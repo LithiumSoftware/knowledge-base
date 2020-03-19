@@ -4,6 +4,8 @@ import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import { Theme } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { ApolloClient, ApolloClientOptions } from "apollo-client";
+import { ApolloProvider } from "@apollo/react-hooks";
 
 const theme: Theme = {
   ...DefaultTheme,
@@ -115,24 +117,30 @@ function CreatePostScreen({ navigation }) {
   );
 }
 
+const client: ApolloClient<{}> = new ApolloClient(
+  {} as ApolloClientOptions<{}>
+);
+
 export default function App() {
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <Navigator>
-          <Screen name="Home" component={HomeScreen} />
-          <Screen
-            name="Details"
-            component={DetailsScreen}
-            initialParams={{
-              parameter:
-                "if you didn't specify any params when navigating to the screen"
-            }}
-          />
-          <Screen name="CreatePost" component={CreatePostScreen} />
-        </Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <ApolloProvider client={client}>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Navigator>
+            <Screen name="Home" component={HomeScreen} />
+            <Screen
+              name="Details"
+              component={DetailsScreen}
+              initialParams={{
+                parameter:
+                  "Message shown when you didn't specify any params when navigating to the screen"
+              }}
+            />
+            <Screen name="CreatePost" component={CreatePostScreen} />
+          </Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </ApolloProvider>
   );
 }
 
