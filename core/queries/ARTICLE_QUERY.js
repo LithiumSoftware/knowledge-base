@@ -1,15 +1,17 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query getArticle($id: ID!) {
+  query Article($id: ID!) {
     article(id: $id) {
       id
       title
-      favourited
-      children {
+      body
+      rootPath
+      author {
         id
-        title
+        username
       }
+      updatedAt
     }
   }
 `;

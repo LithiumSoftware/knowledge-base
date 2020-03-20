@@ -1,15 +1,14 @@
 import gql from "graphql-tag";
 
 export default gql`
-  {
-    verifiedUser {
+  query Article($id: ID!) {
+    article(id: $id) {
       id
-      favourites {
+      title
+      favourited
+      children {
         id
         title
-        parent {
-          id
-        }
       }
     }
   }

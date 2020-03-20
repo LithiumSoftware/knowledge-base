@@ -1,12 +1,15 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query getArticle($id: ID!) {
-    article(id: $id) {
+  query ArticleModifications($id: ID!) {
+    articleModifications(id: $id) {
       id
+      user {
+        id
+        username
+      }
       title
       body
-      rootPath
       author {
         id
         username
