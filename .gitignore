@@ -1,12 +1,24 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+*/node_modules
+*/.pnp
 .pnp.js
 
 # testing
-/coverage
+*/coverage
+
+*/.expo/*
+
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+web-build/
+web-report/
+
+# vs_code
+*/.vscode
 
 # next.js
 /.next/
