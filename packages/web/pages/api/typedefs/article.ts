@@ -8,29 +8,42 @@ export const typeDef = `
   }
 
   extend type Mutation {
-    createdArticle(articleInput: ArticleCreateInput!): Article
-    updatedArticle(articleInput: ArticleUpdateInput): Article
+    createArticle(input: CreateInput!): Article!
+    updateArticle(input: UpdateInput): Article
     
-    isFavourite(articleId: ID!): Boolean
+    toggleFavourite(articleId: ID!): Boolean
 
     moveArticle(id: ID!, parentId: ID): Boolean
   }
 
-  input ArticleCreateInput {
+  input CreateInput {
     title: String!
     body: String
     authorId: ID
     parentId: ID
   }
 
-  input ArticleUpdateInput {
+  input UpdateInput {
     id: ID
     title: String
     body: String
-    children: [ID]
+    children: [ArticleInput]
   }
 
   type Article {
+    id: ID!
+    title: String!
+    body: String
+    author: User
+    parent: Article
+    children: [Article]
+    rootPath: [String]
+    favourited: Boolean
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  input ArticleInput {
     id: ID!
     title: String!
     body: String
@@ -53,15 +66,15 @@ export const resolvers = {
   },
   Mutation: {
     createdArticle: authenticated(
-      (_, { articleInput }, { dataSources: { db }, currentUserId }) =>
-        db.article.create({ ...articleInput, authorId: currentUserId })
+      (_, { input }, { dataSources: { db }, currentUserId }) =>
+        db.article.create({ ...input, authorId: currentUserId })
     ),
     updatedArticle: authenticated(
-      (_, { articleInput }, { dataSources: { db }, currentUserId }) =>
+      (_, { input }, { dataSources: { db }, currentUserId }) =>
         db.article
-          .findByPk(articleInput.id)
+          .findByPk(input.id)
           .then(article =>
-            article.update(articleInput).then(updated =>
+            article.update(input).then(updated =>
               db.article_modification
                 .findOne({
                   where: {

@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 
 export const typeDef = `
   extend type Query {
-    verifiedUser: User
+    me: User
   }
 
   extend type Mutation {
