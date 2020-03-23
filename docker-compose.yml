@@ -12,7 +12,7 @@ services:
     ports:
       - 5432:5432
   web:
-    build: .
+    build: ./packages/web
     volumes:
       - ./packages/web:/usr/src/app
     depends_on:
