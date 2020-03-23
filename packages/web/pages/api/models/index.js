@@ -1,52 +1,34 @@
-"use strict";
+import fs from "fs";
+import path from "path";
+import Sequelize from "sequelize";
 
-const fs = require("fs");
-const path = require("path");
-const Sequelize = require("sequelize");
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
+const config = require(__dirname + "/../config.json")[process.env.NODE_ENV];
+
+const sequelize = new Sequelize(
+  `postgres://${config.username}:${config.password}@postgres:5432/${config.database}`
+);
+
 const db = {};
+const route = `${process.cwd()}/pages/api/models`;
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
-  );
-}
-
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch(err => {
-    console.error("Unable to connect to the database:", err);
-  });
-
-fs.readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
-    );
-  })
+fs.readdirSync(route)
+  .filter(
+    file =>
+      file.indexOf(".") !== 0 &&
+      file !== path.basename(__filename) &&
+      file.slice(-3) === ".js"
+  )
   .forEach(file => {
-    const model = sequelize["import"](path.join(__dirname, file));
+    const model = sequelize["import"](path.join(route, file));
     db[model.name] = model;
   });
 
 Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+  if (db[modelName].associate) db[modelName].associate(db);
 });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+db.sequelize.sync();
 
-module.exports = db;
+export default db;
