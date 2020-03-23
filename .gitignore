@@ -1,11 +1,12 @@
-*/node_modules
-*/.pnp
+
+**/node_modules/
+**/.pnp
 .pnp.js
 
 # testing
-*/coverage
+**/coverage
 
-*/.expo/*
+**/.expo/*
 
 *.jks
 *.p8
@@ -18,14 +19,15 @@ web-build/
 web-report/
 
 # vs_code
-*/.vscode
+
+**/.vscode
 
 # next.js
-/.next/
-/out/
+**/.next/
+**/out/
 
 # production
-/build
+**/build
 
 # misc
 .DS_Store
