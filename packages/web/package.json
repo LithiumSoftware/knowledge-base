@@ -5,23 +5,51 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "create_migration": "npx sequelize --options-path=.sequelizerc migration:create --name",
+    "migrate": "npx sequelize --options-path=.sequelizerc db:migrate",
+    "undo": "npx sequelize --options-path=.sequelizerc db:migrate:undo",
+    "seed": "npx sequelize --options-path=.sequelizerc db:seed:all",
+    "undo_seed": "npx sequelize --options-path=.sequelizerc db:seed:undo:all"
   },
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.3",
+    "@apollo/react-ssr": "^3.1.3",
+    "@material-ui/core": "^4.9.0",
+    "@material-ui/icons": "^4.5.1",
+    "@syncfusion/ej2": "^17.4.49",
+    "@syncfusion/ej2-react-buttons": "^17.4.49",
+    "@syncfusion/ej2-react-richtexteditor": "^17.4.49",
+    "apollo-cache-inmemory": "^1.6.5",
+    "apollo-client": "^2.6.8",
+    "apollo-link-http": "^1.5.16",
     "apollo-server-micro": "^2.9.16",
+    "babel-plugin-styled-components": "^1.10.7",
+    "bcrypt": "^3.0.7",
+    "formik": "^2.1.2",
+    "formik-material-ui": "^2.0.0-alpha.3",
     "graphql": "^14.5.8",
+    "isomorphic-unfetch": "^3.0.0",
+    "js-cookie": "^2.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
     "next": "9.2.0",
-    "pg": "^7.18.1",
-    "pg-hstore": "^2.3.3",
+    "next-cookies": "^2.0.3",
+    "node-pre-gyp": "^0.14.0",
+    "pg": "^7.17.1",
     "react": "16.12.0",
+    "react-dnd": "^10.0.2",
+    "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "16.12.0",
-    "sequelize": "^5.21.4",
-    "sequelize-cli": "^5.5.1",
-    "styled-components": "^5.0.0"
+    "sequelize": "^5.21.3",
+    "styled-components": "^5.0.0",
+    "yup": "^0.28.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.17",
+    "babel-plugin-graphql-tag": "^2.5.0",
     "prettier": "^1.19.1",
+    "sequelize-cli": "^5.5.1",
     "typescript": "^3.7.5"
   }
 }

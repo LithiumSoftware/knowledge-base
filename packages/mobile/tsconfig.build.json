@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.build.json",
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "jsx": "react-native",
@@ -7,6 +7,8 @@
     "moduleResolution": "node",
     "noEmit": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"]
 }

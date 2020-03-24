@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "workspaces": [
+    "packages/mobile",
+    "packages/core",
+    "packages/common"
+  ],
+  "devDependencies": {
+    "@graphql-codegen/typescript": "^1.13.1",
+    "@graphql-codegen/typescript-operations": "^1.13.1",
+    "@graphql-codegen/typescript-react-apollo": "^1.13.1"
+  }
+}

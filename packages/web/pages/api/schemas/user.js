@@ -27,8 +27,8 @@ export const typeDef = `
     username: String
     email: String!
     role: Role!
-    articles: [Article]
-    favourites: [Article]
+    # articles: [Article]
+    # favourites: [Article]
     createdAt: Date
     updatedAt: Date
   }
@@ -41,8 +41,7 @@ export const typeDef = `
 
 export const resolvers = {
   Query: {
-    verifiedUser: (_, _, { dataSources: { db }, currentUserId }) =>
-      db.user.findByPk(currentUserId)
+    me: (root, args, { dataSources: { db }, currentUserId }) => db.user.findByPk(currentUserId),
   },
   Mutation: {
     signedUser: (_, { userInput }, { dataSources: { db }, res }) =>
@@ -54,27 +53,18 @@ export const resolvers = {
           return user;
         })
         .catch(err => {
-          throw new UserInputError(
-            "There's already an account with this email"
-          );
+          throw new UserInputError("There's already an account with this email");
         }),
-    loggedUser: (
-      _,
-      { userInput: { identifier, password } },
-      { dataSources: { db }, res }
-    ) =>
+    loggedUser: (_, { userInput: { identifier, password } }, { dataSources: { db }, res }) =>
       db.user
         .findOne({
-          where: { [Op.or]: [{ username: identifier }, { email: identifier }] }
+          where: { [Op.or]: [{ username: identifier }, { email: identifier }] },
         })
         .then(user => {
           if (user) {
             if (bcrypt.compareSync(password, user.password)) {
               const tokens = setTokens(user);
-              res.setHeader(
-                "Set-Cookie",
-                `token=${tokens.accessToken}; httpOnly`
-              );
+              res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
               return user;
             } else {
               throw null;
@@ -86,7 +76,7 @@ export const resolvers = {
         .catch(err => {
           if (err.errors[0].message.includes("username")) {
             return dataBase.Users.findOne({
-              where: { email: email }
+              where: { email: email },
             }).then(user => {
               const message =
                 user && user.dataValues
@@ -97,12 +87,12 @@ export const resolvers = {
           } else {
             throw new UserInputError("Email address is already in use.");
           }
-        })
+        }),
   },
   User: {
-    articles: user => user.getArticles(),
-    favourites: user => user.getFavourites()
-  }
+    // articles: user => user.getArticles(),
+    // favourites: user => user.getFavourites(),
+  },
 };
 
 const bcrypt = require("bcrypt");
@@ -113,19 +103,19 @@ const setTokens = ({ dataValues: { id, email } }) => {
   const sevenDays = 60 * 60 * 24 * 7 * 1000;
   const fifteenMins = 60 * 15 * 1000;
   const accessUser = {
-    id: id
+    id: id,
   };
 
   const accessToken = jwt.sign({ user: accessUser }, secret, {
-    expiresIn: fifteenMins
+    expiresIn: fifteenMins,
   });
 
   const refreshUser = {
-    id: id
+    id: id,
   };
 
   const refreshToken = jwt.sign({ user: refreshUser }, secret, {
-    expiresIn: sevenDays
+    expiresIn: sevenDays,
   });
 
   return { accessToken, refreshToken };

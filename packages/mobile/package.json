@@ -1,13 +1,17 @@
 {
+  "name": "@workspace-library/mobile",
+  "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "clean": "rm -rf ./dist && rm -rf tsconfig.build.tsbuildinfo"
   },
   "dependencies": {
+    "@workspace-library/core": "1.0.0",
     "@apollo/react-hooks": "^3.1.3",
     "@react-native-community/masked-view": "0.1.5",
     "@react-navigation/native": "^5.1.0",
