@@ -1,13 +1,22 @@
 {
   "private": true,
-  "workspaces": [
-    "packages/mobile",
-    "packages/core",
-    "packages/common"
-  ],
+  "workspaces": {
+    "nohoist": [
+      "**/expo/**",
+      "**/react-native-paper/**",
+      "**/core/**",
+      "**/mobile/**"
+    ],
+    "packages": [
+      "packages/mobile",
+      "packages/core"
+    ]
+  },
   "devDependencies": {
     "@graphql-codegen/typescript": "^1.13.1",
     "@graphql-codegen/typescript-operations": "^1.13.1",
-    "@graphql-codegen/typescript-react-apollo": "^1.13.1"
-  }
+    "@graphql-codegen/typescript-react-apollo": "^1.13.1",
+    "lerna": "^3.20.2"
+  },
+  "name": "workspace-library"
 }

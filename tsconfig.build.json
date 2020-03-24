@@ -1,18 +1,18 @@
 {
-  "extends": "../../tsconfig.build.json",
-
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
   },
-
-  "references": [
-    {
-      "path": "../foo/tsconfig.build.json"
-    }
-  ],
-
-  "include": ["src/**/*"]
+  "exclude": ["node_modules"]
 }
