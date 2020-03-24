@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "start": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start:prod": "next start",
     "create_migration": "npx sequelize --options-path=.sequelizerc migration:create --name",
     "migrate": "npx sequelize --options-path=.sequelizerc db:migrate",
     "undo": "npx sequelize --options-path=.sequelizerc db:migrate:undo",

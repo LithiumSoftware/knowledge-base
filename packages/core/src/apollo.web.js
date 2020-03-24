@@ -6,7 +6,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
 import fetch from "isomorphic-unfetch";
 import Cookies from "js-cookie";
-
+import { getDataFromTree } from "@apollo/react-ssr";
 let globalApolloClient = null;
 
 /**
@@ -29,8 +29,7 @@ export function withApollo(PageComponent, { ssr = true } = {}) {
 
   // Set the correct displayName in development
   if (process.env.NODE_ENV !== "production") {
-    const displayName =
-      PageComponent.displayName || PageComponent.name || "Component";
+    const displayName = PageComponent.displayName || PageComponent.name || "Component";
 
     if (displayName === "App") {
       console.warn("This withApollo HOC only works with PageComponents.");
@@ -65,14 +64,13 @@ export function withApollo(PageComponent, { ssr = true } = {}) {
         if (ssr) {
           try {
             // Run all GraphQL queries
-            const { getDataFromTree } = await import("@apollo/react-ssr");
             await getDataFromTree(
               <AppTree
                 pageProps={{
                   ...pageProps,
-                  apolloClient
+                  apolloClient,
                 }}
-              />
+              />,
             );
           } catch (error) {
             // Prevent Apollo Client GraphQL errors from crashing SSR.
@@ -92,7 +90,7 @@ export function withApollo(PageComponent, { ssr = true } = {}) {
 
       return {
         ...pageProps,
-        apolloState
+        apolloState,
       };
     };
   }
@@ -134,10 +132,10 @@ function createApolloClient(initialState = {}) {
       uri: "http://localhost:3000/api/graphql", // Server URL (must be absolute)
       credentials: "same-origin", // Additional fetch() options like `credentials` or `headers`
       headers: {
-        "malicious-token": `${token}`
+        "malicious-token": `${token}`,
       },
-      fetch
+      fetch,
     }),
-    cache: new InMemoryCache().restore(initialState)
+    cache: new InMemoryCache().restore(initialState),
   });
 }

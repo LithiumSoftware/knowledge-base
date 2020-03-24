@@ -8,9 +8,8 @@ import { ApolloClient, ApolloClientOptions } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
-import test from "@workspace-library/core";
+import { apollo } from "@workspace-library/core";
 
-console.log("TEST", test);
 const theme: Theme = {
   ...DefaultTheme,
   roundness: 2,
@@ -116,14 +115,9 @@ const link = new HttpLink({
   uri: "http://localhost:4000/",
 });
 
-const client = new ApolloClient({
-  cache,
-  link,
-});
-
 export default function App() {
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apollo}>
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Navigator>
