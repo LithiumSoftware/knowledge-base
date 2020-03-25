@@ -2,12 +2,13 @@ import * as React from "react";
 import { Button, StyleSheet, Text, View, TextInput } from "react-native";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import { Theme } from "react-native-paper";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ApolloClient, ApolloClientOptions } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
+import { apollo } from "@workspace-library/core";
 
 const theme: Theme = {
   ...DefaultTheme,
@@ -15,19 +16,20 @@ const theme: Theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: "#3498db",
-    accent: "#f1c40f"
-  }
+    accent: "#f1c40f",
+  },
 };
 
 const { Navigator, Screen } = createStackNavigator();
 
-function HomeScreen({ route, navigation }) {
+function HomeScreen({ route }: { route: any }) {
   React.useEffect(() => {
     if (route.params?.post) {
       // Post updated, do something with `route.params.post`
       // For example, send the post to the server
     }
   }, [route.params?.post]);
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -38,18 +40,13 @@ function HomeScreen({ route, navigation }) {
         title="Go to Details"
         onPress={() =>
           navigation.navigate("Details", {
-            parameter: "you can pass a parameter here"
+            parameter: "you can pass a parameter here",
           })
         }
       />
       {/* Pass data to previous screen: */}
-      <Button
-        title="Create post"
-        onPress={() => navigation.navigate("CreatePost")}
-      />
-      <Text style={{ textAlign: "center", color: "red" }}>
-        Post: {route.params?.post}
-      </Text>
+      <Button title="Create post" onPress={() => navigation.navigate("CreatePost")} />
+      <Text style={{ textAlign: "center", color: "red" }}>Post: {route.params?.post}</Text>
       <Text style={{ textAlign: "center" }}>Lithium team</Text>
     </View>
   );
@@ -66,7 +63,7 @@ function DetailsScreen({ route, navigation }) {
         title="Go to Details... again (navigate)"
         onPress={() =>
           navigation.navigate("Details", {
-            parameter: parameter
+            parameter: parameter,
           })
         }
       />
@@ -79,19 +76,13 @@ function DetailsScreen({ route, navigation }) {
                 ? "this is good"
                 : parameter == "this is good"
                 ? parameter
-                : "and change it on each call"
+                : "and change it on each call",
           })
         }
       />
-      <Button
-        title="Go to Home (navigate)"
-        onPress={() => navigation.navigate("Home")}
-      />
+      <Button title="Go to Home (navigate)" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
-      <Button
-        title="Go back to first screen in stack"
-        onPress={() => navigation.popToTop()}
-      />
+      <Button title="Go back to first screen in stack" onPress={() => navigation.popToTop()} />
     </View>
   );
 }
@@ -121,17 +112,12 @@ function CreatePostScreen({ navigation }) {
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
-  uri: "http://localhost:4000/"
-});
-
-const client: ApolloClient<{}> = new ApolloClient({
-  cache,
-  link
+  uri: "http://localhost:4000/",
 });
 
 export default function App() {
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apollo}>
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Navigator>
@@ -141,7 +127,7 @@ export default function App() {
               component={DetailsScreen}
               initialParams={{
                 parameter:
-                  "Message shown when you didn't specify any params when navigating to the screen"
+                  "Message shown when you didn't specify any params when navigating to the screen",
               }}
             />
             <Screen name="CreatePost" component={CreatePostScreen} />
@@ -159,6 +145,6 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "space-evenly"
-  }
+    justifyContent: "space-evenly",
+  },
 });
