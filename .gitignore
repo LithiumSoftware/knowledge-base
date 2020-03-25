@@ -40,4 +40,6 @@ yarn-error.log*
 
 **/.expo
 **/.expo-shared
-noode_modules
+
+# logs
+*.log

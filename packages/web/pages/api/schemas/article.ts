@@ -1,13 +1,12 @@
 import { ApolloError } from "apollo-server-micro";
 import { authenticated } from "./scalars";
-import getRootPath from "../getRoothPath";
+import { getRootPath, moment } from "../getRoothPath";
 
 export const typeDef = `
   extend type Query {
     article(id: ID!): Article
     articles: [Article]
   }
-
 
   extend type Mutation {
     createArticle(input: CreateInput!): Article!
@@ -29,23 +28,10 @@ export const typeDef = `
     id: ID
     title: String
     body: String
-    children: [ArticleInput]
+    children: [ID]
   }
 
   type Article {
-    id: ID!
-    title: String!
-    body: String
-    author: User
-    parent: Article
-    children: [Article]
-    rootPath: [String]
-    favourited: Boolean
-    createdAt: Date
-    updatedAt: Date
-  }
-
-  input ArticleInput {
     id: ID!
     title: String!
     body: String
@@ -65,10 +51,10 @@ export const resolvers = {
     articles: authenticated((_, args, { dataSources: { db } }) => db.article.findAll()),
   },
   Mutation: {
-    createdArticle: authenticated((_, { input }, { dataSources: { db }, currentUserId }) =>
+    createArticle: authenticated((_, { input }, { dataSources: { db }, currentUserId }) =>
       db.article.create({ ...input, authorId: currentUserId }),
     ),
-    updatedArticle: authenticated((_, { input }, { dataSources: { db }, currentUserId }) =>
+    updateArticle: authenticated((_, { input }, { dataSources: { db }, currentUserId }) =>
       db.article
         .findByPk(input.id)
         .then(article =>
@@ -106,7 +92,7 @@ export const resolvers = {
           throw new ApolloError(err);
         }),
     ),
-    isFavourite: authenticated((_, { articleId }, { dataSources: { db }, currentUserId }) =>
+    toggleFavourite: authenticated((_, { articleId }, { dataSources: { db }, currentUserId }) =>
       db.favourite_article
         .findOne({
           where: { userId: currentUserId, articleId: articleId },

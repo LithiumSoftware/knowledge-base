@@ -1,6 +1,6 @@
-const moment = require("moment");
+export const moment = require("moment");
 
-const getRootPath = async (article, isSlug = true) => {
+export const getRootPath = async (article, isSlug = true) => {
   const path = [];
 
   var parent = article.parentId ? article : null;
@@ -20,5 +20,3 @@ const getRootPath = async (article, isSlug = true) => {
 
   return path.reverse();
 };
-
-export default getRootPath;

@@ -7,8 +7,8 @@ export const typeDef = `
   }
 
   extend type Mutation {
-    signedUser(userInput: UserCreateInput!): User
-    loggedUser(userInput: UserLoginInput!): User
+    signedUser(input: UserCreateInput!): User
+    loggedUser(input: UserLoginInput!): User
   }
 
   input UserLoginInput {
@@ -27,8 +27,8 @@ export const typeDef = `
     username: String
     email: String!
     role: Role!
-    # articles: [Article]
-    # favourites: [Article]
+    articles: [Article]
+    favourites: [Article]
     createdAt: Date
     updatedAt: Date
   }
@@ -44,9 +44,9 @@ export const resolvers = {
     me: (root, args, { dataSources: { db }, currentUserId }) => db.user.findByPk(currentUserId),
   },
   Mutation: {
-    signedUser: (_, { userInput }, { dataSources: { db }, res }) =>
+    signedUser: (_, { input }, { dataSources: { db }, res }) =>
       db.user
-        .create({ ...userInput, role: "USER" })
+        .create({ ...input, role: "USER" })
         .then(user => {
           const tokens = setTokens(user);
           res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
@@ -55,7 +55,7 @@ export const resolvers = {
         .catch(err => {
           throw new UserInputError("There's already an account with this email");
         }),
-    loggedUser: (_, { userInput: { identifier, password } }, { dataSources: { db }, res }) =>
+    loggedUser: (_, { input: { identifier, password } }, { dataSources: { db }, res }) =>
       db.user
         .findOne({
           where: { [Op.or]: [{ username: identifier }, { email: identifier }] },
@@ -90,8 +90,8 @@ export const resolvers = {
         }),
   },
   User: {
-    // articles: user => user.getArticles(),
-    // favourites: user => user.getFavourites(),
+    articles: user => user.getArticles(),
+    favourites: user => user.getFavourites(),
   },
 };
 

@@ -11,12 +11,12 @@ import { typeDef as Scalars, resolvers as scalarsRes } from "./schemas/scalars";
 export const typeDefs = [
   Scalars,
   User,
-  // Article,
-  // ArticleModification
+  Article,
+  ArticleModification
 ];
 export const resolvers = merge(
   scalarsRes,
   userRes,
-  // articleRes,
-  // articleModificationRes
+  articleRes,
+  articleModificationRes
 );
