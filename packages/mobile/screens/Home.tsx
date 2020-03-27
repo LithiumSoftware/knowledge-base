@@ -1,75 +1,46 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { createStackNavigator } from "@react-navigation/stack";
+import { StyleSheet, Text, View } from "react-native";
 
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
-
-const Stack = createStackNavigator();
-
-const DrawerButton = props => {
-  return (
-    <View>
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate("DrawerOpen");
-        }}
-      >
-        <Image source={require("../img/iconImage.png")} style={styles.icon} />
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const HomeScreen = props => (
-  <Stack.Navigator initialRouteName="Home">
-    <Stack.Screen
-      name="Home"
-      component={HomeComponent}
-      initialParams={{ ...props }}
-      options={{
-        title: "Welcome!",
-        headerStyle: {
-          backgroundColor: "#f4511e"
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold"
-        }
-      }}
-    />
-  </Stack.Navigator>
+export default HomeScreen = ({ navigation, route }) => (
+  <View style={styles.main}>
+    <Text>
+      {" "}
+      Es muy importante para nosotros que se tomen este desafío muy seriamente,
+      que se enfoquen en desarrollar dicha tarea de manera que el código
+      generado pueda ser re-utilizado en el futuro (esto último, es muy
+      importante para Lithium ya que nuestra rapidez de delivery de soluciones
+      depende de ello), cumpla con las mejores prácticas, comentarios
+      pertinentes y justificación de decisiones tomadas
+    </Text>
+  </View>
 );
-
-const HomeComponent = props => {
-  const filteredTodos = ["One", "Two", "Three", "Four", "Five"];
-
-  return (
-    <View style={styles.main}>
-      <View style={styles.todoList}>
-        {filteredTodos.map(todo => (
-          <Text> {todo} </Text>
-        ))}
-      </View>
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   main: {
-    margin: 16,
+    display: "flex",
+    flex: 1,
+    width: "100%",
+    flexDirection: "column",
+    padding: 18,
+    paddingTop: 8,
+    paddingBottom: 8,
     alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: "#fff"
   },
+
   todoList: {
-    backgroundColor: "white"
+    flex: 1,
+    width: "100%",
+    backgroundColor: "red"
+  },
+  todoListG: {
+    flex: 1,
+    width: "100%",
+    backgroundColor: "#FFC200"
+  },
+  todoListB: {
+    flex: 1,
+    width: "100%",
+    backgroundColor: "green"
   }
 });
-
-export default HomeScreen;
