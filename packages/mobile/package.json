@@ -45,8 +45,9 @@
       "expo",
       "expo/**",
       "react-native",
-      "react-native-paper/**",
-      "react-native/**"
+      "react-native-paper",
+      "react-native/**",
+      "@react-navigation/**"
     ]
   }
 }
