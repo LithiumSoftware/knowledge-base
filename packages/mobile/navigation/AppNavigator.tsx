@@ -2,27 +2,26 @@ import React from "react";
 import HomeScreen from "../screens/Home";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
 import { Button } from "react-native-paper";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-export default AppNavigator = () => (
-  <Drawer.Navigator drawerType="front">
-    <Drawer.Screen name="Welcome" component={StackNavigator} />
-  </Drawer.Navigator>
-);
+export default function AppNavigator() {
+  return (
+    <Drawer.Navigator drawerType="front">
+      <Drawer.Screen name="Welcome" component={StackNavigator} />
+    </Drawer.Navigator>
+  );
+}
 
-const StackNavigator = ({ navigation, route }) => (
+const StackNavigator = ({
+  navigation,
+  route
+}: {
+  navigation: any;
+  route: any;
+}) => (
   <Stack.Navigator
     initialRouteName="Home"
     mode="modal"
@@ -34,7 +33,9 @@ const StackNavigator = ({ navigation, route }) => (
           style={{ minWidth: 0, left: 4 }}
           icon="menu"
           onPress={() => navigation.toggleDrawer()}
-        />
+        >
+          {" "}
+        </Button>
       ),
       headerTitleContainerStyle: { left: 44 }
     }}

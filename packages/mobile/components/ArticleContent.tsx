@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useState, useEffect } from "react";
-import NextLink from "next/link";
 
 import styled from "styled-components";
 import { ActivityIndicator, Button } from "react-native-paper";
@@ -9,8 +8,8 @@ import { View, Text } from "react-native";
 import moment from "moment";
 import Breadcrumbs from "./Breadcrumbs";
 
-import useArticles from "../../kbcore/dist/queries/ARTICLES_QUERY";
-import useToggleFavorite from "../../kbcore/dist/mutations/TOGGLE_FAVOURITE_MUTATION";
+import ARTICLES_QUERY from "../../kbcore/dist/queries/ARTICLES_QUERY";
+import UPDATE_ARTICLE_MUTATION from "../../kbcore/dist/mutations/UPDATE_ARTICLE_MUTATION";
 
 const StyledButton = styled(Button)`
   display: flex;
@@ -51,10 +50,10 @@ const ArticleContent = (
   { articleId }: { articleId: Number },
   { route, navigation }: { route: any; navigation: any }
 ) => {
-  const articleWithParents = useQuery(GET_ARTICLE_WITH_PARENTS, {
+  const articleWithParents = useQuery(ARTICLES_QUERY, {
     variables: { id: articleId }
   });
-  const [updateArticle] = useMutation(UPDATE_ARTICLE);
+  const [updateArticle] = useMutation(UPDATE_ARTICLE_MUTATION);
   const [updatedTime, setUpdatedTime] = useState(
     articleWithParents.data?.getArticleWithParents[
       articleWithParents.data?.getArticleWithParents.length - 1

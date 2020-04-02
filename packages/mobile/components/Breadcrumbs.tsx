@@ -38,8 +38,6 @@ const Breadcrumbs = ({
     <BreadcrumbItem title={title} action={action} />
   ));
 
-  const itemsBefore = 1;
-  const itemsAfter = 1;
   const max = 2;
 
   const totalItems = breadcrumbs.length;
