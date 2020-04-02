@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default HomeScreen = ({ navigation, route }) => (
+const HomeScreen = ({ navigation, route }) => (
   <View style={styles.main}>
     <Text>
       {" "}
@@ -25,22 +25,24 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
     alignItems: "center",
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
 
   todoList: {
     flex: 1,
     width: "100%",
-    backgroundColor: "red"
+    backgroundColor: "red",
   },
   todoListG: {
     flex: 1,
     width: "100%",
-    backgroundColor: "#FFC200"
+    backgroundColor: "#FFC200",
   },
   todoListB: {
     flex: 1,
     width: "100%",
-    backgroundColor: "green"
-  }
+    backgroundColor: "green",
+  },
 });
+
+export default HomeScreen;
