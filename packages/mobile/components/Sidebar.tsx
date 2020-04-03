@@ -16,7 +16,9 @@ import SidebarArticles from "./SidebarArticles";
 const TabHeight = 42;
 
 const AllArticles = () => <SidebarArticles />;
-const FavouriteArticles = () => <SidebarArticles />;
+const FavouriteArticles = () => (
+  <SidebarArticles initialParams={{ favourites: true }} />
+);
 
 const initialLayout = { width: Dimensions.get("window").width };
 
