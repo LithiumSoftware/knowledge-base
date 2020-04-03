@@ -2,11 +2,11 @@
   "private": true,
   "workspaces": {
     "nohoist": [
-      "**/kbcore/**",
+      "**/core/**",
       "**/mobile/**"
     ],
     "packages": [
-      "packages/kbcore",
+      "packages/core",
       "packages/mobile"
     ]
   },
@@ -15,7 +15,6 @@
     "@graphql-codegen/typescript": "^1.13.1",
     "@graphql-codegen/typescript-operations": "^1.13.1",
     "@graphql-codegen/typescript-react-apollo": "^1.13.1",
-    "apollo-client": "^2.6.8",
     "babel-plugin-styled-components": "^1.10.7",
     "lerna": "^3.20.2",
     "prettier": "^2.0.2",

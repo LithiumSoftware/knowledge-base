@@ -51,7 +51,9 @@
       "react-native-paper",
       "react-native-paper/**",
       "@react-navigation",
-      "@react-navigation/**"
+      "@react-navigation/**",
+      "apollo-client",
+      "apollo-client/**"
     ]
   }
 }

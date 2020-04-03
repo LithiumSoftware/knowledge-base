@@ -1,6 +1,7 @@
 {
   "name": "@workspace-library/core",
   "version": "1.0.0",
+  "private": true,
   "main": "dist/index",
   "types": "dist/index",
   "files": [
