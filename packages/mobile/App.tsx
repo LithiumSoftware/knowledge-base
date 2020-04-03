@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import {
   DefaultTheme,
   Provider as PaperProvider,
-  Theme
+  Theme,
 } from "react-native-paper";
 import { ApolloClient, ApolloClientOptions } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
@@ -17,9 +17,9 @@ const theme: Theme = {
   roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#3498db",
-    accent: "#f1c40f"
-  }
+    primary: "#FFF",
+    accent: "#f1c40f",
+  },
 };
 
 const client: ApolloClient<{}> = new ApolloClient({
@@ -27,9 +27,9 @@ const client: ApolloClient<{}> = new ApolloClient({
   link: new HttpLink({
     uri: "http://localhost:3000/api/graphql", // Server URL (must be absolute)
     credentials: "same-origin", // Additional fetch() options like `credentials` or `headers`
-    fetch
+    fetch,
   }),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 export default () => (

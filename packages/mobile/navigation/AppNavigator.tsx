@@ -39,9 +39,9 @@ const StackNavigator = ({
     mode="modal"
     headerMode="float"
     screenOptions={{
-      headerStyle: { backgroundColor: "#FFC200" },
       headerLeft: () => (
         <IconButton
+          color="#000"
           style={{ minWidth: 0, left: 4 }}
           icon="menu"
           onPress={() => navigation.toggleDrawer()}
