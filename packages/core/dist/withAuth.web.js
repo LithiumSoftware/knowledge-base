@@ -61,7 +61,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import React from "react";
 import { auth, redirect, logout } from "./useAuth.web";
 // Gets the display name of a JSX component for dev tools
-var getDisplayName = function (Component) { return Component.displayName || Component.name || "Component"; };
+var getDisplayName = function (Component) {
+    return Component.displayName || Component.name || "Component";
+};
 export var withAuth = function (_a) {
     var requiredRoles = (_a === void 0 ? {} : _a).requiredRoles;
     return function (WrappedComponent) { var _a; return _a = /** @class */ (function (_super) {
