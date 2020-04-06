@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, FunctionComponent } from "react";
+import { View, Text } from "react-native";
+import { useArticlesQuery } from "@workspace-library/core";
 
-import { generatedGraphQL } from "@workspace-library/core";
+const SidebarArticles: FunctionComponent<{ props: any }> = (props: any) => {
+  const [test, setTest] = useState("false");
+  const data = useArticlesQuery({
+    fetchPolicy: "no-cache",
+    notifyOnNetworkStatusChange: true,
+  });
 
-const SidebarArticles = (props: any) => {
-  const favourites: boolean = props?.initialParams?.favourites || false;
-
-  console.log(generatedGraphQL);
-
-  return null;
+  return (
+    <View>
+      <Text>Heyhey</Text>
+    </View>
+  );
 };
 
 export default SidebarArticles;
