@@ -10,7 +10,7 @@ export var auth = function (ctx) {
 };
 export var redirect = function (_a) {
     var ctx = _a.ctx, uri = _a.uri;
-    if (ctx === null || ctx === void 0 ? void 0 : ctx.req) {
+    if (ctx ? .req : ) {
         ctx.res.writeHead(302, { Location: uri });
         ctx.res.end();
         return;

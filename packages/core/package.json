@@ -28,18 +28,16 @@
     "next": "9.2.0",
     "next-cookies": "^2.0.3",
     "nodemon": "^2.0.2",
-    "react": "16.12.0",
-    "react-dom": "16.12.0",
+    "react": "~16.9.0",
+    "react-dom": "~16.9.0",
     "styled-components": "^5.0.0"
   },
+  "workspaces": {
+    "nohoist": [
+      "@babel/preset-env"
+    ]
+  },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.13.1",
-    "@graphql-codegen/typescript": "^1.13.1",
-    "@graphql-codegen/typescript-operations": "^1.13.1",
-    "@graphql-codegen/typescript-react-apollo": "^1.13.1",
-    "@types/react": "^16.9.17",
-    "babel-plugin-styled-components": "^1.10.7",
-    "babel-preset-env": "^1.7.0",
-    "prettier": "^1.19.1"
+    "@babel/preset-env": "^7.9.0"
   }
 }
