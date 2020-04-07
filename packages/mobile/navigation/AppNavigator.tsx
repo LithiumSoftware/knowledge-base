@@ -9,20 +9,26 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-export default AppNavigator = () => (
+const AppNavigator = () => (
   <Drawer.Navigator drawerType="front">
     <Drawer.Screen name="Welcome" component={StackNavigator} />
   </Drawer.Navigator>
 );
 
-const StackNavigator = ({ navigation, route }) => (
+const StackNavigator = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => (
   <Stack.Navigator
     initialRouteName="Home"
     mode="modal"
@@ -30,13 +36,13 @@ const StackNavigator = ({ navigation, route }) => (
     screenOptions={{
       headerStyle: { backgroundColor: "#FFC200" },
       headerLeft: () => (
-        <Button
+        <IconButton
           style={{ minWidth: 0, left: 4 }}
           icon="menu"
           onPress={() => navigation.toggleDrawer()}
         />
       ),
-      headerTitleContainerStyle: { left: 44 }
+      headerTitleContainerStyle: { left: 44 },
     }}
   >
     <Stack.Screen
@@ -44,8 +50,10 @@ const StackNavigator = ({ navigation, route }) => (
       component={HomeScreen}
       initialParams={{ ...route.params }}
       options={{
-        title: "Lithium KB App"
+        title: "Lithium KB App",
       }}
     />
   </Stack.Navigator>
 );
+
+export default AppNavigator;
