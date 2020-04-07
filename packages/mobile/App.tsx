@@ -9,6 +9,9 @@ import { ApolloClient, ApolloClientOptions } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
+import { createStackNavigator } from "@react-navigation/stack";
+import SignUp from "./screens/sign_up";
+import SignIn from "./screens/sign_in";
 
 import AppNavigator from "./navigation/AppNavigator";
 
@@ -32,11 +35,25 @@ const client: ApolloClient<{}> = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+const { Navigator, Screen } = createStackNavigator();
+
 export default () => (
   <ApolloProvider client={client}>
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <AppNavigator />
+        {/* <AppNavigator /> */}
+        <Navigator screenOptions={{
+            headerShown: false
+          }}>
+            <Screen name="SignUp" component={SignUp}  initialParams={{
+                parameter:
+                  "Message shown when you didn't specify any params when navigating to the screen"
+              }}/>
+               <Screen name="SignIn" component={SignIn}  initialParams={{
+                parameter:
+                  "Message shown when you didn't specify any params when navigating to the screen"
+              }}/>
+          </Navigator>
       </NavigationContainer>
     </PaperProvider>
   </ApolloProvider>
