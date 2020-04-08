@@ -38,7 +38,7 @@ export default function SignUp({ navigation }: { navigation: any }) {
                         logInUser: { id }
                     }
                 }) => {
-                    navigation.navigate("home")
+                    navigation.navigate("HomeScreen")
                 }
             )
             .catch(({ graphQLErrors }) => {
