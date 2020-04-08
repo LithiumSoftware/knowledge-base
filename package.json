@@ -2,11 +2,11 @@
   "private": true,
   "workspaces": {
     "nohoist": [
-      "**/kbcore/**",
+      "**/core/**",
       "**/mobile/**"
     ],
     "packages": [
-      "packages/kbcore",
+      "packages/core",
       "packages/mobile"
     ]
   },
