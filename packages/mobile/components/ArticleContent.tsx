@@ -27,8 +27,8 @@ const hardcodedArticlesWithParents = [
       "<p>Comunidad social con una organización política común y un territorio y órganos de gobierno propios que es soberana e independiente políticamente de otras comunidades.</p>",
     parentId: null,
     authorId: 1,
-    createdAt: Date.now,
-    updatedAt: Date.now,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
   {
     id: 3,
@@ -38,8 +38,8 @@ const hardcodedArticlesWithParents = [
       "<p>Población donde habita un conjunto de personas que se dedican principalmente a actividades industriales y comerciales.</p>",
     parentId: null,
     authorId: 1,
-    createdAt: Date.now,
-    updatedAt: Date.now,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
   {
     id: 4,
@@ -49,20 +49,17 @@ const hardcodedArticlesWithParents = [
       "<p>Parte de una población de extensión relativamente grande, que contiene un agrupamiento social espontáneo y que tiene un carácter peculiar, físico, social, económico o étnico por el que se identifica.</p>",
     parentId: null,
     authorId: 1,
-    createdAt: Date.now,
-    updatedAt: Date.now,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
 ];
 //Hardcoded code for demo -------------------------------------------------------------------------
 
-const StyledButton = styled(Text)`
+const StyledText = styled(Text)`
   width: 335px;
   height: 42px;
   left: 20px;
 
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
   font-size: 12px;
   line-height: 20px;
 
@@ -74,25 +71,13 @@ const StyledButton = styled(Text)`
 `;
 
 const TitleText = styled(Text)`
-  text-align: center;
-  color: #424242;
+  width: 100%;
+  padding-top: 36px;
+  left: 19px;
   font-weight: bold;
-  padding-top: 16px;
-  font-size: 40px;
-`;
-
-const TopBar = styled(View)`
-  display: flex;
-  position: absolute;
-  left: 0;
-  top: 64px;
-  padding-top: 12px;
-  z-index: 1050;
-  width: 80%;
-  justify-content: space-between;
-  padding-left: 255px;
-  padding-right: 20px;
-  background-color: #fffff;
+  font-size: 48px;
+  letter-spacing: -1.5px;
+  color: rgba(0, 0, 0, 0.87);
 `;
 
 const StyledLoadingView = styled(View)`
@@ -222,11 +207,11 @@ const ArticleContent = (
   );
 
   const [lastModificationTime, setLastModificationTime] = useState(
-    moment(updatedTime).fromNow()
+    updatedTime ? moment(updatedTime).fromNow() : null
   );
 
   useEffect(() => {
-    setLastModificationTime(moment(updatedTime).fromNow());
+    setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : null);
     setUpdatedTime(
       articleWithParents[articleWithParents.length - 1]?.updatedAt !==
         articleWithParents[articleWithParents.length - 1]?.createdAt
@@ -234,7 +219,10 @@ const ArticleContent = (
         : undefined
     );
     const timeOut = setInterval(() => {
-      setLastModificationTime(moment(updatedTime).fromNow());
+      console.log(updatedTime ? moment(updatedTime).fromNow() : null);
+      setLastModificationTime(
+        updatedTime ? moment(updatedTime).fromNow() : null
+      );
     }, 15 * 1000);
     return () => {
       clearInterval(timeOut);
@@ -245,30 +233,36 @@ const ArticleContent = (
   ]);
 
   const onSave = (newContent: string) => {
+    console.log(newContent);
     articleWithParents[2].content = newContent;
-    articleWithParents[2].updatedAt = Date.now;
+    articleWithParents[2].updatedAt = Date.now();
+    console.log(articleWithParents[2].updatedAt);
+    console.log(updatedTime ? moment(updatedTime).fromNow() : null);
     setUpdatedTime(articleWithParents[2].updatedAt);
+    setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : null);
   };
   //Hardcoded code for demo -------------------------------------------------------------------------
 
   return (
     <StyledSafeAreaView>
       <Breadcrumbs
-        separator=" / "
+        separator="/"
         items={articleWithParents?.map((article) => ({
           title: article.title,
-          action: console.log(article.title),
         }))}
       />
       <TitleText>
-        {articleWithParents[articleWithParents.length - 1]?.title}
+        {/* {articleWithParents[articleWithParents.length - 1]?.title} */}
+        Introduccion a React Native
       </TitleText>
       <RichTextEditor
         content={articleWithParents[articleWithParents.length - 1]?.content}
         onSave={onSave}
       />
-      {!lastModificationTime.includes("Invalid") && (
-        <StyledButton>Last modified {lastModificationTime}</StyledButton>
+      {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
+        <StyledText onPress={() => console.log(lastModificationTime)}>
+          Last modified {lastModificationTime}
+        </StyledText>
       )}
     </StyledSafeAreaView>
   );

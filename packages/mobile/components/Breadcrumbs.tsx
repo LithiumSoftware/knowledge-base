@@ -1,6 +1,8 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import styled from "styled-components";
+
+const StyledTouchableOpacity = styled(TouchableOpacity)``;
 
 const StyledView = styled(View)`
   flex-direction: row;
@@ -18,32 +20,29 @@ const StyledText = styled(Text)`
   letter-spacing: 0.4px;
 `;
 
-const BreadcrumbItem = ({ title, action }: { title: string; action: any }) => (
-  <StyledText onPress={action}>{title}</StyledText>
+const StyledTextSeparator = styled(StyledText)`
+  padding-left: 8px;
+  padding-right: 8px;
+`;
+
+const BreadcrumbItem = ({ title }: { title: string }) => (
+  <StyledText>{title}</StyledText>
 );
 
 const BreadcrumbSeparator = ({ separator }: { separator: string }) => (
-  <StyledText>{separator}</StyledText>
+  <StyledTextSeparator>{separator}</StyledTextSeparator>
 );
 
-const BreadcrumbCollapser = () => (
-  <StyledText
-    onPress={() => console.log("ESTO VA A ABRIR LA NAVEGACIÓN EN UN MODAL")}
-  >
-    ...
-  </StyledText>
-);
+const BreadcrumbCollapser = () => <StyledText>...</StyledText>;
 
 const Breadcrumbs = ({
   separator,
   items,
 }: {
   separator: string;
-  items: { title: string; action: any }[];
+  items: { title: string }[];
 }) => {
-  let breadcrumbs = items.map(({ title, action }) => (
-    <BreadcrumbItem title={title} action={action} />
-  ));
+  let breadcrumbs = items.map(({ title }) => <BreadcrumbItem title={title} />);
 
   const max = 4;
 
@@ -64,7 +63,13 @@ const Breadcrumbs = ({
     i += 2;
   }
 
-  return <StyledView>{breadcrumbs}</StyledView>;
+  return (
+    <StyledTouchableOpacity
+      onPress={() => console.log("Esto va a abrir toda la navegación")}
+    >
+      <StyledView>{breadcrumbs}</StyledView>
+    </StyledTouchableOpacity>
+  );
 };
 
 export default Breadcrumbs;

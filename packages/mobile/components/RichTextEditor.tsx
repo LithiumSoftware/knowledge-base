@@ -27,7 +27,7 @@ export default function RichTextEditor({
     const { payload } = message;
     if (payload?.html) {
       setArticleContent(payload.html);
-      onSave(content);
+      onSave(articleContent);
     }
   };
 
