@@ -1,19 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   useArticleQuery,
   ToggleFavouriteMutation,
+  Article,
 } from "@workspace-library/core";
+import { List, Divider, IconButton } from "react-native-paper";
+import Collapsible from "react-native-collapsible";
 
 interface Props {
   addSubArticle?: Function;
   hierarchy: number;
-  id: number;
+  id: string | undefined;
   mainRefetch?: Function;
   reload?: any;
   rootPath?: string[];
   selected?: boolean;
-  hardCodedArticle: Object;
-  hardCodedChildren: Object;
+  hardCodedArticle: Article | null;
+  hardCodedChildren: (Article | null)[][];
 }
 
 const SidebarArticle = ({
@@ -27,26 +30,23 @@ const SidebarArticle = ({
   hardCodedArticle,
   hardCodedChildren,
 }: Props) => {
-  const [open, setOpen] = React.useState(!!rootPath);
-  const [isFavourite, setFavourite] = React.useState("");
+  const [collapsed, setCollapsed] = React.useState(false);
+  const [isFavourite, setFavourite] = useState<boolean | null>(
+    Number(id) % 3 === 0
+  );
 
   /* const { loading, error, data, refetch } = useArticleQuery({
     variables: { id: id },
     fetchPolicy: "no-cache",
   }); */
 
-  useEffect(() => {
-    !!rootPath && !open && setOpen(true);
-  }, [rootPath]);
+  /*useEffect(() => {
+    !!rootPath && !collapsed && setCollapsed(true);
+  }, [rootPath]);*/
 
   /*useEffect(() => {
     reload && refetch();
   }, [reload]);*/
-
-  const handleOpen = (event) => {
-    event.preventDefault();
-    setOpen(!open);
-  };
 
   /*
   const [toggleFavourite] = ToggleFavouriteMutation;
@@ -65,47 +65,63 @@ const SidebarArticle = ({
   };*/
 
   // const article = data?.article;
-  const article = hardCodedArticle;
+  const article: Article | null = hardCodedArticle;
+  article && (article.children = hardCodedChildren[Number(id) - 1]);
+
   const titleId = `${article?.title}-${article?.id}`;
-  isFavourite === "" && article && setFavourite(article.favourited);
+  isFavourite === null && article && setFavourite(article.favourited);
 
   return (
     <>
-      <SideBarItem
-        addSubArticle={() => addSubArticle(article?.id)}
-        favourited={isFavourite}
-        hierarchy={hierarchy}
-        id={article?.id}
-        refetch={mainRefetch}
-        selected={titleId === selected}
-        text={article?.title}
-        toggleFavourite={toggleFavouriteAction}
-        url={`/article/${titleId}`}
-      >
-        <StyledListItemIcon onClick={handleOpen}>
-          {open ? <ShowLessIcon /> : <ShowMoreIcon />}
-        </StyledListItemIcon>
-        <ArticleIcon />
-      </SideBarItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        {article?.children.map(({ id, title }, index) => (
-          <SideBarArticle
-            addSubArticle={addSubArticle}
-            hierarchy={hierarchy + 1}
-            id={id}
+      <List.Item
+        style={{ paddingLeft: hierarchy * 4 }}
+        title={article?.title}
+        onPress={() => console.log(article?.title)}
+        left={(props) => (
+          <IconButton
+            {...props}
+            icon={collapsed ? "chevron-down" : "chevron-right"}
+            onPress={() => setCollapsed(!collapsed)}
+          />
+        )}
+        right={(props) => (
+          <>
+            <IconButton
+              {...props}
+              color={isFavourite ? "#FFC200" : "#D6D6D6"}
+              icon={"heart"}
+              onPress={() => setFavourite(!isFavourite)}
+            />
+            <IconButton
+              {...props}
+              icon={"plus"}
+              onPress={() => console.log("plus")}
+            />
+          </>
+        )}
+      ></List.Item>
+      <Collapsible collapsed={!collapsed}>
+        {article?.children?.map((subArticle: Article | null, index) => (
+          <SidebarArticle
+            //addSubArticle={addSubArticle}
+            hierarchy={hierarchy + 2}
+            id={subArticle?.id}
             key={index}
-            mainRefetch={mainRefetch}
+            //mainRefetch={mainRefetch}
             // rootPath && rootPath.includes(`${title}-${id}`)
-            reload={reload}
+            //reload={reload}
             rootPath={
-              rootPath && `${title}-${id}` === rootPath[hierarchy]
+              rootPath &&
+              `${subArticle?.title}-${subArticle?.id}` === rootPath[hierarchy]
                 ? rootPath
                 : undefined
             }
-            selected={selected}
+            //selected={selected}
+            hardCodedArticle={subArticle}
+            hardCodedChildren={hardCodedChildren}
           />
         ))}
-      </Collapse>
+      </Collapsible>
     </>
   );
 };

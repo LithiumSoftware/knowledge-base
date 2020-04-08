@@ -22,7 +22,7 @@ export type Article = {
   parent?: Maybe<Article>;
   children?: Maybe<Array<Maybe<Article>>>;
   rootPath?: Maybe<Array<Maybe<Scalars['String']>>>;
-  favourited?: Maybe<Scalars['Boolean']>;
+  favourited: Scalars['Boolean'];
   createdAt?: Maybe<Scalars['Date']>;
   updatedAt?: Maybe<Scalars['Date']>;
 };

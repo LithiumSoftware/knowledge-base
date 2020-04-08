@@ -14,6 +14,7 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import SidebarArticles from "./SidebarArticles";
 
 const TabHeight = 42;
+const tabActiveColor = "#E09503";
 
 const AllArticles = () => <SidebarArticles {...{ rootPath: ["1"] }} />;
 const FavouriteArticles = () => (
@@ -25,12 +26,13 @@ const initialLayout = { width: Dimensions.get("window").width };
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: "#FFC200" }}
+    indicatorStyle={{ backgroundColor: tabActiveColor }}
     style={{
       backgroundColor: "white",
       height: TabHeight,
+      paddingTop: 2,
     }}
-    activeColor={"#FFC200"}
+    activeColor={tabActiveColor}
     inactiveColor={"rgba(0, 0, 0, 0.6)"}
     tabStyle={{ minHeight: TabHeight, paddingTop: 0, paddingBottom: 0 }}
   />
@@ -78,11 +80,8 @@ const Sidebar = (props: any) => {
         initialLayout={initialLayout}
         lazy={true}
         swipeEnabled={false}
-        style={{ maxHeight: TabHeight }}
         renderTabBar={renderTabBar}
       />
-      <DrawerItemList {...props} />
-      <DrawerItem label="Help" onPress={() => null} />
     </DrawerContentScrollView>
   );
 };
