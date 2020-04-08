@@ -3,5 +3,5 @@ var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cook
     return cooked;
 };
 import gql from "graphql-tag";
-export default gql(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  mutation UpdateArticle($id: ID, $title: String, $body: String) {\n    updateArticle(articleInput: { id: $id, title: $title, body: $body }) {\n      updatedAt\n    }\n  }\n"], ["\n  mutation UpdateArticle($id: ID, $title: String, $body: String) {\n    updateArticle(articleInput: { id: $id, title: $title, body: $body }) {\n      updatedAt\n    }\n  }\n"])));
+export default gql(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  mutation UpdateArticle($id: ID, $title: String, $body: String) {\n    updateArticle(input: { id: $id, title: $title, body: $body }) {\n      updatedAt\n    }\n  }\n"], ["\n  mutation UpdateArticle($id: ID, $title: String, $body: String) {\n    updateArticle(input: { id: $id, title: $title, body: $body }) {\n      updatedAt\n    }\n  }\n"])));
 var templateObject_1;
