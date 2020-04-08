@@ -3,6 +3,7 @@ import HomeScreen from "../screens/Home";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Button } from "react-native-paper";
+import ArticleContent from "../components/ArticleContent";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -17,7 +18,7 @@ export default function AppNavigator() {
 
 const StackNavigator = ({
   navigation,
-  route
+  route,
 }: {
   navigation: any;
   route: any;
@@ -37,7 +38,7 @@ const StackNavigator = ({
           {" "}
         </Button>
       ),
-      headerTitleContainerStyle: { left: 44 }
+      headerTitleContainerStyle: { left: 44 },
     }}
   >
     <Stack.Screen
@@ -45,7 +46,15 @@ const StackNavigator = ({
       component={HomeScreen}
       initialParams={{ ...route.params }}
       options={{
-        title: "Lithium KB App"
+        title: "Lithium KB App",
+      }}
+    />
+    <Stack.Screen
+      name="article"
+      component={ArticleContent}
+      initialParams={{ ...route.params }}
+      options={{
+        title: "Barrio",
       }}
     />
   </Stack.Navigator>

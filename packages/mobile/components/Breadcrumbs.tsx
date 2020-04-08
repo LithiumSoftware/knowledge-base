@@ -11,11 +11,11 @@ const StyledView = styled(View)`
   max-width: 100%;
 `;
 
-const BreadcrumbItem = ({ title, action }: { title: String; action: any }) => (
+const BreadcrumbItem = ({ title, action }: { title: string; action: any }) => (
   <Text onPress={action}>{title}</Text>
 );
 
-const BreadcrumbSeparator = ({ separator }: { separator: String }) => (
+const BreadcrumbSeparator = ({ separator }: { separator: string }) => (
   <Text>{separator}</Text>
 );
 
@@ -29,10 +29,10 @@ const BreadcrumbCollapser = () => (
 
 const Breadcrumbs = ({
   separator,
-  items
+  items,
 }: {
-  separator: String;
-  items: [{ title: String; action: any }];
+  separator: string;
+  items: { title: string; action: any }[];
 }) => {
   let breadcrumbs = items.map(({ title, action }) => (
     <BreadcrumbItem title={title} action={action} />
@@ -47,7 +47,7 @@ const Breadcrumbs = ({
     breadcrumbs = [
       breadcrumbs[0],
       <BreadcrumbCollapser />,
-      breadcrumbs[lastIndex]
+      breadcrumbs[lastIndex],
     ];
   }
 

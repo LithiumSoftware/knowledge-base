@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 
 export default function HomeScreen({
   navigation,
-  route
+  route,
 }: {
   navigation: any;
   route: any;
@@ -19,6 +19,10 @@ export default function HomeScreen({
         depende de ello), cumpla con las mejores prácticas, comentarios
         pertinentes y justificación de decisiones tomadas
       </Text>
+      <Button
+        title="abrir article view"
+        onPress={() => navigation.push("article")}
+      />
     </View>
   );
 }
@@ -33,22 +37,22 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
     alignItems: "center",
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
 
   todoList: {
     flex: 1,
     width: "100%",
-    backgroundColor: "red"
+    backgroundColor: "red",
   },
   todoListG: {
     flex: 1,
     width: "100%",
-    backgroundColor: "#FFC200"
+    backgroundColor: "#FFC200",
   },
   todoListB: {
     flex: 1,
     width: "100%",
-    backgroundColor: "green"
-  }
+    backgroundColor: "green",
+  },
 });

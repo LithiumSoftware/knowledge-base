@@ -25,6 +25,7 @@
   "name": "workspace-library",
   "dependencies": {
     "@types/styled-components": "^5.0.1",
+    "react-native-webview-quilljs": "^2.0.0",
     "styled-components": "^5.0.1"
   }
 }
