@@ -5,26 +5,33 @@ import styled from "styled-components";
 const StyledView = styled(View)`
   flex-direction: row;
   background-color: #fff;
-  align-items: center;
-  justify-content: center;
   min-width: 100%;
   max-width: 100%;
+  padding-top: 9px;
+  padding-left: 19px;
+  font-size: 12px;
+  line-height: 16px;
+`;
+
+const StyledText = styled(Text)`
+  color: #bdbdbd;
+  letter-spacing: 0.4px;
 `;
 
 const BreadcrumbItem = ({ title, action }: { title: string; action: any }) => (
-  <Text onPress={action}>{title}</Text>
+  <StyledText onPress={action}>{title}</StyledText>
 );
 
 const BreadcrumbSeparator = ({ separator }: { separator: string }) => (
-  <Text>{separator}</Text>
+  <StyledText>{separator}</StyledText>
 );
 
 const BreadcrumbCollapser = () => (
-  <Text
+  <StyledText
     onPress={() => console.log("ESTO VA A ABRIR LA NAVEGACIÓN EN UN MODAL")}
   >
     ...
-  </Text>
+  </StyledText>
 );
 
 const Breadcrumbs = ({
@@ -38,7 +45,7 @@ const Breadcrumbs = ({
     <BreadcrumbItem title={title} action={action} />
   ));
 
-  const max = 2;
+  const max = 4;
 
   const totalItems = breadcrumbs.length;
   const lastIndex = totalItems - 1;
@@ -52,7 +59,7 @@ const Breadcrumbs = ({
   }
 
   let i = 1;
-  while (i < breadcrumbs.length - 1) {
+  while (i < breadcrumbs.length) {
     breadcrumbs.splice(i, 0, <BreadcrumbSeparator separator={separator} />);
     i += 2;
   }

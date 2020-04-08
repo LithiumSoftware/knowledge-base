@@ -3,8 +3,8 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useState, useEffect } from "react";
 
 import styled from "styled-components";
-import { ActivityIndicator, Button } from "react-native-paper";
-import { View, Text, SafeAreaView } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
+import { View, Text, SafeAreaView, Button } from "react-native";
 import moment from "moment";
 import Breadcrumbs from "./Breadcrumbs";
 import RichTextEditor from "./RichTextEditor";
@@ -14,6 +14,7 @@ import UPDATE_ARTICLE_MUTATION from "../../kbcore/dist/mutations/UPDATE_ARTICLE_
 
 const StyledSafeAreaView = styled(SafeAreaView)`
   flex: 1;
+  background: #fff;
 `;
 
 //Hardcoded code for demo -------------------------------------------------------------------------
@@ -54,9 +55,22 @@ const hardcodedArticlesWithParents = [
 ];
 //Hardcoded code for demo -------------------------------------------------------------------------
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Text)`
+  width: 335px;
+  height: 42px;
+  left: 20px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+
   display: flex;
-  text-transform: none;
+  align-items: center;
+  text-align: center;
+
+  color: #bdbdbd;
 `;
 
 const TitleText = styled(Text)`
@@ -78,7 +92,7 @@ const TopBar = styled(View)`
   justify-content: space-between;
   padding-left: 255px;
   padding-right: 20px;
-  background-color: #fff;
+  background-color: #fffff;
 `;
 
 const StyledLoadingView = styled(View)`
@@ -239,18 +253,13 @@ const ArticleContent = (
 
   return (
     <StyledSafeAreaView>
-      {/* <TopBar>
-        <Breadcrumbs
-          separator="/"
-          items={articleWithParents?.map((article) => ({
-            title: article.title,
-            action: console.log(article.title),
-          }))}
-        />
-        {!lastModificationTime.includes("Invalid") && (
-          <StyledButton>Last modified {lastModificationTime}</StyledButton>
-        )}
-      </TopBar> */}
+      <Breadcrumbs
+        separator=" / "
+        items={articleWithParents?.map((article) => ({
+          title: article.title,
+          action: console.log(article.title),
+        }))}
+      />
       <TitleText>
         {articleWithParents[articleWithParents.length - 1]?.title}
       </TitleText>
@@ -258,6 +267,9 @@ const ArticleContent = (
         content={articleWithParents[articleWithParents.length - 1]?.content}
         onSave={onSave}
       />
+      {!lastModificationTime.includes("Invalid") && (
+        <StyledButton>Last modified {lastModificationTime}</StyledButton>
+      )}
     </StyledSafeAreaView>
   );
 };
