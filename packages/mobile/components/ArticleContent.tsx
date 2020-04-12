@@ -1,16 +1,11 @@
 import * as React from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useState, useEffect } from "react";
 
 import styled from "styled-components";
-import { ActivityIndicator } from "react-native-paper";
 import { View, Text, SafeAreaView, Button } from "react-native";
 import moment from "moment";
 import Breadcrumbs from "./Breadcrumbs";
-import RichTextEditor from "./RichTextEditor";
-
-import ARTICLES_QUERY from "../../kbcore/dist/queries/ARTICLES_QUERY";
-import UPDATE_ARTICLE_MUTATION from "../../kbcore/dist/mutations/UPDATE_ARTICLE_MUTATION";
+import ArticleEditor from "./ArticleEditor";
 
 const StyledSafeAreaView = styled(SafeAreaView)`
   flex: 1;
@@ -28,7 +23,7 @@ const hardcodedArticlesWithParents = [
     parentId: null,
     authorId: 1,
     createdAt: Date.now(),
-    updatedAt: Date.now(),
+    updatedAt: Date.now()
   },
   {
     id: 3,
@@ -39,7 +34,7 @@ const hardcodedArticlesWithParents = [
     parentId: null,
     authorId: 1,
     createdAt: Date.now(),
-    updatedAt: Date.now(),
+    updatedAt: Date.now()
   },
   {
     id: 4,
@@ -50,8 +45,8 @@ const hardcodedArticlesWithParents = [
     parentId: null,
     authorId: 1,
     createdAt: Date.now(),
-    updatedAt: Date.now(),
-  },
+    updatedAt: Date.now()
+  }
 ];
 //Hardcoded code for demo -------------------------------------------------------------------------
 
@@ -229,7 +224,7 @@ const ArticleContent = (
     };
   }, [
     updatedTime,
-    articleWithParents[articleWithParents.length - 1]?.updatedAt,
+    articleWithParents[articleWithParents.length - 1]?.updatedAt
   ]);
 
   const onSave = (newContent: string) => {
@@ -247,15 +242,15 @@ const ArticleContent = (
     <StyledSafeAreaView>
       <Breadcrumbs
         separator="/"
-        items={articleWithParents?.map((article) => ({
-          title: article.title,
+        items={articleWithParents?.map(article => ({
+          title: article.title
         }))}
       />
       <TitleText>
         {/* {articleWithParents[articleWithParents.length - 1]?.title} */}
         Introduccion a React Native
       </TitleText>
-      <RichTextEditor
+      <ArticleEditor
         content={articleWithParents[articleWithParents.length - 1]?.content}
         onSave={onSave}
       />

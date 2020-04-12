@@ -35,16 +35,15 @@ const BreadcrumbSeparator = ({ separator }: { separator: string }) => (
 
 const BreadcrumbCollapser = () => <StyledText>...</StyledText>;
 
-const Breadcrumbs = ({
-  separator,
-  items,
-}: {
+const max = 4;
+
+interface Props {
   separator: string;
   items: { title: string }[];
-}) => {
-  let breadcrumbs = items.map(({ title }) => <BreadcrumbItem title={title} />);
+}
 
-  const max = 4;
+const Breadcrumbs = ({ separator, items }: Props) => {
+  let breadcrumbs = items.map(({ title }) => <BreadcrumbItem title={title} />);
 
   const totalItems = breadcrumbs.length;
   const lastIndex = totalItems - 1;
@@ -53,7 +52,7 @@ const Breadcrumbs = ({
     breadcrumbs = [
       breadcrumbs[0],
       <BreadcrumbCollapser />,
-      breadcrumbs[lastIndex],
+      breadcrumbs[lastIndex]
     ];
   }
 

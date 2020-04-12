@@ -14,13 +14,12 @@ const StyledView = styled(View)`
   margin-bottom: 15px;
 `;
 
-export default function RichTextEditor({
-  content,
-  onSave,
-}: {
-  content: String;
-  onSave: any;
-}) {
+interface Props {
+  content: string;
+  onSave: Function;
+}
+
+export default function ArticleEditor({ content, onSave }: Props) {
   const [articleContent, setArticleContent] = useState(content);
 
   const onMessageReceived = (message: any) => {
