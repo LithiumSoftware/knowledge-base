@@ -83,10 +83,13 @@ const StyledLoadingView = styled(View)`
   alignitems: center;
 `;
 
-const ArticleContent = (
-  { articleId }: { articleId: number },
-  { route, navigation }: { route: any; navigation: any }
-) => {
+interface Props {
+  route: any;
+  navigation: any;
+  articleId: number;
+}
+
+const ArticleContent = ({ route, navigation, articleId }: Props) => {
   // const articleWithParents = useQuery(ARTICLES_QUERY, {
   //   variables: { id: articleId },
   // });
