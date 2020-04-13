@@ -1,9 +1,11 @@
 import { useMutation } from "@apollo/react-hooks";
-import { Field , Formik } from 'formik';
-import * as React from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import * as Yup from "yup";
+import { Field, Formik } from 'formik';
 import gql from "graphql-tag";
+import * as React from "react";
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { TextInput } from "react-native-paper";
+import styled from 'styled-components/native';
+import * as Yup from "yup";
 // import {LOG_IN_MUTATION} from "@workspace-library/core";
 
 const LOG_IN_MUTATION = gql`
@@ -48,14 +50,14 @@ export default function SignUp({ navigation }: { navigation: any }) {
     };
 
     return (
-        <View style={styles.container}>
-            <View>
+        <Container>
+            <Header>
                 <Image resizeMode={'cover'}
                     source={require('../assets/logo-lithium.png')}
                 />
-                <Text style={styles.welcomeText} >{'Welcome to Lithium KB'}</Text>
-            </View>
-            <Text style={styles.title}>Login</Text>
+                <WelcomeText>{'Welcome to Lithium KB'}</WelcomeText>
+            </Header>
+            <Title>Login</Title>
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={LoginSchema}
@@ -66,131 +68,137 @@ export default function SignUp({ navigation }: { navigation: any }) {
                         <React.Fragment>
                             {errors?.server &&
                                 <Text style={{ fontSize: 15, color: 'red' }}>{errors.server}</Text>
-                            }   
+                            }
 
                             {touched.email && errors?.email?.length &&
                                 <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
                             }
-                            <View style={styles.inputView} > 
-                       
-                            <Field
-                                id="email"
-                                name="email"
-                                type="email"
-                                component={TextInput}
-                                style={styles.inputText}
-                                value={email}
-                                placeholder="Email..."
-                                placeholderTextColor="#003f5c"
-                                onChangeText={handleChange('email')}
-                                onBlur={handleBlur('email')}
-                            />
-                             </View> 
-                            
+                            <Input>
+
+                                <Field
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    component={TextInputCust}
+                                    value={email}
+                                    placeholder="Email..."
+                                    placeholderTextColor="#003f5c"
+                                    onChangeText={handleChange('email')}
+                                    error={touched["email"] && errors["email"]?.length > 0}
+                                    onBlur={handleBlur('email')}
+                                />
+                            </Input>
+
                             {touched.password && errors?.password?.length &&
                                 <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
                             }
-                             <View style={styles.inputView} > 
+                            <Input >
 
-                            <Field
-                                id="password"
-                                name="password"
-                                type="password"
-                                component={TextInput}
-                                value={password}
-                                secureTextEntry
-                                style={styles.inputText}
-                                placeholder="Password..."
-                                placeholderTextColor="#003f5c"
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                            />
-                             </View> 
+                                <Field
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    component={TextInputCust}
+                                    value={password}
+                                    secureTextEntry
+                                    placeholder="Password..."
+                                    placeholderTextColor="#003f5c"
+                                    onChangeText={handleChange('password')}
+                                    error={touched["password"] && errors["password"]?.length > 0}
+                                    onBlur={handleBlur('password')}
+                                />
+                            </Input>
 
-                            <Text style={styles.signInText} >{'Forgot de password?'}</Text>
+                            <ForgotText >{'Forgot de password?'}</ForgotText>
 
-                            <TouchableOpacity
-                                style={styles.signUpBtn}
+                            <SignInButton
                                 onPress={handleSubmit}>
-                                <Text style={styles.signInText}>SIGN IN</Text>
-                            </TouchableOpacity>
-                        </React.Fragment> 
-                         
+                                <SignInText>SIGN IN</SignInText>
+                            </SignInButton>
+                        </React.Fragment>
+
                     )}
             </Formik>
-            <View style={styles.singUp}>
+            <SignUpFrame>
                 <Text>{'Do not have an acount?'}</Text>
                 <TouchableOpacity onPress={() => { navigation.navigate("SignUp") }}>
-                    <Text style={styles.signUpText}> SIGN UP</Text>
+                    <SignUpText> SIGN UP</SignUpText>
                 </TouchableOpacity>
-            </View>
+            </SignUpFrame>
 
-        </View>
+        </Container>
     );
 }
 
-function authenticate({ user, password }: { user: string, password: string }) {
+const Header = styled.View`
+  margin-bottom: 25px;
+  `;
 
-}
+const TextInputCust = styled(TextInput)`
+     height: 50px;
+    background-color: #FFFFFF;
+    border: 1px #D3D3D3;
+    border-bottom-width: 0px;
+  `;
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FFFFFF',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        fontWeight: "bold",
-        fontSize: 50,
-        color: "#000000",
-        marginBottom: 40,
-        alignItems: 'flex-start',
-    },
-    inputView: {
-        width: "80%",
-        backgroundColor: "#FFFFFF",
-        // borderRadius: 150,
-        // outline:5,
-        height: 50,
-        marginBottom: 20,
-        justifyContent: "center",
-        padding: 20,
-        borderColor: "#20232a",
-        borderWidth: 1,
-    },
-    inputText: {
-        height: 50,
-        color: "black"
-    },
-    forgot: {
-        color: "white",
-        fontSize: 11
-    },
-    signUpBtn: {
-        width: "80%",
-        backgroundColor: "#ffb900",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 40,
-        marginBottom: 10
-    },
-    welcomeText: {
-        color: "#ffb900"
-    },
-    signUpText: {
-        color: "#ffb900"
-    },
-    signInText: {
-        color: "black"
-    },
-    singUp: {
-        flexDirection: 'row',
-    },
-    logo: {
-        width: 50,
-        height: 50,
-    },
-});
+const Container = styled.View`
+  flex: 1px;
+  background-color: #FFFFFF;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 30px;
+  `;
+
+const Title = styled.Text`
+    font-weight: bold;
+    font-size: 50px;
+    color: #000000;
+    margin-bottom: 40px;
+    align-items: flex-start;
+  `;
+
+const Input = styled.View`
+  width: 80%;
+  background-color: #FFFFFF;
+  height: 55px;
+  justify-content: center;
+`;
+
+const SignInButton = styled.TouchableOpacity`
+    width: 80%;
+    background-color: #ffb900;
+    border-radius: 25px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 10px;
+`;
+
+const SignUpFrame = styled.View`
+    flex-direction: row
+    margin-left: 30px;
+    `;
+
+const LoginText = styled.Text`
+    color: #ffb900
+`;
+
+const SignInText = styled.Text`
+    color: black
+`;
+
+const ForgotText = styled.Text`
+    margin-top: 10px;
+    color: black;
+    font-size: 10px;
+
+`;
+
+const WelcomeText = styled.Text`
+    color: #ffb900
+`;
+
+const SignUpText = styled.Text`
+    color: #ffb900
+`;

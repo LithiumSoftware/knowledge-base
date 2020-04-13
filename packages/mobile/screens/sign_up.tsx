@@ -1,9 +1,11 @@
-import * as React from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
-import { Formik, Field } from 'formik';
-import * as Yup from "yup";
 import { useMutation } from "@apollo/react-hooks";
+import { Field, Formik } from 'formik';
 import gql from "graphql-tag";
+import * as React from "react";
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import styled from 'styled-components/native';
+import * as Yup from "yup";
+import { TextInput } from "react-native-paper";
 
 // import {CREATE_USER_MUTATION} from "@workspace-library/core";
 
@@ -47,7 +49,7 @@ const SignUp = ({ navigation }: any) => {
           }
         }) => {
           if (id) {
-            navigation.navigate("SignIn");
+            navigation.navigate("HomeScreen");
           }
           
         }
@@ -61,14 +63,14 @@ const SignUp = ({ navigation }: any) => {
 
 
   return (
-    <View style={styles.container}>
-      <View>
+    <Container>
+      <Header>
         <Image resizeMode={'cover'}
           source={require('../assets/logo-lithium.png')}
         />
-        <Text style={styles.loginText} >{'Welcome to Lithium KB'}</Text>
-      </View>
-      <Text style={styles.title}>Sign up</Text>
+        <WelcomeText>{'Welcome to Lithium KB'}</WelcomeText>
+      </Header>
+      <Title>{'Sign up'}</Title>
       <Formik
         initialValues={{ username: '', email: '', password: '', confirmation: '' }}
         validationSchema={signupSchema}
@@ -78,147 +80,241 @@ const SignUp = ({ navigation }: any) => {
 
             {errors?.server &&
               <Text style={{ fontSize: 15, color: 'red' }}>{errors.server}</Text>
-            }   
+            } 
 
+            {/* <HelperText
+              style={{ height: 25}}
+              type="error"
+              visible={touched["username"] && errors["username"]}
+            >
+              {errors.username}
+
+            </HelperText>   */}
             {touched.username && errors?.username?.length &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
             }
-            <View style={styles.inputView} >
+            <Input>
               <Field
-                component={TextInput}
-                style={styles.inputText}
+                component={TextInputCust}
                 value={username}
                 placeholder="Name..."
                 placeholderTextColor="#003f5c"
+                error={touched["username"] && errors["username"]?.length > 0}
                 onBlur={handleBlur('username')}
                 onChangeText={handleChange('username')} />
-            </View>
+                
+            </Input>
+
+            {/* <HelperText
+                style={{ height: 25}}
+                type="error"
+                visible={touched["email"] && errors["email"]}
+              >
+                {errors.email}
+
+              </HelperText> */}
 
             {touched.email && errors?.email?.length &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
             }
-            <View style={styles.inputView} >
+            <Input>
               <Field
-                component={TextInput}
-                style={styles.inputText}
+                component={TextInputCust}
                 value={email}
                 placeholder="Email..."
                 placeholderTextColor="#003f5c"
-                // error={touched["email"] && errors?["email"]?.length > 0 : ''}
-                // helperText={touched["email"] && errors["email"]}
+                error={touched["email"] && errors["email"]?.length > 0}
                 onBlur={handleBlur('email')}
                 onChangeText={handleChange('email')} />
-            </View>
+            </Input>
 
+            {/* <HelperText
+                style={{ height: 25}}
+                type="error"
+                visible={touched["password"] && errors["password"]}
+              >
+                {errors.password}
+
+              </HelperText> */}
             {touched.password && errors?.password?.length &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
             }
-            <View style={styles.inputView} >
+            <Input>
               <Field
-                component={TextInput}
+                component={TextInputCust}
                 value={password}
                 secureTextEntry
-                style={styles.inputText}
                 placeholder="Password..."
                 placeholderTextColor="#003f5c"
-                // error={touched["password"] && errors?["password"]?.length > 0 : ''}
-                // helperText={touched["password"] && errors["password"]}
+                error={touched["password"] && errors["password"]?.length > 0 }
                 onBlur={handleBlur('password')}
                 onChangeText={handleChange('password')} />
-            </View>
+            </Input>
 
+            {/* <HelperText
+              style={{ height: 25}}
+              type="error"
+              visible={touched["confirmation"] && errors["confirmation"]}
+            >
+              {errors.confirmation}
+
+            </HelperText> */}
             {touched.confirmation && errors?.confirmation?.length &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.confirmation}</Text>
             }
-            <View style={styles.inputView} >
+            <Input>
               <Field
-                component={TextInput}
+                component={TextInputCust}
                 value={confirmation}
                 secureTextEntry
-                style={styles.inputText}
                 placeholder="Confirmation..."
                 placeholderTextColor="#003f5c"
-                // error={touched["confirmation"] && errors?["confirmation"]?.length > 0 : ''}
-                // helperText={touched["confirmation"] && errors["confirmation"]}
+                error={touched["confirmation"] && errors["confirmation"]?.length > 0}
                 onBlur={handleBlur('confirmation')}
                 onChangeText={handleChange('confirmation')} />
-            </View>
+            </Input>
 
-            <TouchableOpacity style={styles.signUpBtn}
+            <SignUpButton
               onPress={handleSubmit}>
-              <Text style={styles.signUpText}>SIGN UP</Text>
-            </TouchableOpacity>
+              <SignUpText>SIGN UP</SignUpText>
+            </SignUpButton>
           </React.Fragment>
         )}
       </Formik>
-      <View style={styles.login}>
+      <SignInFrame>
         <Text>{'Already have an acount? '}</Text>
 
         <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
-          <Text style={styles.loginText}> LOGIN</Text>
+          <LoginText> LOGIN</LoginText>
         </TouchableOpacity>
-      </View>
-    </View>
+      </SignInFrame>
+    </Container>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 50,
-    color: "#000000",
-    marginBottom: 40,
-    alignItems: 'flex-start',
-  },
-  inputView: {
-    width: "80%",
-    backgroundColor: "#FFFFFF",
-    // borderRadius: 150,
-    // outline:5,
-    height: 50,
-    marginBottom: 20,
-    justifyContent: "center",
-    padding: 20,
-    borderColor: "#20232a",
-    borderWidth: 1,
-  },
-  inputText: {
-    height: 50,
-    color: "black"
-  },
-  forgot: {
-    color: "white",
-    fontSize: 11
-  },
-  signUpBtn: {
-    width: "80%",
-    backgroundColor: "#ffb900",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    marginBottom: 10
-  },
-  loginText: {
-    color: "#ffb900"
-  },
-  signUpText: {
-    color: "black"
-  },
-  login: {
-    flexDirection: 'row',
-  },
-  logo: {
-    width: 50,
-    height: 50,
-  },
-});
+const Header = styled.View`
+  margin-bottom: 25px;
+  `;
+ 
+const TextInputCust = styled(TextInput)`
+  height: 50px;
+  background-color: #FFFFFF;
+  border: 1px #D3D3D3;
+  border-bottom-width: 0px;
+  `;
+
+const Container = styled.View`
+  flex: 1px;
+  background-color: #FFFFFF;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 30px;
+  `;
+
+  const Title = styled.Text`
+    font-weight: bold;
+    font-size: 50px;
+    color: #000000;
+    margin-bottom: 40px;
+    align-items: flex-start;
+  `;
+
+  const Input = styled.View`
+    width: 80%;
+    background-color: #FFFFFF;
+    height: 55px;
+    justify-content: center;
+  `;
+
+  const SignUpButton = styled.TouchableOpacity`
+    width: 80%;
+    background-color: #ffb900;
+    border-radius: 25px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    `;
+
+const SignInFrame = styled.View`
+flex-direction: row;
+margin-left: 40px;
+`;
+
+const LoginText = styled.Text`
+    color: #ffb900;
+`;
+
+const SignUpText = styled.Text`
+    color: black;
+`;
+
+const LoginQuestion = styled.Text`
+    flex-direction: row;
+`;
+
+const WelcomeText = styled.Text`
+    color: #ffb900;
+`;
+
+const SignInText = styled.Text`
+    color: #ffb900;
+`;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#FFFFFF',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   title: {
+//     fontWeight: "bold",
+//     fontSize: 50,
+//     color: "#000000",
+//     marginBottom: 40,
+//     alignItems: 'flex-start',
+//   },
+//   inputView: {
+//     width: "80%",
+//     backgroundColor: "#FFFFFF",
+//     // borderRadius: 150,
+//     // outline:5,
+//     height: 50,
+//     marginBottom: 20,
+//     justifyContent: "center",
+//     padding: 20,
+//     borderColor: "#20232a",
+//     borderWidth: 1,
+//   },
+//   inputText: {
+//     height: 50,
+//     color: "black"
+//   },
+//   forgot: {
+//     color: "white",
+//     fontSize: 11
+//   },
+//   signUpBtn: {
+//     width: "80%",
+//     backgroundColor: "#ffb900",
+//     borderRadius: 25,
+//     height: 50,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     marginTop: 40,
+//     marginBottom: 10
+//   },
+//   loginText: {
+//     color: "#ffb900"
+//   },
+//   signUpText: {
+//     color: "black"
+//   },
+//   login: {
+//     flexDirection: 'row',
+//   },
+// });
 
 export default SignUp;
