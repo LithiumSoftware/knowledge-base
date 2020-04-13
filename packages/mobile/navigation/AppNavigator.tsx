@@ -1,6 +1,6 @@
 import React from "react";
 import HomeScreen from "../screens/Home";
-import ArticleScreen from "mobile/screens/Article";
+import ArticleScreen from "../screens/Article";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { IconButton } from "react-native-paper";
