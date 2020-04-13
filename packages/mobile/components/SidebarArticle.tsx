@@ -17,6 +17,7 @@ interface Props {
   selected?: boolean;
   hardCodedArticle: Article | null;
   hardCodedChildren: (Article | null)[][];
+  navigation: any;
 }
 
 const SidebarArticle = ({
@@ -29,6 +30,7 @@ const SidebarArticle = ({
   selected,
   hardCodedArticle,
   hardCodedChildren,
+  navigation,
 }: Props) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [isFavourite, setFavourite] = useState<boolean | null>(
@@ -76,7 +78,7 @@ const SidebarArticle = ({
       <List.Item
         style={{ paddingLeft: hierarchy * 4 }}
         title={article?.title}
-        onPress={() => console.log(article?.title)}
+        onPress={() => navigation.push("article", { id: article?.id })}
         left={(props) => (
           <IconButton
             {...props}
@@ -119,6 +121,7 @@ const SidebarArticle = ({
             //selected={selected}
             hardCodedArticle={subArticle}
             hardCodedChildren={hardCodedChildren}
+            navigation={navigation}
           />
         ))}
       </Collapsible>

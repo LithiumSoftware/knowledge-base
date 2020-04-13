@@ -16,11 +16,6 @@ import SidebarArticles from "./SidebarArticles";
 const TabHeight = 42;
 const tabActiveColor = "#E09503";
 
-const AllArticles = () => <SidebarArticles {...{ rootPath: ["1"] }} />;
-const FavouriteArticles = () => (
-  <SidebarArticles {...{ favourites: true, rootPath: ["1"] }} />
-);
-
 const initialLayout = { width: Dimensions.get("window").width };
 
 const renderTabBar = (props: any) => (
@@ -45,10 +40,26 @@ const Sidebar = (props: any) => {
     { key: "favourites", title: "Favourites" },
   ]);
 
-  const renderScene = SceneMap({
-    all: AllArticles,
-    favourites: FavouriteArticles,
-  });
+  const renderScene = ({ route }: { route: any }) => {
+    switch (route.key) {
+      case "all":
+        return (
+          <SidebarArticles
+            {...{ navigation: props.navigation, rootPath: ["1"] }}
+          />
+        );
+      case "favourites":
+        return (
+          <SidebarArticles
+            {...{
+              favourites: true,
+              rootPath: ["1"],
+              navigation: props.navigation,
+            }}
+          />
+        );
+    }
+  };
 
   return (
     <DrawerContentScrollView {...props}>

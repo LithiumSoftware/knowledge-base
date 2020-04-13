@@ -72,9 +72,15 @@ interface Props {
   favourites?: boolean;
   rootPath: string[];
   selected?: Object;
+  navigation?: any;
 }
 
-const SidebarArticles = ({ favourites, rootPath, selected }: Props) => {
+const SidebarArticles = ({
+  favourites,
+  rootPath,
+  selected,
+  navigation,
+}: Props) => {
   /*const data = useArticlesQuery({
     fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
@@ -100,6 +106,7 @@ const SidebarArticles = ({ favourites, rootPath, selected }: Props) => {
                 }
                 hardCodedArticle={articles[key]}
                 hardCodedChildren={hardCodedArticleChildren}
+                navigation={navigation}
                 //mainRefetch={favourites && refetch}
                 //reload={reload}
                 //selected={selected}
