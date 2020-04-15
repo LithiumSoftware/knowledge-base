@@ -6,7 +6,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { TextInput } from "react-native-paper";
 import styled from 'styled-components/native';
 import * as Yup from "yup";
-import LOG_IN_MUTATION from '../local_core/mutations/LOG_IN_MUTATION';
+import {useLoginMutation} from '../local_core/generated/graphql';
 
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -15,9 +15,15 @@ const LoginSchema = Yup.object().shape({
     password: Yup.string().required("Required")
 });
 
+// const [loginMutation, { data, loading, error }] = useLoginMutation({
+//     *   variables: {
+//     *      identifier: // value for 'identifier'
+//     *      password: // value for 'password'
+//     *   },
+//     * });
 
 export default function SignUp({ navigation }: { navigation: any }) {
-    const [logInUser, { data }] = useMutation(LOG_IN_MUTATION);
+    const [logInUser, { data }] = useLoginMutation();
 
     const submition = (values: any, { setErrors }: any) => {
         logInUser({
@@ -28,11 +34,11 @@ export default function SignUp({ navigation }: { navigation: any }) {
         })
             .then(
                 ({
-                    data: {
-                        loggedUser: { id }
-                    }
+                    data
                 }) => {
-                    navigation.navigate("HomeScreen")
+                    if (data?.loggedUser?.id) {
+                        navigation.navigate("HomeScreen");
+                    }
                 }
             )
             .catch(({ Errors, graphQLErrors }) => {

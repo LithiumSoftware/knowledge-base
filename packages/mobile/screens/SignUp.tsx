@@ -6,7 +6,7 @@ import { Image, Text, TouchableOpacity, Alert} from 'react-native';
 import styled from 'styled-components/native';
 import * as Yup from "yup";
 import { TextInput } from "react-native-paper";
-import CREATE_USER_MUTATION from '../local_core/mutations/CREATE_USER_MUTATION';
+import {useSignupMutation} from '../local_core/generated/graphql';
 
 const signupSchema = Yup.object().shape({
   username: Yup.string()
@@ -37,7 +37,7 @@ function alert(nombre : string)  {Alert.alert(
 )};
 
 const SignUp = ({ navigation }: any) => {
-  const [signUpUser, { data }] = useMutation(CREATE_USER_MUTATION);
+  const [signUpUser, { data }] = useSignupMutation();
 
   const submition = (values: any, { setErrors }: any) => {
 
@@ -50,12 +50,10 @@ const SignUp = ({ navigation }: any) => {
     })
       .then(
         ({
-          data: {
-            signedUser: { id }
-          }
+        data
         }) => {
-          if (id && id > 0) {
-            navigation.navigate("HomeScreen");
+          if (data?.signedUser?.id) {
+              navigation.navigate("HomeScreen");
           }
         }
       )
