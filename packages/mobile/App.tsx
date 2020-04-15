@@ -5,10 +5,11 @@ import {
   Provider as PaperProvider,
   Theme,
 } from "react-native-paper";
-import { ApolloClient, ApolloClientOptions } from "apollo-client";
-import { ApolloProvider } from "@apollo/react-hooks";
-import { InMemoryCache } from "apollo-cache-inmemory";
+
+import { ApolloProvider } from "react-apollo";
+import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
 import AppNavigator from "./navigation/AppNavigator";
 
@@ -22,22 +23,24 @@ const theme: Theme = {
   },
 };
 
-const client: ApolloClient<{}> = new ApolloClient({
-  ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
-  link: new HttpLink({
-    uri: "http://localhost:3000/api/graphql", // Server URL (must be absolute)
-    credentials: "same-origin", // Additional fetch() options like `credentials` or `headers`
-    fetch,
-  }),
-  cache: new InMemoryCache(),
+const link = new HttpLink({
+  uri: "http://192.168.1.2:3000/api/graphql", // Server URL (must be absolute)
+});
+const cache = new InMemoryCache();
+
+const client = new ApolloClient({
+  link: link,
+  cache: cache,
 });
 
-export default () => (
-  <ApolloProvider client={client}>
-    <PaperProvider theme={theme}>
+const MyApp = () => (
+  <PaperProvider theme={theme}>
+    <ApolloProvider client={client}>
       <NavigationContainer>
         <AppNavigator />
       </NavigationContainer>
-    </PaperProvider>
-  </ApolloProvider>
+    </ApolloProvider>
+  </PaperProvider>
 );
+
+export default MyApp;
