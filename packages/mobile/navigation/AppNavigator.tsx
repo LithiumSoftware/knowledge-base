@@ -3,23 +3,21 @@ import HomeScreen from "../screens/Home";
 import ArticleScreen from "../screens/Article";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-import { IconButton } from "react-native-paper";
 import { View } from "react-native";
+import { IconButton } from "react-native-paper";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-export default function AppNavigator() {
-  return (
-    <Drawer.Navigator drawerType="front">
-      <Drawer.Screen name="Welcome" component={StackNavigator} />
-    </Drawer.Navigator>
-  );
-}
+const AppNavigator = () => (
+  <Drawer.Navigator drawerType="front">
+    <Drawer.Screen name="Welcome" component={StackNavigator} />
+  </Drawer.Navigator>
+);
 
 const StackNavigator = ({
   navigation,
-  route
+  route,
 }: {
   navigation: any;
   route: any;
@@ -37,9 +35,7 @@ const StackNavigator = ({
           onPress={() => navigation.toggleDrawer()}
         />
       ),
-      headerTitleContainerStyle: {
-        left: 4
-      }
+      headerTitleContainerStyle: { left: 44 },
     }}
   >
     <Stack.Screen
@@ -47,7 +43,7 @@ const StackNavigator = ({
       component={HomeScreen}
       initialParams={{ ...route.params }}
       options={{
-        title: "Lithium KB App"
+        title: "Lithium KB App",
       }}
     />
     <Stack.Screen
@@ -79,8 +75,10 @@ const StackNavigator = ({
               onPress={() => console.log("search")}
             />
           </View>
-        )
+        ),
       }}
     />
   </Stack.Navigator>
 );
+
+export default AppNavigator;
