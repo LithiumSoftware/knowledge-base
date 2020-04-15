@@ -1,12 +1,10 @@
-import { useMutation } from "@apollo/react-hooks";
 import { Field, Formik } from 'formik';
-import gql from "graphql-tag";
 import * as React from "react";
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { TextInput } from "react-native-paper";
 import styled from 'styled-components/native';
 import * as Yup from "yup";
-import {useLoginMutation} from '../local_core/generated/graphql';
+import { useLoginMutation } from '../local_core/generated/graphql';
 
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -14,13 +12,6 @@ const LoginSchema = Yup.object().shape({
         .required("Please enter an email"),
     password: Yup.string().required("Required")
 });
-
-// const [loginMutation, { data, loading, error }] = useLoginMutation({
-//     *   variables: {
-//     *      identifier: // value for 'identifier'
-//     *      password: // value for 'password'
-//     *   },
-//     * });
 
 export default function SignUp({ navigation }: { navigation: any }) {
     const [logInUser, { data }] = useLoginMutation();
@@ -66,10 +57,9 @@ export default function SignUp({ navigation }: { navigation: any }) {
                         <React.Fragment>
 
                             {touched.email && errors?.email?.length &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+                                <ErrorTextFields>{errors.email}</ErrorTextFields>
                             }
                             <Input>
-
                                 <Field
                                     id="email"
                                     name="email"
@@ -85,7 +75,7 @@ export default function SignUp({ navigation }: { navigation: any }) {
                             </Input>
 
                             {touched.password && errors?.password?.length &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                                <ErrorTextFields>{errors.password}</ErrorTextFields>
                             }
                             <Input >
 
@@ -108,11 +98,11 @@ export default function SignUp({ navigation }: { navigation: any }) {
 
                             {errors?.server &&
                                 <ErrorText>{errors.server}</ErrorText>
-                            } 
-                            <SignInButton
+                            }
+                            <LoginButton
                                 onPress={handleSubmit}>
-                                <SignInText>SIGN IN</SignInText>
-                            </SignInButton>
+                                <LoginText>LOGIN</LoginText>
+                            </LoginButton>
                         </React.Fragment>
 
 
@@ -163,7 +153,7 @@ const Input = styled.View`
   justify-content: center;
 `;
 
-const SignInButton = styled.TouchableOpacity`
+const LoginButton = styled.TouchableOpacity`
     width: 80%;
     background-color: #ffb900;
     border-radius: 25px;
@@ -180,10 +170,10 @@ const SignUpFrame = styled.View`
     `;
 
 const LoginText = styled.Text`
-    color: #ffb900
+    color: black
 `;
 
-const SignInText = styled.Text`
+const Text = styled.Text`
     color: black
 `;
 
@@ -206,4 +196,9 @@ const ErrorText = styled.Text`
     color: red;
     fontSize: 15px;
     margin-top: 20px;
+`;
+
+const ErrorTextFields = styled.Text`
+    color: red;
+    fontSize: 10px;
 `;

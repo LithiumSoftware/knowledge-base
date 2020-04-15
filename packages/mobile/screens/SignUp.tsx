@@ -1,12 +1,10 @@
-import { useMutation } from "@apollo/react-hooks";
 import { Field, Formik } from 'formik';
-import gql from "graphql-tag";
 import * as React from "react";
-import { Image, Text, TouchableOpacity, Alert} from 'react-native';
+import { Alert, Image, Text, TouchableOpacity } from 'react-native';
+import { TextInput } from "react-native-paper";
 import styled from 'styled-components/native';
 import * as Yup from "yup";
-import { TextInput } from "react-native-paper";
-import {useSignupMutation} from '../local_core/generated/graphql';
+import { useSignupMutation } from '../local_core/generated/graphql';
 
 const signupSchema = Yup.object().shape({
   username: Yup.string()
@@ -22,20 +20,6 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password does not match")
 });
 
-function alert(nombre : string)  {Alert.alert(
-  nombre,
-  "My Alert Msg",
-  [
-    {
-      text: "Cancel",
-      onPress: () => console.log("Cancel Pressed"),
-      style: "cancel"
-    },
-    { text: "OK", onPress: () => console.log("OK Pressed") }
-  ],
-  { cancelable: false }
-)};
-
 const SignUp = ({ navigation }: any) => {
   const [signUpUser, { data }] = useSignupMutation();
 
@@ -50,16 +34,16 @@ const SignUp = ({ navigation }: any) => {
     })
       .then(
         ({
-        data
+          data
         }) => {
           if (data?.signedUser?.id) {
-              navigation.navigate("HomeScreen");
+            navigation.navigate("HomeScreen");
           }
         }
       )
-      .catch(({ Errors,graphQLErrors }) => {
+      .catch(({ Errors, graphQLErrors }) => {
         const error = graphQLErrors?.map((err: any) => err?.message);
-          setErrors({ server: error[0] });
+        setErrors({ server: error[0] });
       });
   };
 
@@ -83,7 +67,7 @@ const SignUp = ({ navigation }: any) => {
           <React.Fragment>
 
             {touched.username && errors?.username?.length &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
+              <ErrorTextFields>{errors.username}</ErrorTextFields>
             }
             <Input>
               <Field
@@ -94,11 +78,11 @@ const SignUp = ({ navigation }: any) => {
                 error={touched["username"] && errors["username"]?.length > 0}
                 onBlur={handleBlur('username')}
                 onChangeText={handleChange('username')} />
-                
+
             </Input>
 
             {touched.email && errors?.email?.length &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+              <ErrorTextFields>{errors.email}</ErrorTextFields>
             }
             <Input>
               <Field
@@ -112,7 +96,7 @@ const SignUp = ({ navigation }: any) => {
             </Input>
 
             {touched.password && errors?.password?.length &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+              <ErrorTextFields>{errors.password}</ErrorTextFields>
             }
             <Input>
               <Field
@@ -121,13 +105,13 @@ const SignUp = ({ navigation }: any) => {
                 secureTextEntry
                 placeholder="Password..."
                 placeholderTextColor="#003f5c"
-                error={touched["password"] && errors["password"]?.length > 0 }
+                error={touched["password"] && errors["password"]?.length > 0}
                 onBlur={handleBlur('password')}
                 onChangeText={handleChange('password')} />
             </Input>
 
             {touched.confirmation && errors?.confirmation?.length &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.confirmation}</Text>
+              <ErrorTextFields>{errors.confirmation}</ErrorTextFields>
             }
             <Input>
               <Field
@@ -144,7 +128,7 @@ const SignUp = ({ navigation }: any) => {
 
             {errors?.server &&
               <ErrorText>{errors.server}</ErrorText>
-            } 
+            }
             <SignUpButton
               onPress={handleSubmit}>
               <SignUpText>SIGN UP</SignUpText>
@@ -152,13 +136,13 @@ const SignUp = ({ navigation }: any) => {
           </React.Fragment>
         )}
       </Formik>
-      <SignInFrame>
-        <Text>{'Already have an acount? '}</Text>
+      <LoginFrame>
+        <LoginQuestion>{'Already have an acount? '}</LoginQuestion>
 
         <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
           <LoginText> LOGIN</LoginText>
         </TouchableOpacity>
-      </SignInFrame>
+      </LoginFrame>
     </Container>
   );
 }
@@ -166,7 +150,7 @@ const SignUp = ({ navigation }: any) => {
 const Header = styled.View`
   margin-bottom: 25px;
   `;
- 
+
 const TextInputCust = styled(TextInput)`
   height: 50px;
   background-color: #FFFFFF;
@@ -182,7 +166,7 @@ const Container = styled.View`
   padding: 30px;
   `;
 
-  const Title = styled.Text`
+const Title = styled.Text`
     font-weight: bold;
     font-size: 50px;
     color: #000000;
@@ -190,14 +174,14 @@ const Container = styled.View`
     align-items: flex-start;
   `;
 
-  const Input = styled.View`
+const Input = styled.View`
     width: 80%;
     background-color: #FFFFFF;
     height: 55px;
     justify-content: center;
   `;
 
-  const SignUpButton = styled.TouchableOpacity`
+const SignUpButton = styled.TouchableOpacity`
     width: 80%;
     background-color: #ffb900;
     border-radius: 25px;
@@ -208,7 +192,7 @@ const Container = styled.View`
     margin-bottom: 10px;
     `;
 
-const SignInFrame = styled.View`
+const LoginFrame = styled.View`
 flex-direction: row;
 margin-left: 40px;
 `;
@@ -237,6 +221,11 @@ const ErrorText = styled.Text`
     color: red;
     fontSize: 15px;
     margin-top: 20px;
+`;
+
+const ErrorTextFields = styled.Text`
+    color: red;
+    fontSize: 10px;
 `;
 
 export default SignUp;
