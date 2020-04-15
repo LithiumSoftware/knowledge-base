@@ -6,15 +6,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { TextInput } from "react-native-paper";
 import styled from 'styled-components/native';
 import * as Yup from "yup";
-// import {LOG_IN_MUTATION} from "@workspace-library/core";
-
-const LOG_IN_MUTATION = gql`
-  mutation login($email: String!, $password: String!) {
-    logInUser(userInput: { email: $email, password: $password }) {
-      id
-    }
-  }
-`;
+import LOG_IN_MUTATION from '../local_core/mutations/LOG_IN_MUTATION';
 
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -30,20 +22,20 @@ export default function SignUp({ navigation }: { navigation: any }) {
     const submition = (values: any, { setErrors }: any) => {
         logInUser({
             variables: {
-                email: values.email,
+                identifier: values.email,
                 password: values.password
             }
         })
             .then(
                 ({
                     data: {
-                        logInUser: { id }
+                        loggedUser: { id }
                     }
                 }) => {
                     navigation.navigate("HomeScreen")
                 }
             )
-            .catch(({ graphQLErrors }) => {
+            .catch(({ Errors, graphQLErrors }) => {
                 const error = graphQLErrors?.map((err: any) => err?.message);
                 setErrors({ server: error[0] });
             });
@@ -66,9 +58,6 @@ export default function SignUp({ navigation }: { navigation: any }) {
                 {({ values: { email, password }, handleChange, handleSubmit, errors, touched, handleBlur, }:
                     { handleSubmit: any, values: any, handleChange: any, errors: any, touched: any, handleBlur: any }) => (
                         <React.Fragment>
-                            {errors?.server &&
-                                <Text style={{ fontSize: 15, color: 'red' }}>{errors.server}</Text>
-                            }
 
                             {touched.email && errors?.email?.length &&
                                 <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
@@ -111,11 +100,15 @@ export default function SignUp({ navigation }: { navigation: any }) {
 
                             <ForgotText >{'Forgot de password?'}</ForgotText>
 
+                            {errors?.server &&
+                                <ErrorText>{errors.server}</ErrorText>
+                            } 
                             <SignInButton
                                 onPress={handleSubmit}>
                                 <SignInText>SIGN IN</SignInText>
                             </SignInButton>
                         </React.Fragment>
+
 
                     )}
             </Formik>
@@ -201,4 +194,10 @@ const WelcomeText = styled.Text`
 
 const SignUpText = styled.Text`
     color: #ffb900
+`;
+
+const ErrorText = styled.Text`
+    color: red;
+    fontSize: 15px;
+    margin-top: 20px;
 `;

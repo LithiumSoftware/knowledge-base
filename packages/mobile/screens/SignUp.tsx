@@ -2,20 +2,11 @@ import { useMutation } from "@apollo/react-hooks";
 import { Field, Formik } from 'formik';
 import gql from "graphql-tag";
 import * as React from "react";
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, Alert} from 'react-native';
 import styled from 'styled-components/native';
 import * as Yup from "yup";
 import { TextInput } from "react-native-paper";
-
-// import {CREATE_USER_MUTATION} from "@workspace-library/core";
-
-const CREATE_USER_MUTATION = gql`
-  mutation signup($username: String, $email: String!, $password: String!) {
-    signUpUser(userInput: { username: $username, email: $email, password: $password }) {
-      id
-    }
-  }
-`;
+import CREATE_USER_MUTATION from '../local_core/mutations/CREATE_USER_MUTATION';
 
 const signupSchema = Yup.object().shape({
   username: Yup.string()
@@ -31,10 +22,25 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password does not match")
 });
 
+function alert(nombre : string)  {Alert.alert(
+  nombre,
+  "My Alert Msg",
+  [
+    {
+      text: "Cancel",
+      onPress: () => console.log("Cancel Pressed"),
+      style: "cancel"
+    },
+    { text: "OK", onPress: () => console.log("OK Pressed") }
+  ],
+  { cancelable: false }
+)};
+
 const SignUp = ({ navigation }: any) => {
   const [signUpUser, { data }] = useMutation(CREATE_USER_MUTATION);
 
   const submition = (values: any, { setErrors }: any) => {
+
     signUpUser({
       variables: {
         username: values.username,
@@ -45,18 +51,17 @@ const SignUp = ({ navigation }: any) => {
       .then(
         ({
           data: {
-            signUpUser: { id }
+            signedUser: { id }
           }
         }) => {
-          if (id) {
+          if (id && id > 0) {
             navigation.navigate("HomeScreen");
           }
-          
         }
       )
       .catch(({ Errors,graphQLErrors }) => {
         const error = graphQLErrors?.map((err: any) => err?.message);
-        setErrors({ server: error[0] });
+          setErrors({ server: error[0] });
       });
   };
 
@@ -75,21 +80,10 @@ const SignUp = ({ navigation }: any) => {
         initialValues={{ username: '', email: '', password: '', confirmation: '' }}
         validationSchema={signupSchema}
         onSubmit={submition}>
+
         {({ values: { username, email, password, confirmation }, handleChange, handleSubmit, errors, touched, handleBlur }: { values: any, handleChange: any, handleSubmit: any, errors: any, touched: any, handleBlur: any }) => (
           <React.Fragment>
 
-            {errors?.server &&
-              <Text style={{ fontSize: 15, color: 'red' }}>{errors.server}</Text>
-            } 
-
-            {/* <HelperText
-              style={{ height: 25}}
-              type="error"
-              visible={touched["username"] && errors["username"]}
-            >
-              {errors.username}
-
-            </HelperText>   */}
             {touched.username && errors?.username?.length &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
             }
@@ -105,15 +99,6 @@ const SignUp = ({ navigation }: any) => {
                 
             </Input>
 
-            {/* <HelperText
-                style={{ height: 25}}
-                type="error"
-                visible={touched["email"] && errors["email"]}
-              >
-                {errors.email}
-
-              </HelperText> */}
-
             {touched.email && errors?.email?.length &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
             }
@@ -128,14 +113,6 @@ const SignUp = ({ navigation }: any) => {
                 onChangeText={handleChange('email')} />
             </Input>
 
-            {/* <HelperText
-                style={{ height: 25}}
-                type="error"
-                visible={touched["password"] && errors["password"]}
-              >
-                {errors.password}
-
-              </HelperText> */}
             {touched.password && errors?.password?.length &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
             }
@@ -151,14 +128,6 @@ const SignUp = ({ navigation }: any) => {
                 onChangeText={handleChange('password')} />
             </Input>
 
-            {/* <HelperText
-              style={{ height: 25}}
-              type="error"
-              visible={touched["confirmation"] && errors["confirmation"]}
-            >
-              {errors.confirmation}
-
-            </HelperText> */}
             {touched.confirmation && errors?.confirmation?.length &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.confirmation}</Text>
             }
@@ -174,6 +143,10 @@ const SignUp = ({ navigation }: any) => {
                 onChangeText={handleChange('confirmation')} />
             </Input>
 
+
+            {errors?.server &&
+              <ErrorText>{errors.server}</ErrorText>
+            } 
             <SignUpButton
               onPress={handleSubmit}>
               <SignUpText>SIGN UP</SignUpText>
@@ -262,59 +235,10 @@ const SignInText = styled.Text`
     color: #ffb900;
 `;
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#FFFFFF',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   title: {
-//     fontWeight: "bold",
-//     fontSize: 50,
-//     color: "#000000",
-//     marginBottom: 40,
-//     alignItems: 'flex-start',
-//   },
-//   inputView: {
-//     width: "80%",
-//     backgroundColor: "#FFFFFF",
-//     // borderRadius: 150,
-//     // outline:5,
-//     height: 50,
-//     marginBottom: 20,
-//     justifyContent: "center",
-//     padding: 20,
-//     borderColor: "#20232a",
-//     borderWidth: 1,
-//   },
-//   inputText: {
-//     height: 50,
-//     color: "black"
-//   },
-//   forgot: {
-//     color: "white",
-//     fontSize: 11
-//   },
-//   signUpBtn: {
-//     width: "80%",
-//     backgroundColor: "#ffb900",
-//     borderRadius: 25,
-//     height: 50,
-//     alignItems: "center",
-//     justifyContent: "center",
-//     marginTop: 40,
-//     marginBottom: 10
-//   },
-//   loginText: {
-//     color: "#ffb900"
-//   },
-//   signUpText: {
-//     color: "black"
-//   },
-//   login: {
-//     flexDirection: 'row',
-//   },
-// });
+const ErrorText = styled.Text`
+    color: red;
+    fontSize: 15px;
+    margin-top: 20px;
+`;
 
 export default SignUp;
