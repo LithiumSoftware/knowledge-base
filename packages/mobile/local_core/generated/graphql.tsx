@@ -9,7 +9,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** Date custom scalar type */
   Date: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -22,7 +24,7 @@ export type Article = {
   parent?: Maybe<Article>;
   children?: Maybe<Array<Maybe<Article>>>;
   rootPath?: Maybe<Array<Maybe<Scalars['String']>>>;
-  favourited?: Maybe<Scalars['Boolean']>;
+  favourited: Scalars['Boolean'];
   createdAt?: Maybe<Scalars['Date']>;
   updatedAt?: Maybe<Scalars['Date']>;
 };
@@ -276,13 +278,14 @@ export type ArticleQuery = (
     & { author?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-    )> }
+    )>, children?: Maybe<Array<Maybe<(
+      { __typename?: 'Article' }
+      & Pick<Article, 'id' | 'title'>
+    )>>> }
   )> }
 );
 
-export type FavouriteArticlesQueryVariables = {
-  id: Scalars['ID'];
-};
+export type FavouriteArticlesQueryVariables = {};
 
 
 export type FavouriteArticlesQuery = (
@@ -531,7 +534,7 @@ export const ArticlesDocument = gql`
  * __useArticlesQuery__
  *
  * To run a query within a React component, call `useArticlesQuery` and pass it any options that fit your needs.
- * When your component renders, `useArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -574,7 +577,7 @@ export const ArticleModificationsDocument = gql`
  * __useArticleModificationsQuery__
  *
  * To run a query within a React component, call `useArticleModificationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useArticleModificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useArticleModificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -606,6 +609,10 @@ export const ArticleDocument = gql`
       id
       username
     }
+    children {
+      id
+      title
+    }
     updatedAt
   }
 }
@@ -615,7 +622,7 @@ export const ArticleDocument = gql`
  * __useArticleQuery__
  *
  * To run a query within a React component, call `useArticleQuery` and pass it any options that fit your needs.
- * When your component renders, `useArticleQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useArticleQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -637,7 +644,7 @@ export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>;
 export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>;
 export type ArticleQueryResult = ApolloReactCommon.QueryResult<ArticleQuery, ArticleQueryVariables>;
 export const FavouriteArticlesDocument = gql`
-    query FavouriteArticles($id: ID!) {
+    query FavouriteArticles {
   me {
     id
     favourites {
@@ -655,7 +662,7 @@ export const FavouriteArticlesDocument = gql`
  * __useFavouriteArticlesQuery__
  *
  * To run a query within a React component, call `useFavouriteArticlesQuery` and pass it any options that fit your needs.
- * When your component renders, `useFavouriteArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFavouriteArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -663,7 +670,6 @@ export const FavouriteArticlesDocument = gql`
  * @example
  * const { data, loading, error } = useFavouriteArticlesQuery({
  *   variables: {
- *      id: // value for 'id'
  *   },
  * });
  */
@@ -694,7 +700,7 @@ export const SidebarArticleDocument = gql`
  * __useSidebarArticleQuery__
  *
  * To run a query within a React component, call `useSidebarArticleQuery` and pass it any options that fit your needs.
- * When your component renders, `useSidebarArticleQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useSidebarArticleQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;

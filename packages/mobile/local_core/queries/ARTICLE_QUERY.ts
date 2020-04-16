@@ -11,6 +11,10 @@ export default gql`
         id
         username
       }
+      children {
+        id
+        title
+      }
       updatedAt
     }
   }

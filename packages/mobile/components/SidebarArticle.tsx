@@ -3,82 +3,55 @@ import {
   useArticleQuery,
   ToggleFavouriteMutation,
   Article,
-} from "@workspace-library/core";
+} from "../local_core/generated/graphql";
 import { List, Divider, IconButton } from "react-native-paper";
 import Collapsible from "react-native-collapsible";
 
 interface Props {
-  addSubArticle?: Function;
   hierarchy: number;
-  id: string | undefined;
-  mainRefetch?: Function;
+  id: string;
   reload?: any;
   rootPath?: string[];
-  selected?: boolean;
-  hardCodedArticle: Article | null;
-  hardCodedChildren: (Article | null)[][];
+  selected: string | null;
   navigation: any;
 }
 
 const SidebarArticle = ({
-  addSubArticle,
   hierarchy,
   id,
-  mainRefetch,
   reload,
   rootPath,
   selected,
-  hardCodedArticle,
-  hardCodedChildren,
   navigation,
 }: Props) => {
   const [collapsed, setCollapsed] = React.useState(false);
-  const [isFavourite, setFavourite] = useState<boolean | null>(
-    Number(id) % 3 === 0
-  );
+  const [isFavourite, setFavourite] = useState<boolean | null>(null);
 
-  /* const { loading, error, data, refetch } = useArticleQuery({
+  const { loading, error, data, refetch } = useArticleQuery({
     variables: { id: id },
     fetchPolicy: "no-cache",
-  }); */
+  });
 
-  /*useEffect(() => {
+  useEffect(() => {
     !!rootPath && !collapsed && setCollapsed(true);
-  }, [rootPath]);*/
+  }, [rootPath]);
 
-  /*useEffect(() => {
+  useEffect(() => {
     reload && refetch();
-  }, [reload]);*/
+  }, [reload]);
 
-  /*
-  const [toggleFavourite] = ToggleFavouriteMutation;
-
-  const toggleFavouriteAction = () => {
-    toggleFavourite({
-      variables: {
-        articleId: article?.id,
-      },
-    })
-      .then(({ data: { isFavourite } }) => setFavourite(isFavourite))
-      .catch((err) => {
-        //TODO: Add error management
-        console.log(`Error Toggle Favourite: ${err}`);
-      });
-  };*/
-
-  // const article = data?.article;
-  const article: Article | null = hardCodedArticle;
-  article && (article.children = hardCodedChildren[Number(id) - 1]);
-
+  const article = data?.article;
   const titleId = `${article?.title}-${article?.id}`;
-  isFavourite === null && article && setFavourite(article.favourited);
 
   return (
     <>
       <List.Item
-        style={{ paddingLeft: hierarchy * 4 }}
+        style={{
+          paddingLeft: hierarchy * 4,
+          backgroundColor: selected === titleId ? "#CCC" : "#FFF",
+        }}
         title={article?.title}
-        onPress={() => navigation.push("article", { id: article?.id })}
+        onPress={() => navigation.navigate("article", { id: article?.id })}
         left={(props) => (
           <IconButton
             {...props}
@@ -103,27 +76,24 @@ const SidebarArticle = ({
         )}
       ></List.Item>
       <Collapsible collapsed={!collapsed}>
-        {article?.children?.map((subArticle: Article | null, index) => (
-          <SidebarArticle
-            //addSubArticle={addSubArticle}
-            hierarchy={hierarchy + 2}
-            id={subArticle?.id}
-            key={index}
-            //mainRefetch={mainRefetch}
-            // rootPath && rootPath.includes(`${title}-${id}`)
-            //reload={reload}
-            rootPath={
-              rootPath &&
-              `${subArticle?.title}-${subArticle?.id}` === rootPath[hierarchy]
-                ? rootPath
-                : undefined
-            }
-            //selected={selected}
-            hardCodedArticle={subArticle}
-            hardCodedChildren={hardCodedChildren}
-            navigation={navigation}
-          />
-        ))}
+        {article?.children?.map(
+          (subArticle: { id: string; title: string }, index) => (
+            <SidebarArticle
+              hierarchy={hierarchy + 2}
+              id={subArticle?.id}
+              key={index}
+              reload={reload}
+              rootPath={
+                rootPath &&
+                `${subArticle?.title}-${subArticle?.id}` === rootPath[hierarchy]
+                  ? rootPath
+                  : undefined
+              }
+              selected={selected}
+              navigation={navigation}
+            />
+          )
+        )}
       </Collapsible>
     </>
   );

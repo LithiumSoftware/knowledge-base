@@ -47,7 +47,9 @@ export const typeDef = `
 
 export const resolvers = {
   Query: {
-    article: (_, { id }, { dataSources: { db } }) => db.article.findByPk(id),
+    article: authenticated((_, { id }, { dataSources: { db } }) =>
+      db.article.findByPk(id)
+    ),
     articles: authenticated((_, args, { dataSources: { db } }) =>
       db.article.findAll()
     ),

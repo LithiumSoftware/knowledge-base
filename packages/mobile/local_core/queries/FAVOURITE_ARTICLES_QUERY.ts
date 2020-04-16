@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query FavouriteArticles($id: ID!) {
+  query FavouriteArticles {
     me {
       id
       favourites {

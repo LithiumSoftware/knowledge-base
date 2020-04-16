@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -17,22 +17,37 @@ import Sidebar from "../components/Sidebar";
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-const AppNavigator = () => (
-  <Drawer.Navigator
-    drawerContent={(props) => <Sidebar {...props} />}
-    drawerType="front"
-    drawerStyle={{ paddingTop: -4 }}
-  >
-    <Drawer.Screen name="Welcome" component={StackNavigator} />
-  </Drawer.Navigator>
-);
+const AppNavigator = () => {
+  const [rootPath, setRootPath] = useState([]);
+  const [selected, setSelected] = useState(null);
+
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => (
+        <Sidebar {...props} rootPath={rootPath} selected={selected} />
+      )}
+      drawerType="front"
+      drawerStyle={{ paddingTop: -4 }}
+    >
+      <Drawer.Screen
+        name="Welcome"
+        component={StackNavigator}
+        initialParams={setRootPath}
+      />
+    </Drawer.Navigator>
+  );
+};
 
 const StackNavigator = ({
   navigation,
   route,
+  setRootPath,
+  setSelected,
 }: {
   navigation: any;
   route: any;
+  setRootPath: Function;
+  setSelected: Function;
 }) => (
   <Stack.Navigator
     initialRouteName="Home"

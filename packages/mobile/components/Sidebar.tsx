@@ -34,8 +34,8 @@ const renderTabBar = (props: any) => (
 );
 
 const Sidebar = (props: any) => {
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     { key: "all", title: "All" },
     { key: "favourites", title: "Favourites" },
   ]);
@@ -45,7 +45,11 @@ const Sidebar = (props: any) => {
       case "all":
         return (
           <SidebarArticles
-            {...{ navigation: props.navigation, rootPath: ["1"] }}
+            {...{
+              navigation: props.navigation,
+              rootPath: props.rootPath,
+              selected: props.selected,
+            }}
           />
         );
       case "favourites":
@@ -53,8 +57,9 @@ const Sidebar = (props: any) => {
           <SidebarArticles
             {...{
               favourites: true,
-              rootPath: ["1"],
+              rootPath: props.rootPath,
               navigation: props.navigation,
+              selected: props.selected,
             }}
           />
         );
