@@ -24,7 +24,10 @@ const SidebarArticles = ({
 }: Props) => {
   const [reload, setReload] = useState<Date | null>(null);
   const { data, refetch, networkStatus } = favourites
-    ? { data: null, refetch: null, networkStatus: null }
+    ? useFavouriteArticlesQuery({
+        fetchPolicy: "no-cache",
+        notifyOnNetworkStatusChange: true,
+      })
     : useArticlesQuery({
         fetchPolicy: "no-cache",
         notifyOnNetworkStatusChange: true,
@@ -34,7 +37,7 @@ const SidebarArticles = ({
     networkStatus === 4 && setReload(new Date());
   }, [networkStatus]);
 
-  const articles = data?.articles;
+  const articles = favourites ? data?.me?.favourites : data?.articles;
 
   return (
     <List.Section>
