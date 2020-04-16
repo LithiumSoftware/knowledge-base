@@ -64,12 +64,12 @@ const SidebarArticle = ({
             <IconButton
               {...props}
               color={isFavourite ? "#FFC200" : "#D6D6D6"}
-              icon={"heart"}
+              icon="heart"
               onPress={() => setFavourite(!isFavourite)}
             />
             <IconButton
               {...props}
-              icon={"plus"}
+              icon="plus"
               onPress={() => console.log("plus")}
             />
           </>

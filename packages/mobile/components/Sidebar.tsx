@@ -7,26 +7,48 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-
 import { Appbar, Avatar, Divider, Drawer } from "react-native-paper";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 
+import styled from "styled-components/native";
+
 import SidebarArticles from "./SidebarArticles";
+import SidebarFooter from "./SidebarFooter";
 
 const TabHeight = 42;
 const tabActiveColor = "#E09503";
 
 const initialLayout = { width: Dimensions.get("window").width };
 
+const StyledTabBar = styled(TabBar)`
+  background-color: white;
+  height: ${TabHeight}px;
+  padding-top: 2px;
+`;
+
+const Header = styled(Appbar.Header)`
+  margin-left: 14px;
+  padding-left: 0px;
+  margin-top: 0px;
+  padding-top: 0px;
+  height: 52px;
+  z-index: 10;
+`;
+
+const StyledImage = styled(Image)`
+  width: 26px;
+  height: 33px;
+`;
+
+const AvatarIcon = styled(Avatar.Icon)`
+  margin-right: 4px;
+  padding: 0px;
+`;
+
 const renderTabBar = (props: any) => (
-  <TabBar
+  <StyledTabBar
     {...props}
     indicatorStyle={{ backgroundColor: tabActiveColor }}
-    style={{
-      backgroundColor: "white",
-      height: TabHeight,
-      paddingTop: 2,
-    }}
     activeColor={tabActiveColor}
     inactiveColor={"rgba(0, 0, 0, 0.6)"}
     tabStyle={{ minHeight: TabHeight, paddingTop: 0, paddingBottom: 0 }}
@@ -67,38 +89,25 @@ const Sidebar = (props: any) => {
   };
 
   return (
-    <DrawerContentScrollView {...props}>
-      <Appbar.Header
-        style={{
-          marginLeft: 14,
-          paddingLeft: 0,
-          marginTop: 0,
-          paddingTop: 0,
-          height: 52,
-          zIndex: 10,
-        }}
-      >
-        <Image
-          source={require("../assets/icono-lithium.png")}
-          style={{ width: 26, height: 33 }}
+    <>
+      <DrawerContentScrollView {...props}>
+        <Header>
+          <StyledImage source={require("../assets/icono-lithium.png")} />
+          <Appbar.Content title="Lithium KB." />
+          <AvatarIcon icon="account-circle" size={52} />
+        </Header>
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={initialLayout}
+          lazy={true}
+          swipeEnabled={false}
+          renderTabBar={renderTabBar}
         />
-        <Appbar.Content title="Lithium KB." />
-        <Avatar.Icon
-          icon="account-circle"
-          style={{ marginRight: 4, padding: 0 }}
-          size={52}
-        />
-      </Appbar.Header>
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={initialLayout}
-        lazy={true}
-        swipeEnabled={false}
-        renderTabBar={renderTabBar}
-      />
-    </DrawerContentScrollView>
+      </DrawerContentScrollView>
+      <SidebarFooter />
+    </>
   );
 };
 

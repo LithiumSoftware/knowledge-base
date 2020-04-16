@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { IconButton } from "react-native-paper";
+import styled from "styled-components/native";
 
 import HomeScreen from "../screens/Home";
 import Sidebar from "../components/Sidebar";
@@ -55,9 +56,8 @@ const StackNavigator = ({
     headerMode="float"
     screenOptions={{
       headerLeft: () => (
-        <IconButton
+        <StyledIconButton
           color="#000"
-          style={{ minWidth: 0, left: 4 }}
           icon="menu"
           onPress={() => navigation.toggleDrawer()}
         />
@@ -77,3 +77,8 @@ const StackNavigator = ({
 );
 
 export default AppNavigator;
+
+const StyledIconButton = styled(IconButton)`
+  min-width: 0;
+  left: 4px;
+`;
