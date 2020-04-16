@@ -1,167 +1,183 @@
-import { Field, Formik } from 'formik';
+import {
+  Field,
+  Formik,
+  FormikValues,
+  FormikErrors,
+  FormikTouched,
+} from "formik";
 import * as React from "react";
-import { Image, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-paper";
-import styled from 'styled-components/native';
+import styled from "styled-components/native";
 import * as Yup from "yup";
-import { useLoginMutation } from '../local_core/generated/graphql';
+import { useLoginMutation } from "../local_core/generated/graphql";
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-        .email("Please enter a valid email")
-        .required("Please enter an email"),
-    password: Yup.string().required("Required")
+  email: Yup.string()
+    .email("Please enter a valid email")
+    .required("Please enter an email"),
+  password: Yup.string().required("Required"),
 });
 
-export default function SignUp({ navigation }: { navigation: any }) {
-    const [logInUser, { data }] = useLoginMutation();
+export default function SignUp({navigation} : {navigation: StackNavigationProp<any>}) {
+  const [logInUser, { data }] = useLoginMutation();
 
-    const submition = (values: any, { setErrors }: any) => {
-        logInUser({
-            variables: {
-                identifier: values.email,
-                password: values.password
-            }
-        })
-            .then(
-                ({
-                    data
-                }) => {
-                    if (data?.loggedUser?.id) {
-                        navigation.navigate("HomeScreen");
-                    }
-                }
-            )
-            .catch(({ Errors, graphQLErrors }) => {
-                const error = graphQLErrors?.map((err: any) => err?.message);
-                setErrors({ server: error[0] });
-            });
-    };
+  const submition = (
+    values: FormikValues,
+    { setErrors }: { setErrors: (errors: FormikErrors<FormikValues>) => void }
+  ) => {
+    logInUser({
+      variables: {
+        identifier: values.email,
+        password: values.password,
+      },
+    })
+      .then(({ data }) => {
+        if (data?.loggedUser?.id) {
+          navigation.navigate("HomeScreen");
+        }
+      })
+      .catch(({ Errors, graphQLErrors }) => {
+        const error = graphQLErrors?.map((err: any) => err?.message);
+        setErrors({ server: error[0] });
+      });
+  };
 
-    return (
-        <Container>
-            <Header>
-                <Image resizeMode={'cover'}
-                    source={require('../assets/logo-lithium.png')}
-                />
-                <WelcomeText>{'Welcome to Lithium KB'}</WelcomeText>
-            </Header>
-            <Title>Login</Title>
-            <Formik
-                initialValues={{ email: '', password: '' }}
-                validationSchema={LoginSchema}
-                onSubmit={submition}
-            >
-                {({ values: { email, password }, handleChange, handleSubmit, errors, touched, handleBlur, }:
-                    { handleSubmit: any, values: any, handleChange: any, errors: any, touched: any, handleBlur: any }) => (
-                        <React.Fragment>
+  return (
+    <Container>
+      <Header>
+        <Image
+          resizeMode={"cover"}
+          source={require("../assets/logo-lithium.png")}
+        />
+        <WelcomeText>{"Welcome to Lithium KB"}</WelcomeText>
+      </Header>
+      <Title>Login</Title>
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validationSchema={LoginSchema}
+        onSubmit={submition}
+      >
+        {({
+          values: { email, password },
+          handleChange,
+          handleSubmit,
+          errors,
+          touched,
+          handleBlur,
+        }: {
+          handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
+          values: FormikValues;
+          handleChange: (f: string) => void;
+          errors: FormikErrors<FormikValues>;
+          touched: FormikTouched<FormikValues>;
+          handleBlur: (f: string) => void;
+        }) => (
+          <React.Fragment>
+            {touched.email && errors?.email?.length && (
+              <ErrorTextFields>{errors.email}</ErrorTextFields>
+            )}
+            <Input>
+              <Field
+                id="email"
+                name="email"
+                type="email"
+                component={TextInputCust}
+                value={email}
+                placeholder="Email..."
+                placeholderTextColor="#003f5c"
+                onChangeText={handleChange("email")}
+                error={touched.email && errors?.email?.length}
+                onBlur={handleBlur("email")}
+              />
+            </Input>
 
-                            {touched.email && errors?.email?.length &&
-                                <ErrorTextFields>{errors.email}</ErrorTextFields>
-                            }
-                            <Input>
-                                <Field
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    component={TextInputCust}
-                                    value={email}
-                                    placeholder="Email..."
-                                    placeholderTextColor="#003f5c"
-                                    onChangeText={handleChange('email')}
-                                    error={touched["email"] && errors["email"]?.length > 0}
-                                    onBlur={handleBlur('email')}
-                                />
-                            </Input>
+            {touched.password && errors?.password?.length && (
+              <ErrorTextFields>{errors.password}</ErrorTextFields>
+            )}
+            <Input>
+              <Field
+                id="password"
+                name="password"
+                type="password"
+                component={TextInputCust}
+                value={password}
+                secureTextEntry
+                placeholder="Password..."
+                placeholderTextColor="#003f5c"
+                onChangeText={handleChange("password")}
+                error={touched.password && errors?.password?.length}
+                onBlur={handleBlur("password")}
+              />
+            </Input>
 
-                            {touched.password && errors?.password?.length &&
-                                <ErrorTextFields>{errors.password}</ErrorTextFields>
-                            }
-                            <Input >
+            <ForgotText>Forgot de password?</ForgotText>
 
-                                <Field
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    component={TextInputCust}
-                                    value={password}
-                                    secureTextEntry
-                                    placeholder="Password..."
-                                    placeholderTextColor="#003f5c"
-                                    onChangeText={handleChange('password')}
-                                    error={touched["password"] && errors["password"]?.length > 0}
-                                    onBlur={handleBlur('password')}
-                                />
-                            </Input>
-
-                            <ForgotText >{'Forgot de password?'}</ForgotText>
-
-                            {errors?.server &&
-                                <ErrorText>{errors.server}</ErrorText>
-                            }
-                            <LoginButton
-                                onPress={handleSubmit}>
-                                <LoginText>LOGIN</LoginText>
-                            </LoginButton>
-                        </React.Fragment>
-
-
-                    )}
-            </Formik>
-            <SignUpFrame>
-                <Text>{'Do not have an acount?'}</Text>
-                <TouchableOpacity onPress={() => { navigation.navigate("SignUp") }}>
-                    <SignUpText> SIGN UP</SignUpText>
-                </TouchableOpacity>
-            </SignUpFrame>
-
-        </Container>
-    );
+            {errors?.server && <ErrorText>{errors.server}</ErrorText>}
+            <LoginButton onPress={handleSubmit}>
+              <LoginText>LOGIN</LoginText>
+            </LoginButton>
+          </React.Fragment>
+        )}
+      </Formik>
+      <SignUpFrame>
+        <Text>Do not have an acount?</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("SignUp");
+          }}
+        >
+          <SignUpText> SIGN UP</SignUpText>
+        </TouchableOpacity>
+      </SignUpFrame>
+    </Container>
+  );
 }
 
 const Header = styled.View`
   margin-bottom: 25px;
-  `;
+`;
 
 const TextInputCust = styled(TextInput)`
-     height: 50px;
-    background-color: #FFFFFF;
-    border: 1px #D3D3D3;
-    border-bottom-width: 0px;
-  `;
+  height: 50px;
+  background-color: #ffffff;
+  border: 1px #d3d3d3;
+  border-bottom-width: 0px;
+`;
 
 const Container = styled.View`
   flex: 1px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   align-items: flex-start;
   justify-content: flex-start;
   padding: 30px;
-  `;
+`;
 
 const Title = styled.Text`
-    font-weight: bold;
-    font-size: 50px;
-    color: #000000;
-    margin-bottom: 40px;
-    align-items: flex-start;
-  `;
+  font-weight: bold;
+  font-size: 50px;
+  color: #000000;
+  margin-bottom: 40px;
+  align-items: flex-start;
+`;
 
 const Input = styled.View`
   width: 80%;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   height: 55px;
   justify-content: center;
 `;
 
 const LoginButton = styled.TouchableOpacity`
-    width: 80%;
-    background-color: #ffb900;
-    border-radius: 25px;
-    height: 50px;
-    align-items: center;
-    justify-content: center;
-    margin-top: 40px;
-    margin-bottom: 10px;
+  width: 80%;
+  background-color: #ffb900;
+  border-radius: 25px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 10px;
 `;
 
 const SignUpFrame = styled.View`
@@ -170,35 +186,34 @@ const SignUpFrame = styled.View`
     `;
 
 const LoginText = styled.Text`
-    color: black
+  color: black;
 `;
 
 const Text = styled.Text`
-    color: black
+  color: black;
 `;
 
 const ForgotText = styled.Text`
-    margin-top: 10px;
-    color: black;
-    font-size: 10px;
-
+  margin-top: 10px;
+  color: black;
+  font-size: 10px;
 `;
 
 const WelcomeText = styled.Text`
-    color: #ffb900
+  color: #ffb900;
 `;
 
 const SignUpText = styled.Text`
-    color: #ffb900
+  color: #ffb900;
 `;
 
 const ErrorText = styled.Text`
-    color: red;
-    fontSize: 15px;
-    margin-top: 20px;
+  color: red;
+  fontsize: 15px;
+  margin-top: 20px;
 `;
 
 const ErrorTextFields = styled.Text`
-    color: red;
-    fontSize: 10px;
+  color: red;
+  fontsize: 10px;
 `;
