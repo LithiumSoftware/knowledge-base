@@ -1,9 +1,10 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import {
   Field,
   Formik,
-  FormikValues,
   FormikErrors,
   FormikTouched,
+  FormikValues,
 } from "formik";
 import * as React from "react";
 import { Image, TouchableOpacity } from "react-native";
@@ -11,7 +12,6 @@ import { TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { useSignupMutation } from "../local_core/generated/graphql";
-import { StackNavigationProp } from '@react-navigation/stack';
 
 const signupSchema = Yup.object().shape({
   username: Yup.string()
@@ -27,7 +27,7 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password does not match"),
 });
 
-const SignUp = ({navigation} : { navigation: StackNavigationProp<any> }) => {
+const SignUp = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
   const [signUpUser, { data }] = useSignupMutation();
 
   const submition = (
@@ -88,42 +88,40 @@ const SignUp = ({navigation} : { navigation: StackNavigationProp<any> }) => {
           handleBlur: (f: string) => void;
         }) => (
           <React.Fragment>
-            {touched.username && errors?.username?.length && (
-              <ErrorTextFields>{errors.username}</ErrorTextFields>
-            )}
-            <Input>
+            <InputContainer>
               <Field
-                component={TextInputCust}
+                id="username"
+                label="Name"
+                component={TextInput}
                 value={username}
                 placeholder="Name..."
                 placeholderTextColor="#003f5c"
                 error={touched.username && errors?.username?.length}
                 onBlur={handleBlur("username")}
                 onChangeText={handleChange("username")}
+                mode="outlined"
               />
-            </Input>
+            </InputContainer>
 
-            {touched.email && errors?.email?.length && (
-              <ErrorTextFields>{errors.email}</ErrorTextFields>
-            )}
-            <Input>
+            <InputContainer>
               <Field
-                component={TextInputCust}
+                id="email"
+                label="Email"
+                component={TextInput}
                 value={email}
                 placeholder="Email..."
                 placeholderTextColor="#003f5c"
                 error={touched.email && errors?.email?.length}
                 onBlur={handleBlur("email")}
                 onChangeText={handleChange("email")}
+                mode="outlined"
               />
-            </Input>
-
-            {touched.password && errors?.password?.length && (
-              <ErrorTextFields>{errors.password}</ErrorTextFields>
-            )}
-            <Input>
+            </InputContainer>
+            <InputContainer>
               <Field
-                component={TextInputCust}
+                id="password"
+                label="Password"
+                component={TextInput}
                 value={password}
                 secureTextEntry
                 placeholder="Password..."
@@ -131,25 +129,26 @@ const SignUp = ({navigation} : { navigation: StackNavigationProp<any> }) => {
                 error={touched.password && errors.password?.length}
                 onBlur={handleBlur("password")}
                 onChangeText={handleChange("password")}
+                autoFocus
+                mode="outlined"
               />
-            </Input>
+            </InputContainer>
 
-            {touched.confirmation && errors?.confirmation?.length && (
-              <ErrorTextFields>{errors.confirmation}</ErrorTextFields>
-            )}
-            <Input>
+            <InputContainer>
               <Field
-                component={TextInputCust}
+                id="confirmation"
+                label="Repeat password"
+                component={TextInput}
                 value={confirmation}
                 secureTextEntry
-                placeholder="Confirmation..."
+                placeholder="Repeat password..."
                 placeholderTextColor="#003f5c"
                 error={touched.confirmation && errors?.confirmation?.length}
                 onBlur={handleBlur("confirmation")}
                 onChangeText={handleChange("confirmation")}
+                mode="outlined"
               />
-            </Input>
-
+            </InputContainer>
             {errors?.server && <ErrorText>{errors.server}</ErrorText>}
             <SignUpButton onPress={handleSubmit}>
               <SignUpText>SIGN UP</SignUpText>
@@ -172,13 +171,6 @@ const Header = styled.View`
   margin-bottom: 25px;
 `;
 
-const TextInputCust = styled(TextInput)`
-  height: 50px;
-  background-color: #ffffff;
-  border: 1px #d3d3d3;
-  border-bottom-width: 0px;
-`;
-
 const Container = styled.View`
   flex: 1px;
   background-color: #ffffff;
@@ -195,13 +187,6 @@ const Title = styled.Text`
   align-items: flex-start;
 `;
 
-const Input = styled.View`
-  width: 80%;
-  background-color: #ffffff;
-  height: 55px;
-  justify-content: center;
-`;
-
 const SignUpButton = styled.TouchableOpacity`
   width: 80%;
   background-color: #ffb900;
@@ -216,6 +201,7 @@ const SignUpButton = styled.TouchableOpacity`
 const LoginFrame = styled.View`
   flex-direction: row;
   margin-left: 40px;
+  margin-top: 20px;
 `;
 
 const LoginText = styled.Text`
@@ -232,21 +218,20 @@ const LoginQuestion = styled.Text`
 
 const WelcomeText = styled.Text`
   color: #ffb900;
-`;
-
-const SignInText = styled.Text`
-  color: #ffb900;
+  fontSize: 17px;
 `;
 
 const ErrorText = styled.Text`
   color: red;
-  fontsize: 15px;
+  fontSize: 15px;
   margin-top: 20px;
 `;
 
-const ErrorTextFields = styled.Text`
-  color: red;
-  fontsize: 10px;
+const InputContainer = styled.View`
+  width: 80%;
+  background-color: #ffffff;
+  height: 65px;
+  justify-content: center;
 `;
 
 export default SignUp;

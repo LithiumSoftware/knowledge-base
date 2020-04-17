@@ -11,7 +11,7 @@ import { TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { useLoginMutation } from "../local_core/generated/graphql";
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -20,7 +20,11 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required("Required"),
 });
 
-export default function SignUp({navigation} : {navigation: StackNavigationProp<any>}) {
+export default function SignUp({
+  navigation,
+}: {
+  navigation: StackNavigationProp<any>;
+}) {
   const [logInUser, { data }] = useLoginMutation();
 
   const submition = (
@@ -75,33 +79,28 @@ export default function SignUp({navigation} : {navigation: StackNavigationProp<a
           handleBlur: (f: string) => void;
         }) => (
           <React.Fragment>
-            {touched.email && errors?.email?.length && (
-              <ErrorTextFields>{errors.email}</ErrorTextFields>
-            )}
-            <Input>
+            <InputContainer>
               <Field
                 id="email"
                 name="email"
-                type="email"
-                component={TextInputCust}
+                label="Email"
+                component={TextInput}
                 value={email}
                 placeholder="Email..."
                 placeholderTextColor="#003f5c"
                 onChangeText={handleChange("email")}
                 error={touched.email && errors?.email?.length}
                 onBlur={handleBlur("email")}
+                mode="outlined"
               />
-            </Input>
+            </InputContainer>
 
-            {touched.password && errors?.password?.length && (
-              <ErrorTextFields>{errors.password}</ErrorTextFields>
-            )}
-            <Input>
+            <InputContainer>
               <Field
                 id="password"
                 name="password"
-                type="password"
-                component={TextInputCust}
+                label="Password"
+                component={TextInput}
                 value={password}
                 secureTextEntry
                 placeholder="Password..."
@@ -109,8 +108,9 @@ export default function SignUp({navigation} : {navigation: StackNavigationProp<a
                 onChangeText={handleChange("password")}
                 error={touched.password && errors?.password?.length}
                 onBlur={handleBlur("password")}
+                mode="outlined"
               />
-            </Input>
+            </InputContainer>
 
             <ForgotText>Forgot de password?</ForgotText>
 
@@ -139,13 +139,6 @@ const Header = styled.View`
   margin-bottom: 25px;
 `;
 
-const TextInputCust = styled(TextInput)`
-  height: 50px;
-  background-color: #ffffff;
-  border: 1px #d3d3d3;
-  border-bottom-width: 0px;
-`;
-
 const Container = styled.View`
   flex: 1px;
   background-color: #ffffff;
@@ -162,10 +155,10 @@ const Title = styled.Text`
   align-items: flex-start;
 `;
 
-const Input = styled.View`
+const InputContainer = styled.View`
   width: 80%;
   background-color: #ffffff;
-  height: 55px;
+  height: 65px; 
   justify-content: center;
 `;
 
@@ -182,6 +175,7 @@ const LoginButton = styled.TouchableOpacity`
 
 const SignUpFrame = styled.View`
     flex-direction: row
+    margin-top: 20px;
     margin-left: 30px;
     `;
 
@@ -201,6 +195,7 @@ const ForgotText = styled.Text`
 
 const WelcomeText = styled.Text`
   color: #ffb900;
+  fontSize: 17px;
 `;
 
 const SignUpText = styled.Text`
@@ -209,11 +204,6 @@ const SignUpText = styled.Text`
 
 const ErrorText = styled.Text`
   color: red;
-  fontsize: 15px;
+  fontSize: 15px;
   margin-top: 20px;
-`;
-
-const ErrorTextFields = styled.Text`
-  color: red;
-  fontsize: 10px;
 `;
