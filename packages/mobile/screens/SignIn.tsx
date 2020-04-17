@@ -112,7 +112,7 @@ export default function SignIn({
               />
             </InputContainer>
 
-            <ForgotText>Forgot de password?</ForgotText>
+            <ForgotText>Forgot password?</ForgotText>
 
             {errors?.server && <ErrorText>{errors.server}</ErrorText>}
             <LoginButton onPress={handleSubmit}>
