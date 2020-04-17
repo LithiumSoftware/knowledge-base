@@ -20,7 +20,7 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required("Required"),
 });
 
-export default function SignUp({
+export default function SignIn({
   navigation,
 }: {
   navigation: StackNavigationProp<any>;
