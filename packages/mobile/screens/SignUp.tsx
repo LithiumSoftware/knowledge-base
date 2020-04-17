@@ -194,7 +194,7 @@ const SignUpButton = styled.TouchableOpacity`
   height: 50px;
   align-items: center;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 120px;
   margin-bottom: 10px;
 `;
 
@@ -219,6 +219,8 @@ const LoginQuestion = styled.Text`
 const WelcomeText = styled.Text`
   color: #ffb900;
   fontSize: 17px;
+  margin-top: 10px;
+  font-weight: bold;
 `;
 
 const ErrorText = styled.Text`
