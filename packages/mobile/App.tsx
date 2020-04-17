@@ -44,7 +44,7 @@ const MyApp = () => (
   <PaperProvider theme={theme}>
     <ApolloProvider client={client}>
       <NavigationContainer>
-        {/* <AppNavigator /> */}
+        <AppNavigator />
         <Navigator screenOptions={{
             headerShown: false
           }}>
