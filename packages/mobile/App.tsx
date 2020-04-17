@@ -10,9 +10,6 @@ import { ApolloProvider } from "react-apollo";
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
 import { createStackNavigator } from "@react-navigation/stack";
-import SignUp from "./screens/SignUp";
-import SignIn from "./screens/SignIn";
-import HomeScreen from "./screens/Home";
 
 import { InMemoryCache } from "apollo-cache-inmemory";
 
@@ -45,22 +42,6 @@ const MyApp = () => (
     <ApolloProvider client={client}>
       <NavigationContainer>
         <AppNavigator />
-        <Navigator screenOptions={{
-            headerShown: false
-          }}>
-            <Screen name="SignUp" component={SignUp}  initialParams={{
-                parameter:
-                  "Message shown when you didn't specify any params when navigating to the screen"
-              }}/>
-               <Screen name="SignIn" component={SignIn}  initialParams={{
-                parameter:
-                  "Message shown when you didn't specify any params when navigating to the screen"
-              }}/>
-               <Screen name="HomeScreen" component={HomeScreen}  initialParams={{
-                parameter:
-                  "Message shown when you didn't specify any params when navigating to the screen"
-              }}/>
-          </Navigator>
       </NavigationContainer>
     </ApolloProvider>
   </PaperProvider>
