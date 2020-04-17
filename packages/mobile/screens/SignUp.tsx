@@ -129,7 +129,6 @@ const SignUp = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
                 error={touched.password && errors.password?.length}
                 onBlur={handleBlur("password")}
                 onChangeText={handleChange("password")}
-                autoFocus
                 mode="outlined"
               />
             </InputContainer>
