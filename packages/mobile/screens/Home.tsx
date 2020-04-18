@@ -21,7 +21,9 @@ export default function HomeScreen({
       </Text>
       <Button
         title="abrir article view"
-        onPress={() => navigation.push("article")}
+        onPress={() => {
+          navigation.push("article");
+        }}
       />
     </View>
   );

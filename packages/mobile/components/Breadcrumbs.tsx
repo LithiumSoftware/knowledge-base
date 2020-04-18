@@ -39,11 +39,11 @@ const max = 4;
 
 interface Props {
   separator: string;
-  items: { title: string }[];
+  titles: string[];
 }
 
-const Breadcrumbs = ({ separator, items }: Props) => {
-  let breadcrumbs = items.map(({ title }) => <BreadcrumbItem title={title} />);
+const Breadcrumbs = ({ separator, titles }: Props) => {
+  let breadcrumbs = titles.map((title) => <BreadcrumbItem title={title} />);
 
   const totalItems = breadcrumbs.length;
   const lastIndex = totalItems - 1;
@@ -52,7 +52,7 @@ const Breadcrumbs = ({ separator, items }: Props) => {
     breadcrumbs = [
       breadcrumbs[0],
       <BreadcrumbCollapser />,
-      breadcrumbs[lastIndex]
+      breadcrumbs[lastIndex],
     ];
   }
 

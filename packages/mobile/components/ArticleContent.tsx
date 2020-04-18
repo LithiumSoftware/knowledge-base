@@ -2,53 +2,18 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 
 import styled from "styled-components";
-import { View, Text, SafeAreaView, Button } from "react-native";
+import { View, Text, SafeAreaView, Button, TextInput } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import moment from "moment";
 import Breadcrumbs from "./Breadcrumbs";
 import ArticleEditor from "./ArticleEditor";
+
+import { useArticleQuery } from "../local_core/generated/graphql";
 
 const StyledSafeAreaView = styled(SafeAreaView)`
   flex: 1;
   background: #fff;
 `;
-
-//Hardcoded code for demo -------------------------------------------------------------------------
-const hardcodedArticlesWithParents = [
-  {
-    id: 2,
-    title: "País",
-    icon: "🌎",
-    content:
-      "<p>Comunidad social con una organización política común y un territorio y órganos de gobierno propios que es soberana e independiente políticamente de otras comunidades.</p>",
-    parentId: null,
-    authorId: 1,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
-  },
-  {
-    id: 3,
-    title: "Ciudad",
-    icon: "🏙",
-    content:
-      "<p>Población donde habita un conjunto de personas que se dedican principalmente a actividades industriales y comerciales.</p>",
-    parentId: null,
-    authorId: 1,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
-  },
-  {
-    id: 4,
-    title: "Barrio",
-    icon: "🏘",
-    content:
-      "<p>Parte de una población de extensión relativamente grande, que contiene un agrupamiento social espontáneo y que tiene un carácter peculiar, físico, social, económico o étnico por el que se identifica.</p>",
-    parentId: null,
-    authorId: 1,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
-  }
-];
-//Hardcoded code for demo -------------------------------------------------------------------------
 
 const StyledText = styled(Text)`
   width: 335px;
@@ -65,7 +30,7 @@ const StyledText = styled(Text)`
   color: #bdbdbd;
 `;
 
-const TitleText = styled(Text)`
+const TitleEditText = styled(TextInput)`
   width: 100%;
   padding-top: 36px;
   left: 19px;
@@ -79,190 +44,86 @@ const StyledLoadingView = styled(View)`
   width: 100%;
   height: 100%;
   display: flex;
-  justifycontent: center;
-  alignitems: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 interface Props {
   route: any;
   navigation: any;
-  articleId: number;
+  articleId: string;
 }
 
 const ArticleContent = ({ route, navigation, articleId }: Props) => {
-  // const articleWithParents = useQuery(ARTICLES_QUERY, {
-  //   variables: { id: articleId },
-  // });
-  //
-  // const [updateArticle] = useMutation(UPDATE_ARTICLE_MUTATION);
-  //
-  // const [updatedTime, setUpdatedTime] = useState(
-  //   articleWithParents.data?.getArticleWithParents[
-  //     articleWithParents.data?.getArticleWithParents.length - 1
-  //   ]?.updatedAt !==
-  //     articleWithParents.data?.getArticleWithParents[
-  //       articleWithParents.data?.getArticleWithParents.length - 1
-  //     ]?.createdAt
-  //     ? articleWithParents.data?.getArticleWithParents[
-  //         articleWithParents.data?.getArticleWithParents.length - 1
-  //       ]?.updatedAt
-  //     : null
-  // );
-  //
-  // const [lastModificationTime, setLastModificationTime] = useState(
-  //   moment(updatedTime).fromNow()
-  // );
-  //
-  // useEffect(() => {
-  //   setLastModificationTime(moment(updatedTime).fromNow());
-  //   setUpdatedTime(
-  //     articleWithParents.data?.getArticleWithParents[
-  //       articleWithParents.data?.getArticleWithParents.length - 1
-  //     ]?.updatedAt !==
-  //       articleWithParents.data?.getArticleWithParents[
-  //         articleWithParents.data?.getArticleWithParents.length - 1
-  //       ]?.createdAt
-  //       ? articleWithParents.data?.getArticleWithParents[
-  //           articleWithParents.data?.getArticleWithParents.length - 1
-  //         ]?.updatedAt
-  //       : null
-  //   );
-  //   const timeOut = setInterval(() => {
-  //     setLastModificationTime(moment(updatedTime).fromNow());
-  //   }, 15 * 1000);
-  //   return () => {
-  //     clearInterval(timeOut);
-  //   };
-  // }, [
-  //   updatedTime,
-  //   articleWithParents.data?.getArticleWithParents[
-  //     articleWithParents.data?.getArticleWithParents.length - 1
-  //   ]?.updatedAt,
-  // ]);
-  //
-  // const onSave = (newContent: String) => {
-  //   updateArticle({
-  //     variables: {
-  //       newContent: newContent,
-  //       articleId:
-  //         articleWithParents.data?.getArticleWithParents[
-  //           articleWithParents.data?.getArticleWithParents.length - 1
-  //         ]?.id,
-  //     },
-  //   }).then((data) => {
-  //     setUpdatedTime(data.data.updateArticle.updatedAt);
-  //   });
-  // };
-  //
-  // return articleWithParents.loading ? (
-  //   <StyledLoadingView>
-  //     <ActivityIndicator color="primary" />
-  //   </StyledLoadingView>
-  // ) : (
-  //   <View>
-  //     <TopBar>
-  //       <Breadcrumbs
-  //         separator="/"
-  //         items={articleWithParents.data?.getArticleWithParents?.map(
-  //           (article: { title: String }) => ({
-  //             title: article.title,
-  //             action: navigation.push(article.title),
-  //           })
-  //         )}
-  //       />
-  //       {!lastModificationTime.includes("Invalid") && (
-  //         <StyledButton color="secondary">
-  //           Last modified {lastModificationTime}
-  //         </StyledButton>
-  //       )}
-  //     </TopBar>
-  //     <TitleText>
-  //       {
-  //         articleWithParents.data?.getArticleWithParents[
-  //           articleWithParents.data?.getArticleWithParents.length - 1
-  //         ]?.title
-  //       }
-  //     </TitleText>
-  //     <RichTextEditor
-  //       content={
-  //         articleWithParents.data?.getArticleWithParents[
-  //           articleWithParents.data?.getArticleWithParents.length - 1
-  //         ]?.content
-  //       }
-  //       onSave={onSave}
-  //     />
-  //   </View>
-  // );
-  //Hardcoded code for demo -------------------------------------------------------------------------
+  const { data, loading, error } = useArticleQuery({
+    variables: { id: articleId },
+  });
 
-  const articleWithParents = hardcodedArticlesWithParents;
+  // const [updateArticle] = useMutation(UPDATE_ARTICLE_MUTATION);
 
   const [updatedTime, setUpdatedTime] = useState(
-    articleWithParents[articleWithParents.length - 1]?.updatedAt !==
-      articleWithParents[articleWithParents.length - 1]?.createdAt
-      ? articleWithParents[articleWithParents.length - 1]?.updatedAt
-      : undefined
+    data?.article?.updatedAt !== data?.article?.createdAt
+      ? data?.article?.updatedAt
+      : null
   );
 
   const [lastModificationTime, setLastModificationTime] = useState(
-    updatedTime ? moment(updatedTime).fromNow() : null
+    moment(updatedTime).fromNow()
   );
 
   useEffect(() => {
-    setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : null);
+    setLastModificationTime(moment(updatedTime).fromNow());
     setUpdatedTime(
-      articleWithParents[articleWithParents.length - 1]?.updatedAt !==
-        articleWithParents[articleWithParents.length - 1]?.createdAt
-        ? articleWithParents[articleWithParents.length - 1]?.updatedAt
-        : undefined
+      data?.article?.updatedAt !== data?.article?.createdAt
+        ? data?.article?.updatedAt
+        : null
     );
     const timeOut = setInterval(() => {
-      console.log(updatedTime ? moment(updatedTime).fromNow() : null);
-      setLastModificationTime(
-        updatedTime ? moment(updatedTime).fromNow() : null
-      );
+      setLastModificationTime(moment(updatedTime).fromNow());
     }, 15 * 1000);
     return () => {
       clearInterval(timeOut);
     };
-  }, [
-    updatedTime,
-    articleWithParents[articleWithParents.length - 1]?.updatedAt
-  ]);
+  }, [updatedTime, data?.article?.updatedAt]);
 
-  const onSave = (newContent: string) => {
-    console.log(newContent);
-    articleWithParents[2].content = newContent;
-    articleWithParents[2].updatedAt = Date.now();
-    console.log(articleWithParents[2].updatedAt);
-    console.log(updatedTime ? moment(updatedTime).fromNow() : null);
-    setUpdatedTime(articleWithParents[2].updatedAt);
-    setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : null);
+  const onSave = (newContent: String) => {
+    // updateArticle({
+    //   variables: {
+    //     newContent: newContent,
+    //     articleId: data?.article?.id,
+    //   },
+    // }).then((response) => {
+    //   setUpdatedTime(response.data.updateArticle.updatedAt);
+    // });
   };
-  //Hardcoded code for demo -------------------------------------------------------------------------
 
-  return (
+  return loading ? (
+    <StyledLoadingView>
+      <ActivityIndicator color="primary" />
+    </StyledLoadingView>
+  ) : data && data.article ? (
     <StyledSafeAreaView>
       <Breadcrumbs
         separator="/"
-        items={articleWithParents?.map(article => ({
-          title: article.title
-        }))}
+        titles={[
+          ...(data.article.rootPath
+            ? data.article.rootPath.map(
+                (titleAndId) => titleAndId?.split("-")[0] || ""
+              )
+            : []),
+          data.article.title,
+        ]}
       />
-      <TitleText>
-        {/* {articleWithParents[articleWithParents.length - 1]?.title} */}
-        Introduccion a React Native
-      </TitleText>
-      <ArticleEditor
-        content={articleWithParents[articleWithParents.length - 1]?.content}
-        onSave={onSave}
-      />
+      <TitleEditText>{data.article.title}</TitleEditText>
+      <ArticleEditor content={data.article.body || ""} onSave={onSave} />
       {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
         <StyledText onPress={() => console.log(lastModificationTime)}>
           Last modified {lastModificationTime}
         </StyledText>
       )}
     </StyledSafeAreaView>
+  ) : (
+    <Text>{error?.message}</Text>
   );
 };
 

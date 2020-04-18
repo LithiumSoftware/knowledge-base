@@ -49,7 +49,7 @@ const StackNavigator = ({
     <Stack.Screen
       name="article"
       component={ArticleScreen}
-      initialParams={{ ...route.params, articleId: 1 }}
+      initialParams={{ ...route.params, articleId: "1" }}
       options={{
         title: "",
         headerStyle: { backgroundColor: "#fff" },

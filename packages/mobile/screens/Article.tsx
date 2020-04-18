@@ -1,13 +1,14 @@
-import React, { Component } from "react";
-import ArticleContent from "mobile/components/ArticleContent";
+import React from "react";
+import ArticleContent from "../components/ArticleContent";
 
 interface Props {
   navigation: any;
   route: any;
-  articleId: number;
 }
 
-export default function ArticleScreen({ route, navigation, articleId }: Props) {
+export default function ArticleScreen({ route, navigation }: Props) {
+  const { articleId } = route.params;
+  console.log("articleId:" + articleId);
   return (
     <ArticleContent
       route={route}
