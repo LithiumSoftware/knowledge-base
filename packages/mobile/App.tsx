@@ -9,8 +9,6 @@ import {
 import { ApolloProvider } from "react-apollo";
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
-import { createStackNavigator } from "@react-navigation/stack";
-
 import { InMemoryCache } from "apollo-cache-inmemory";
 
 import AppNavigator from "./navigation/AppNavigator";
@@ -34,8 +32,6 @@ const client = new ApolloClient({
   link: link,
   cache: cache,
 });
-
-const { Navigator, Screen } = createStackNavigator();
 
 const MyApp = () => (
   <PaperProvider theme={theme}>

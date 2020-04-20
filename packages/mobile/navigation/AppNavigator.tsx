@@ -31,21 +31,7 @@ const StackNavigator = ({
   navigation: any;
   route: any;
 }) => (
-  <Stack.Navigator
-    initialRouteName="SignIn" 
-    headerMode="none"
-    // screenOptions={{
-    //   headerStyle: { backgroundColor: "#FFC200" },
-    //   headerLeft: () => (
-    //     <IconButton
-    //       style={{ minWidth: 0, left: 4 }}
-    //       icon="menu"
-    //       onPress={() => navigation.toggleDrawer()}
-    //     />
-    //   ),
-    //   headerTitleContainerStyle: { left: 44 },
-    // }}
-  >
+  <Stack.Navigator initialRouteName="SignIn" headerMode="none">
     <Stack.Screen
       name="SignIn"
       component={SignInScreen}
@@ -66,7 +52,6 @@ const StackNavigator = ({
         title: "Lithium KB App",
       }}
     />
-
   </Stack.Navigator>
 );
 
