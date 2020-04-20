@@ -55,6 +55,7 @@
     "babel-plugin-graphql-tag": "^2.5.0",
     "babel-plugin-styled-components": "^1.10.7",
     "prettier": "^2.0.2",
-    "typescript": "~3.6.3"
+    "typescript": "~3.6.3",
+    "@types/yup": "^0.26.34"
   }
 }
