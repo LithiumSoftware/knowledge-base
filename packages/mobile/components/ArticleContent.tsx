@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { View, Text, SafeAreaView, Button, TextInput } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import moment from "moment";
-import Breadcrumbs from "./Breadcrumbs";
 import ArticleEditor from "./ArticleEditor";
 
 import { useArticleQuery } from "../local_core/generated/graphql";
