@@ -24,7 +24,7 @@ const AppNavigator = () => {
 
   return (
     <Drawer.Navigator
-      drawerContent={(props) => (
+      drawerContent={(props: any) => (
         <Sidebar {...props} rootPath={rootPath} selected={selected} />
       )}
       drawerType="front"
@@ -39,17 +39,19 @@ const AppNavigator = () => {
   );
 };
 
+interface StackProps {
+  navigation: any;
+  route: any;
+  setRootPath: Function;
+  setSelected: Function;
+}
+
 const StackNavigator = ({
   navigation,
   route,
   setRootPath,
   setSelected,
-}: {
-  navigation: any;
-  route: any;
-  setRootPath: Function;
-  setSelected: Function;
-}) => (
+}: StackProps) => (
   <Stack.Navigator
     initialRouteName="Home"
     mode="modal"

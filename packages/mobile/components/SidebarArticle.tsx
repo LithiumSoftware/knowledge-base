@@ -52,14 +52,14 @@ const SidebarArticle = ({
         }}
         title={article?.title}
         onPress={() => navigation.navigate("article", { id: article?.id })}
-        left={(props) => (
+        left={(props: any) => (
           <IconButton
             {...props}
             icon={collapsed ? "chevron-down" : "chevron-right"}
             onPress={() => setCollapsed(!collapsed)}
           />
         )}
-        right={(props) => (
+        right={(props: any) => (
           <>
             <IconButton
               {...props}
@@ -74,7 +74,7 @@ const SidebarArticle = ({
             />
           </>
         )}
-      ></List.Item>
+      />
       <Collapsible collapsed={!collapsed}>
         {article?.children?.map(
           (subArticle: { id: string; title: string }, index) => (
