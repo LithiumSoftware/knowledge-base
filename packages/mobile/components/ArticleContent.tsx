@@ -51,12 +51,11 @@ const StyledLoadingView = styled(View)`
 interface Props {
   route: any;
   navigation: any;
-  articleId: string;
 }
 
-const ArticleContent = ({ route, navigation, articleId }: Props) => {
+const ArticleContent = ({ route, navigation }: Props) => {
   const { data, loading, error } = useArticleQuery({
-    variables: { id: articleId },
+    variables: { id: route.params.articleId },
   });
 
   // const [updateArticle] = useMutation(UPDATE_ARTICLE_MUTATION);
@@ -103,7 +102,7 @@ const ArticleContent = ({ route, navigation, articleId }: Props) => {
     </StyledLoadingView>
   ) : data && data.article ? (
     <StyledSafeAreaView>
-      <Breadcrumbs
+      {/* <Breadcrumbs
         separator="/"
         titles={[
           ...(data.article.rootPath
@@ -113,14 +112,14 @@ const ArticleContent = ({ route, navigation, articleId }: Props) => {
             : []),
           data.article.title,
         ]}
-      />
+      /> */}
       <TitleEditText>{data.article.title}</TitleEditText>
       <ArticleEditor content={data.article.body || ""} onSave={onSave} />
-      {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
+      {/* {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
         <StyledText onPress={() => console.log(lastModificationTime)}>
           Last modified {lastModificationTime}
         </StyledText>
-      )}
+      )} */}
     </StyledSafeAreaView>
   ) : (
     <Text>{error?.message}</Text>

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { View, KeyboardAvoidingView, Platform } from "react-native";
 import styled from "styled-components";
-import WebViewQuillJS from "react-native-webview-quilljs";
+import WebViewQuillJS, {
+  WebviewQuillJSMessage,
+  WebviewQuillJSEvents,
+} from "react-native-webview-quilljs";
 
 const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView)`
   flex: 1;
@@ -22,11 +25,14 @@ interface Props {
 export default function ArticleEditor({ content, onSave }: Props) {
   const [articleContent, setArticleContent] = useState(content);
 
-  const onMessageReceived = (message: any) => {
-    const { payload } = message;
-    if (payload?.html) {
-      setArticleContent(payload.html);
-      onSave(articleContent);
+  const onMessageReceived = (message: WebviewQuillJSMessage) => {
+    const { event } = message;
+    if (event == WebviewQuillJSEvents.ON_CHANGE) {
+      const { payload } = message;
+      if (payload?.html && payload?.html != articleContent) {
+        setArticleContent(payload.html);
+        onSave(articleContent);
+      }
     }
   };
 
@@ -37,7 +43,7 @@ export default function ArticleEditor({ content, onSave }: Props) {
     >
       <StyledView>
         <WebViewQuillJS
-          defaultContent={articleContent}
+          content={articleContent}
           backgroundColor={"#FFFFFF"}
           onMessageReceived={onMessageReceived}
         />
