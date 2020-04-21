@@ -16,6 +16,7 @@ export default gql`
         title
       }
       updatedAt
+      createdAt
     }
   }
 `;

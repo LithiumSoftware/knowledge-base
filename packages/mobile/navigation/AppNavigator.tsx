@@ -17,6 +17,7 @@ import styled from "styled-components/native";
 import HomeScreen from "../screens/Home";
 import SignUpScreen from "../screens/SignUp";
 import LogInScreen from "../screens/LogIn";
+import ArticleScreen from "../screens/Article";
 
 import Sidebar from "../components/Sidebar";
 
@@ -94,6 +95,38 @@ const UserNavigator = ({
       initialParams={{ ...route.params }}
       options={{
         title: "Lithium KB App",
+      }}
+    />
+    <Stack.Screen
+      name="article"
+      component={ArticleScreen}
+      initialParams={{ ...route.params, articleId: "1" }}
+      options={{
+        title: "",
+        headerStyle: { backgroundColor: "#fff" },
+        headerLeft: () => (
+          <IconButton
+            color="black"
+            style={{ left: 4, height: "100%" }}
+            icon="menu"
+            onPress={() => navigation.toggleDrawer()}
+          />
+        ),
+        headerTitleContainerStyle: { left: 4 },
+        headerRight: () => (
+          <View style={{ flexDirection: "row" }}>
+            <IconButton
+              color="#FFC200"
+              icon="heart"
+              onPress={() => console.log("favorite")}
+            />
+            <IconButton
+              color="#dadada"
+              icon="magnify"
+              onPress={() => console.log("search")}
+            />
+          </View>
+        ),
       }}
     />
   </Stack.Navigator>

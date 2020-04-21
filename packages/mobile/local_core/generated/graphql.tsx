@@ -274,7 +274,7 @@ export type ArticleQuery = (
   { __typename?: 'Query' }
   & { article?: Maybe<(
     { __typename?: 'Article' }
-    & Pick<Article, 'id' | 'title' | 'body' | 'rootPath' | 'updatedAt'>
+    & Pick<Article, 'id' | 'title' | 'body' | 'rootPath' | 'updatedAt' | 'createdAt'>
     & { author?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
@@ -614,6 +614,7 @@ export const ArticleDocument = gql`
       title
     }
     updatedAt
+    createdAt
   }
 }
     `;
