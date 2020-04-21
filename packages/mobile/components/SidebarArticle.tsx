@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { List, Divider, IconButton } from "react-native-paper";
+import Collapsible from "react-native-collapsible";
+
+import styled from "styled-components/native";
+import { Heart, Plus, ChevronDown, ChevronRight, File } from "../assets/icons";
+
 import {
   useArticleQuery,
   ToggleFavouriteMutation,
   Article,
 } from "../local_core/generated/graphql";
-import { List, Divider, IconButton } from "react-native-paper";
-import Collapsible from "react-native-collapsible";
 
 interface Props {
   hierarchy: number;
@@ -53,23 +57,31 @@ const SidebarArticle = ({
         title={article?.title}
         onPress={() => navigation.navigate("article", { id: article?.id })}
         left={(props: any) => (
-          <IconButton
-            {...props}
-            icon={collapsed ? "chevron-down" : "chevron-right"}
+          <NoMarginIcon
+            icon={() =>
+              article?.children?.length ? (
+                collapsed ? (
+                  <ChevronDown />
+                ) : (
+                  <ChevronRight />
+                )
+              ) : (
+                <File />
+              )
+            }
             onPress={() => setCollapsed(!collapsed)}
           />
         )}
         right={(props: any) => (
           <>
-            <IconButton
+            <NoMarginIcon
               {...props}
-              color={isFavourite ? "#FFC200" : "#D6D6D6"}
-              icon="heart"
+              icon={() => <Heart fill={isFavourite ? "#FFC200" : "#D6D6D6"} />}
               onPress={() => setFavourite(!isFavourite)}
             />
-            <IconButton
+            <NoMarginIcon
               {...props}
-              icon="plus"
+              icon={() => <Plus />}
               onPress={() => console.log("plus")}
             />
           </>
@@ -79,7 +91,7 @@ const SidebarArticle = ({
         {article?.children?.map(
           (subArticle: { id: string; title: string }, index) => (
             <SidebarArticle
-              hierarchy={hierarchy + 2}
+              hierarchy={hierarchy + 8}
               id={subArticle?.id}
               key={index}
               reload={reload}
@@ -100,3 +112,7 @@ const SidebarArticle = ({
 };
 
 export default SidebarArticle;
+
+const NoMarginIcon = styled(IconButton)`
+  margin: 0px;
+`;

@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import { Button, Divider } from "react-native-paper";
 
+import { FilePlus } from "../assets/icons";
+
 const StyledButton = styled(Button)`
   height: 44px;
 `;
@@ -12,7 +14,7 @@ const SidebarFooter = () => {
     <>
       <Divider />
       <StyledButton
-        icon="file-plus"
+        icon={() => <FilePlus />}
         mode="text"
         onPress={() => console.log("Create Article")}
         color="#E09503"

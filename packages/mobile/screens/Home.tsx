@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
     padding: 18,
-    paddingTop: 8,
+    paddingTop: 18,
     paddingBottom: 8,
     alignItems: "center",
     backgroundColor: "#fff",

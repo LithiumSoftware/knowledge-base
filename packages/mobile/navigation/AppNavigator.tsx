@@ -10,48 +10,69 @@ import {
   View,
 } from "react-native";
 import { IconButton } from "react-native-paper";
+
+import { Menu } from "../assets/icons";
 import styled from "styled-components/native";
 
 import HomeScreen from "../screens/Home";
+import SignUpScreen from "../screens/SignUp";
+import LogInScreen from "../screens/LogIn";
+
 import Sidebar from "../components/Sidebar";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-const AppNavigator = () => {
+const loggedUser = true;
+
+const AppNavigator = (props: any) => {
   const [rootPath, setRootPath] = useState([]);
   const [selected, setSelected] = useState(null);
 
   return (
-    <Drawer.Navigator
-      drawerContent={(props: any) => (
-        <Sidebar {...props} rootPath={rootPath} selected={selected} />
+    <>
+      {loggedUser ? (
+        <Drawer.Navigator
+          drawerContent={(props: any) => (
+            <Sidebar {...props} rootPath={rootPath} selected={selected} />
+          )}
+          drawerType="front"
+          drawerStyle={{ paddingTop: -4 }}
+        >
+          <Drawer.Screen
+            name="Welcome"
+            component={UserNavigator}
+            initialParams={setRootPath}
+          />
+        </Drawer.Navigator>
+      ) : (
+        <GuestNavigator />
       )}
-      drawerType="front"
-      drawerStyle={{ paddingTop: -4 }}
-    >
-      <Drawer.Screen
-        name="Welcome"
-        component={StackNavigator}
-        initialParams={setRootPath}
-      />
-    </Drawer.Navigator>
+    </>
   );
 };
 
-interface StackProps {
+interface UserProps {
   navigation: any;
   route: any;
   setRootPath: Function;
   setSelected: Function;
 }
 
-const StackNavigator = ({
+const GuestNavigator = () => (
+  <Stack.Navigator initialRouteName="LogIn" headerMode="none">
+    <Stack.Screen name="LogIn" component={LogInScreen} />
+
+    <Stack.Screen name="SignUp" component={SignUpScreen} />
+  </Stack.Navigator>
+);
+
+const UserNavigator = ({
   navigation,
   route,
   setRootPath,
   setSelected,
-}: StackProps) => (
+}: UserProps) => (
   <Stack.Navigator
     initialRouteName="Home"
     mode="modal"
@@ -60,7 +81,7 @@ const StackNavigator = ({
       headerLeft: () => (
         <StyledIconButton
           color="#000"
-          icon="menu"
+          icon={() => <Menu />}
           onPress={() => navigation.toggleDrawer()}
         />
       ),

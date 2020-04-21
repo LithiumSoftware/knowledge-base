@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { Image, Dimensions, View } from "react-native";
 import {
   createDrawerNavigator,
@@ -11,6 +10,7 @@ import { Appbar, Avatar, Divider, Drawer } from "react-native-paper";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 
 import styled from "styled-components/native";
+import { AccountCircle } from "../assets/icons";
 
 import SidebarArticles from "./SidebarArticles";
 import SidebarFooter from "./SidebarFooter";
@@ -33,6 +33,7 @@ const Header = styled(Appbar.Header)`
   padding-top: 0px;
   height: 52px;
   z-index: 10;
+  background-color: #fff;
 `;
 
 const StyledImage = styled(Image)`
@@ -43,6 +44,8 @@ const StyledImage = styled(Image)`
 const AvatarIcon = styled(Avatar.Icon)`
   margin-right: 4px;
   padding: 0px;
+  background-color: #fff;
+  color: #dadada;
 `;
 
 const renderTabBar = (props: any) => (
@@ -94,7 +97,7 @@ const Sidebar = (props: any) => {
         <Header>
           <StyledImage source={require("../assets/icono-lithium.png")} />
           <Appbar.Content title="Lithium KB." />
-          <AvatarIcon icon="account-circle" size={52} />
+          <AvatarIcon icon={() => <AccountCircle />} size={52} />
         </Header>
         <TabView
           navigationState={{ index, routes }}
