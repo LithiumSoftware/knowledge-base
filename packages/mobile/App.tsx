@@ -31,6 +31,10 @@ const cache = new InMemoryCache();
 const client = new ApolloClient({
   link: link,
   cache: cache,
+  onError: ({ networkError, graphQLErrors }) => {
+    console.log("graphQLErrors", graphQLErrors);
+    console.log("networkError", networkError);
+  },
 });
 
 const MyApp = () => (

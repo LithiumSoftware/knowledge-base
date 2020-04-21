@@ -152,7 +152,7 @@ export type UserLoginInput = {
 };
 
 export type CreateArticleMutationVariables = {
-  title: Scalars['String'];
+  title?: Scalars['String'];
   parentId?: Maybe<Scalars['ID']>;
 };
 
@@ -323,7 +323,7 @@ export type SidebarArticleQuery = (
 
 
 export const CreateArticleDocument = gql`
-    mutation CreateArticle($title: String!, $parentId: ID) {
+    mutation CreateArticle($title: String! = "Undefined", $parentId: ID) {
   createArticle(input: {title: $title, parentId: $parentId}) {
     id
     title

@@ -24,7 +24,7 @@ import Sidebar from "../components/Sidebar";
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-const loggedUser = true;
+const loggedUser = false;
 
 const AppNavigator = (props: any) => {
   const [rootPath, setRootPath] = useState([]);

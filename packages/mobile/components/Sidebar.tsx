@@ -109,7 +109,7 @@ const Sidebar = (props: any) => {
           renderTabBar={renderTabBar}
         />
       </DrawerContentScrollView>
-      <SidebarFooter />
+      <SidebarFooter navigation={props.navigation} />
     </>
   );
 };
