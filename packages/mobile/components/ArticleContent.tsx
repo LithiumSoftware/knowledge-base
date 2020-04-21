@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { View, Text, SafeAreaView, Button, TextInput } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import moment from "moment";
+import Breadcrumbs from "./Breadcrumbs";
 import ArticleEditor from "./ArticleEditor";
 
 import { useArticleQuery } from "../local_core/generated/graphql";
@@ -101,7 +102,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
     </StyledLoadingView>
   ) : data && data.article ? (
     <StyledSafeAreaView>
-      {/* <Breadcrumbs
+      <Breadcrumbs
         separator="/"
         titles={[
           ...(data.article.rootPath
@@ -111,7 +112,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
             : []),
           data.article.title,
         ]}
-      /> */}
+      />
       <TitleEditText>{data.article.title}</TitleEditText>
       <ArticleEditor content={data.article.body || ""} onSave={onSave} />
       {/* {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
