@@ -1,4 +1,8 @@
+import React, { useState } from "react";
+import { Image, TouchableOpacity, View } from "react-native";
+import { TextInput } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
+
 import {
   Field,
   Formik,
@@ -6,11 +10,27 @@ import {
   FormikTouched,
   FormikValues,
 } from "formik";
-import * as React from "react";
-import { Image, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
-import styled from "styled-components/native";
 import * as Yup from "yup";
+
+import {
+  Container,
+  Header,
+  Title,
+  InputContainer,
+  StyledField,
+  FormButton,
+  Navigation,
+  ButtonText,
+  Text,
+  PrimaryText,
+  ErrorText,
+  StyledIconButton,
+  FormikProps,
+  Props,
+} from "./LogIn";
+import { Eye, EyeOff } from "../assets/icons";
+import styled from "styled-components/native";
+
 import { useSignupMutation } from "../local_core/generated/graphql";
 
 const signupSchema = Yup.object().shape({
@@ -27,8 +47,10 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password does not match"),
 });
 
-const SignUp = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
+const SignUp = ({ navigation }: Props) => {
   const [signUpUser, { data }] = useSignupMutation();
+  const [hidePw, setHidePw] = useState(true);
+  const [hideRptPw, setHideRptPw] = useState(true);
 
   const submition = (
     values: FormikValues,
@@ -43,7 +65,7 @@ const SignUp = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
     })
       .then(({ data }) => {
         if (data?.signedUser?.id) {
-          navigation.navigate("HomeScreen");
+          console.log("Add session management");
         }
       })
       .catch(({ Errors, graphQLErrors }) => {
@@ -54,185 +76,115 @@ const SignUp = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
 
   return (
     <Container>
-      <Header>
-        <Image
-          resizeMode={"cover"}
-          source={require("../assets/logo-lithium.png")}
-        />
-        <WelcomeText>Welcome to Lithium KB</WelcomeText>
-      </Header>
+      <Header />
       <Title>Sign up</Title>
-      <Formik
-        initialValues={{
-          username: "",
-          email: "",
-          password: "",
-          confirmation: "",
-        }}
-        validationSchema={signupSchema}
-        onSubmit={submition}
-      >
-        {({
-          values: { username, email, password, confirmation },
-          handleChange,
-          handleSubmit,
-          errors,
-          touched,
-          handleBlur,
-        }: {
-          values: FormikValues;
-          handleChange: (f: string) => void;
-          handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
-          errors: FormikErrors<FormikValues>;
-          touched: FormikTouched<FormikValues>;
-          handleBlur: (f: string) => void;
-        }) => (
-          <React.Fragment>
-            <InputContainer>
-              <Field
-                id="username"
-                label="Name"
-                component={TextInput}
-                value={username}
-                placeholder="Name..."
-                placeholderTextColor="#003f5c"
-                error={touched.username && errors?.username?.length}
-                onBlur={handleBlur("username")}
-                onChangeText={handleChange("username")}
-                mode="outlined"
-              />
-            </InputContainer>
+      <View>
+        <Formik
+          initialValues={{
+            username: "",
+            email: "",
+            password: "",
+            confirmation: "",
+          }}
+          validationSchema={signupSchema}
+          onSubmit={submition}
+        >
+          {({
+            values: { username, email, password, confirmation },
+            handleChange,
+            handleSubmit,
+            errors,
+            touched,
+            handleBlur,
+          }: FormikProps) => (
+            <>
+              <InputContainer>
+                <StyledField
+                  id="username"
+                  label="Name"
+                  component={TextInput}
+                  value={username}
+                  placeholder="Name"
+                  selectionColor="#ffb900"
+                  placeholderTextColor="#003f5c"
+                  error={touched.username && errors?.username?.length}
+                  onBlur={handleBlur("username")}
+                  onChangeText={handleChange("username")}
+                />
+              </InputContainer>
 
-            <InputContainer>
-              <Field
-                id="email"
-                label="Email"
-                component={TextInput}
-                value={email}
-                placeholder="Email..."
-                placeholderTextColor="#003f5c"
-                error={touched.email && errors?.email?.length}
-                onBlur={handleBlur("email")}
-                onChangeText={handleChange("email")}
-                mode="outlined"
-              />
-            </InputContainer>
-            <InputContainer>
-              <Field
-                id="password"
-                label="Password"
-                component={TextInput}
-                value={password}
-                secureTextEntry
-                placeholder="Password..."
-                placeholderTextColor="#003f5c"
-                error={touched.password && errors.password?.length}
-                onBlur={handleBlur("password")}
-                onChangeText={handleChange("password")}
-                mode="outlined"
-              />
-            </InputContainer>
+              <InputContainer>
+                <StyledField
+                  id="email"
+                  label="Email"
+                  component={TextInput}
+                  value={email}
+                  placeholder="Email"
+                  selectionColor="#ffb900"
+                  placeholderTextColor="#003f5c"
+                  error={touched.email && errors?.email?.length}
+                  onBlur={handleBlur("email")}
+                  onChangeText={handleChange("email")}
+                  keyboardType="email-address"
+                />
+              </InputContainer>
+              <InputContainer>
+                <StyledField
+                  id="password"
+                  label="Password"
+                  component={TextInput}
+                  value={password}
+                  secureTextEntry={hidePw}
+                  placeholder="Password"
+                  selectionColor="#ffb900"
+                  placeholderTextColor="#003f5c"
+                  error={touched.password && errors.password?.length}
+                  onBlur={handleBlur("password")}
+                  onChangeText={handleChange("password")}
+                />
+                <StyledIconButton
+                  icon={() => (hidePw ? <EyeOff /> : <Eye />)}
+                  onPress={() => setHidePw(!hidePw)}
+                />
+              </InputContainer>
 
-            <InputContainer>
-              <Field
-                id="confirmation"
-                label="Repeat password"
-                component={TextInput}
-                value={confirmation}
-                secureTextEntry
-                placeholder="Repeat password..."
-                placeholderTextColor="#003f5c"
-                error={touched.confirmation && errors?.confirmation?.length}
-                onBlur={handleBlur("confirmation")}
-                onChangeText={handleChange("confirmation")}
-                mode="outlined"
-              />
-            </InputContainer>
-            {errors?.server && <ErrorText>{errors.server}</ErrorText>}
-            <SignUpButton onPress={handleSubmit}>
-              <SignUpText>SIGN UP</SignUpText>
-            </SignUpButton>
-          </React.Fragment>
-        )}
-      </Formik>
-      <LoginFrame>
-        <LoginQuestion>Already have an acount?</LoginQuestion>
+              <InputContainer style={{ marginBottom: "14%" }}>
+                <StyledField
+                  id="confirmation"
+                  label="Repeat password"
+                  component={TextInput}
+                  value={confirmation}
+                  secureTextEntry={hideRptPw}
+                  placeholder="Repeat password"
+                  selectionColor="#ffb900"
+                  placeholderTextColor="#003f5c"
+                  error={touched.confirmation && errors?.confirmation?.length}
+                  onBlur={handleBlur("confirmation")}
+                  onChangeText={handleChange("confirmation")}
+                />
+                <StyledIconButton
+                  icon={() => (hideRptPw ? <EyeOff /> : <Eye />)}
+                  onPress={() => setHideRptPw(!hideRptPw)}
+                />
+              </InputContainer>
 
-        <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
-          <LoginText> LOGIN</LoginText>
-        </TouchableOpacity>
-      </LoginFrame>
+              {errors?.server && <ErrorText>{errors.server}</ErrorText>}
+              <FormButton onPress={handleSubmit}>
+                <ButtonText>SIGN UP</ButtonText>
+              </FormButton>
+            </>
+          )}
+        </Formik>
+
+        <Navigation>
+          <Text>Already have an acount?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
+            <PrimaryText>LOGIN</PrimaryText>
+          </TouchableOpacity>
+        </Navigation>
+      </View>
     </Container>
   );
 };
-
-const Header = styled.View`
-  margin-bottom: 25px;
-`;
-
-const Container = styled.View`
-  flex: 1px;
-  background-color: #ffffff;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 30px;
-`;
-
-const Title = styled.Text`
-  font-weight: bold;
-  font-size: 50px;
-  color: #000000;
-  margin-bottom: 40px;
-  align-items: flex-start;
-`;
-
-const SignUpButton = styled.TouchableOpacity`
-  width: 80%;
-  background-color: #ffb900;
-  border-radius: 25px;
-  height: 50px;
-  align-items: center;
-  justify-content: center;
-  margin-top: 120px;
-  margin-bottom: 10px;
-`;
-
-const LoginFrame = styled.View`
-  flex-direction: row;
-  margin-left: 40px;
-  margin-top: 20px;
-`;
-
-const LoginText = styled.Text`
-  color: #ffb900;
-`;
-
-const SignUpText = styled.Text`
-  color: black;
-`;
-
-const LoginQuestion = styled.Text`
-  flex-direction: row;
-`;
-
-const WelcomeText = styled.Text`
-  color: #ffb900;
-  fontSize: 17px;
-  margin-top: 10px;
-  font-weight: bold;
-`;
-
-const ErrorText = styled.Text`
-  color: red;
-  fontSize: 15px;
-  margin-top: 20px;
-`;
-
-const InputContainer = styled.View`
-  width: 80%;
-  background-color: #ffffff;
-  height: 65px;
-  justify-content: center;
-`;
 
 export default SignUp;

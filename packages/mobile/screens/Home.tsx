@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-export default function HomeScreen({
-  navigation,
-  route,
-}: {
+interface HomeProps {
   navigation: any;
   route: any;
-}) {
+}
+
+const HomeScreen = ({ navigation, route }: HomeProps) => {
   return (
     <View style={styles.main}>
       <Text>
@@ -19,15 +18,9 @@ export default function HomeScreen({
         depende de ello), cumpla con las mejores prácticas, comentarios
         pertinentes y justificación de decisiones tomadas
       </Text>
-      <Button
-        title="abrir article view"
-        onPress={() => {
-          navigation.push("article");
-        }}
-      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   main: {
@@ -36,7 +29,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
     padding: 18,
-    paddingTop: 8,
+    paddingTop: 18,
     paddingBottom: 8,
     alignItems: "center",
     backgroundColor: "#fff",
@@ -58,3 +51,5 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
   },
 });
+
+export default HomeScreen;
