@@ -24,7 +24,20 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required("Required"),
 });
 
-const LogIn = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
+export interface FormikProps {
+  handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
+  values: FormikValues;
+  handleChange: (f: string) => void;
+  errors: FormikErrors<FormikValues>;
+  touched: FormikTouched<FormikValues>;
+  handleBlur: (f: string) => void;
+}
+
+export interface Props {
+  navigation: StackNavigationProp<any>;
+}
+
+const LogIn = ({ navigation }: Props) => {
   const [logInUser, { data }] = useLoginMutation();
   const [hidePw, setHidePw] = useState(true);
 
@@ -40,7 +53,7 @@ const LogIn = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
     })
       .then(({ data }) => {
         if (data?.loggedUser?.id) {
-          navigation.navigate("HomeScreen");
+          console.log("Add session management");
         }
       })
       .catch(({ Errors, graphQLErrors }) => {
@@ -66,14 +79,7 @@ const LogIn = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
             errors,
             touched,
             handleBlur,
-          }: {
-            handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
-            values: FormikValues;
-            handleChange: (f: string) => void;
-            errors: FormikErrors<FormikValues>;
-            touched: FormikTouched<FormikValues>;
-            handleBlur: (f: string) => void;
-          }) => (
+          }: FormikProps) => (
             <>
               <InputContainer>
                 <StyledField

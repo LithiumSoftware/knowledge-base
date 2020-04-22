@@ -24,9 +24,8 @@ import Sidebar from "../components/Sidebar";
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-const loggedUser = false;
-
 const AppNavigator = (props: any) => {
+  const [loggedUser, setUser] = useState(null);
   const [rootPath, setRootPath] = useState([]);
   const [selected, setSelected] = useState(null);
 

@@ -25,6 +25,8 @@ import {
   PrimaryText,
   ErrorText,
   StyledIconButton,
+  FormikProps,
+  Props,
 } from "./LogIn";
 import { Eye, EyeOff } from "../assets/icons";
 import styled from "styled-components/native";
@@ -45,7 +47,7 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password does not match"),
 });
 
-const SignUp = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
+const SignUp = ({ navigation }: Props) => {
   const [signUpUser, { data }] = useSignupMutation();
   const [hidePw, setHidePw] = useState(true);
   const [hideRptPw, setHideRptPw] = useState(true);
@@ -63,7 +65,7 @@ const SignUp = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
     })
       .then(({ data }) => {
         if (data?.signedUser?.id) {
-          navigation.navigate("HomeScreen");
+          console.log("Add session management");
         }
       })
       .catch(({ Errors, graphQLErrors }) => {
@@ -94,14 +96,7 @@ const SignUp = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
             errors,
             touched,
             handleBlur,
-          }: {
-            values: FormikValues;
-            handleChange: (f: string) => void;
-            handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
-            errors: FormikErrors<FormikValues>;
-            touched: FormikTouched<FormikValues>;
-            handleBlur: (f: string) => void;
-          }) => (
+          }: FormikProps) => (
             <>
               <InputContainer>
                 <StyledField
