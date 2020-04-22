@@ -9,6 +9,7 @@ import Breadcrumbs from "./Breadcrumbs";
 import ArticleEditor from "./ArticleEditor";
 
 import { useArticleQuery } from "../local_core/generated/graphql";
+import { useUpdateArticleMutation } from "../local_core/generated/graphql";
 
 const StyledSafeAreaView = styled(SafeAreaView)`
   flex: 1;
@@ -58,7 +59,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
     variables: { id: route.params.articleId },
   });
 
-  // const [updateArticle] = useMutation(UPDATE_ARTICLE_MUTATION);
+  const [updateArticle] = useUpdateArticleMutation();
 
   const [updatedTime, setUpdatedTime] = useState(
     data?.article?.updatedAt !== data?.article?.createdAt
@@ -85,16 +86,23 @@ const ArticleContent = ({ route, navigation }: Props) => {
     };
   }, [updatedTime, data?.article?.updatedAt]);
 
-  const onSave = (newContent: String) => {
-    // updateArticle({
-    //   variables: {
-    //     newContent: newContent,
-    //     articleId: data?.article?.id,
-    //   },
-    // }).then((response) => {
-    //   setUpdatedTime(response.data.updateArticle.updatedAt);
-    // });
-  };
+  function onSaveTitle(newTitle: string) {
+    updateArticle({
+      variables: {
+        id: data?.article?.id,
+        title: newTitle,
+      },
+    }).then(({ data }) => setUpdatedTime(data?.updateArticle?.updatedAt));
+  }
+
+  function onSaveBody(newBody: string) {
+    updateArticle({
+      variables: {
+        id: data?.article?.id,
+        body: newBody,
+      },
+    }).then(({ data }) => setUpdatedTime(data?.updateArticle?.updatedAt));
+  }
 
   return loading ? (
     <StyledLoadingView>
@@ -113,13 +121,16 @@ const ArticleContent = ({ route, navigation }: Props) => {
           data.article.title,
         ]}
       />
-      <TitleEditText>{data.article.title}</TitleEditText>
-      <ArticleEditor content={data.article.body || ""} onSave={onSave} />
-      {/* {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
+      <TitleEditText
+        value={data.article.title}
+        onChangeText={(text: string) => onSaveTitle(text)}
+      />
+      <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
+      {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
         <StyledText onPress={() => console.log(lastModificationTime)}>
           Last modified {lastModificationTime}
         </StyledText>
-      )} */}
+      )}
     </StyledSafeAreaView>
   ) : (
     <Text>{error?.message}</Text>
