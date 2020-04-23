@@ -12,9 +12,10 @@ const StyledButton = styled(Button)`
 
 interface FooterProps {
   navigation: any;
+  setReload: Function;
 }
 
-const SidebarFooter = ({ navigation }: FooterProps) => {
+const SidebarFooter = ({ navigation, setReload }: FooterProps) => {
   const [createArticle, { data }] = useCreateArticleMutation();
 
   const buttonPressed = () => {
@@ -25,6 +26,7 @@ const SidebarFooter = ({ navigation }: FooterProps) => {
             createArticle: { id },
           },
         }) => {
+          setReload(new Date());
           navigation.navigate("article", { id: id });
         }
       )
