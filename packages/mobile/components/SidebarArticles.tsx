@@ -60,6 +60,7 @@ const SidebarArticles = ({
                 navigation={navigation}
                 reload={reloadArticle}
                 selected={selected}
+                mainRefetch={refetch}
               />
               {favourites && <Divider />}
             </View>
