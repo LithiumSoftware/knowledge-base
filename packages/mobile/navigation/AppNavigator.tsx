@@ -42,7 +42,12 @@ const AppNavigator = (props: any) => {
         (loggedUser ? (
           <Drawer.Navigator
             drawerContent={(props: any) => (
-              <Sidebar {...props} rootPath={rootPath} selected={selected} />
+              <Sidebar
+                {...props}
+                rootPath={rootPath}
+                selected={selected}
+                setUser={setUser}
+              />
             )}
             drawerType="front"
             drawerStyle={{ paddingTop: -4 }}
