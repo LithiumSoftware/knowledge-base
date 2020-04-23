@@ -55,7 +55,9 @@ const SidebarArticle = ({
           backgroundColor: selected === titleId ? "#CCC" : "#FFF",
         }}
         title={article?.title}
-        onPress={() => navigation.navigate("article", { id: article?.id })}
+        onPress={() =>
+          navigation.navigate("Article", { articleId: article?.id })
+        }
         left={(props: any) => (
           <NoMarginIcon
             icon={() =>

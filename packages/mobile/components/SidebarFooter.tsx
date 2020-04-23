@@ -25,7 +25,7 @@ const SidebarFooter = ({ navigation }: FooterProps) => {
             createArticle: { id },
           },
         }) => {
-          navigation.navigate("article", { id: id });
+          navigation.navigate("Article", { articleId: id });
         }
       )
       .catch((err) => {

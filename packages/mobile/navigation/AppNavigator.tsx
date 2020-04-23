@@ -97,9 +97,9 @@ const UserNavigator = ({
       }}
     />
     <Stack.Screen
-      name="article"
+      name="Article"
       component={ArticleScreen}
-      initialParams={{ ...route.params, articleId: "1" }}
+      initialParams={{ ...route.params }}
       options={{
         title: "",
         headerStyle: { backgroundColor: "#fff" },
