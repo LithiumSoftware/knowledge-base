@@ -1,0 +1,9 @@
+const path = require("path");
+folder = `${__dirname}/pages/api`
+
+module.exports = {
+  config: path.join(folder, "config.json"),
+  "migrations-path": path.join(folder, "migrations"),
+  "seeders-path": path.join(folder, "seeders"),
+  "models-path": path.join(folder, "models")
+};
