@@ -3,6 +3,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
+  AsyncStorage,
   ScrollView,
   StyleSheet,
   Text,
@@ -25,29 +26,41 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 const AppNavigator = (props: any) => {
-  const [loggedUser, setUser] = useState(null);
+  const [loggedUser, setUser] = useState<String | null>(null);
   const [rootPath, setRootPath] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  AsyncStorage.getItem("logged_in").then((data) => {
+    setUser(data);
+    setLoading(false);
+  });
 
   return (
     <>
-      {loggedUser ? (
-        <Drawer.Navigator
-          drawerContent={(props: any) => (
-            <Sidebar {...props} rootPath={rootPath} selected={selected} />
-          )}
-          drawerType="front"
-          drawerStyle={{ paddingTop: -4 }}
-        >
-          <Drawer.Screen
-            name="Welcome"
-            component={UserNavigator}
-            initialParams={setRootPath}
-          />
-        </Drawer.Navigator>
-      ) : (
-        <GuestNavigator />
-      )}
+      {!loading &&
+        (loggedUser ? (
+          <Drawer.Navigator
+            drawerContent={(props: any) => (
+              <Sidebar
+                {...props}
+                rootPath={rootPath}
+                selected={selected}
+                setUser={setUser}
+              />
+            )}
+            drawerType="front"
+            drawerStyle={{ paddingTop: -4 }}
+          >
+            <Drawer.Screen
+              name="Welcome"
+              component={UserNavigator}
+              initialParams={setRootPath}
+            />
+          </Drawer.Navigator>
+        ) : (
+          <GuestNavigator initialParams={{ setUser: setUser }} />
+        ))}
     </>
   );
 };
@@ -59,11 +72,19 @@ interface UserProps {
   setSelected: Function;
 }
 
-const GuestNavigator = () => (
+const GuestNavigator = ({ initialParams: { setUser } }: any) => (
   <Stack.Navigator initialRouteName="LogIn" headerMode="none">
-    <Stack.Screen name="LogIn" component={LogInScreen} />
+    <Stack.Screen
+      name="LogIn"
+      component={LogInScreen}
+      initialParams={{ setUser }}
+    />
 
-    <Stack.Screen name="SignUp" component={SignUpScreen} />
+    <Stack.Screen
+      name="SignUp"
+      component={SignUpScreen}
+      initialParams={{ setUser }}
+    />
   </Stack.Navigator>
 );
 

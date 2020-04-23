@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import { AsyncStorage, Image, TouchableOpacity, View } from "react-native";
 import { TextInput, IconButton } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -35,9 +35,15 @@ export interface FormikProps {
 
 export interface Props {
   navigation: StackNavigationProp<any>;
+  route: any;
 }
 
-const LogIn = ({ navigation }: Props) => {
+const LogIn = ({
+  navigation,
+  route: {
+    params: { setUser },
+  },
+}: Props) => {
   const [logInUser, { data }] = useLoginMutation();
   const [hidePw, setHidePw] = useState(true);
 
@@ -51,11 +57,17 @@ const LogIn = ({ navigation }: Props) => {
         password: values.password,
       },
     })
-      .then(({ data }) => {
-        if (data?.loggedUser?.id) {
-          console.log("Add session management");
+      .then(
+        ({
+          data: {
+            loggedUser: { id },
+          },
+        }) => {
+          if (id) {
+            AsyncStorage.setItem("logged_in", id).then(() => setUser(true));
+          }
         }
-      })
+      )
       .catch(({ Errors, graphQLErrors }) => {
         const error = graphQLErrors?.map((err: any) => err?.message);
         setErrors({ server: error[0] });

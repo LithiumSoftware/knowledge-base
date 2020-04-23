@@ -7,7 +7,8 @@ import { Heart, Plus, ChevronDown, ChevronRight, File } from "../assets/icons";
 
 import {
   useArticleQuery,
-  ToggleFavouriteMutation,
+  useToggleFavouriteMutation,
+  useCreateArticleMutation,
   Article,
 } from "../local_core/generated/graphql";
 
@@ -15,6 +16,7 @@ interface Props {
   hierarchy: number;
   id: string;
   reload?: any;
+  mainRefetch: any;
   rootPath?: string[];
   selected: string | null;
   navigation: any;
@@ -24,6 +26,7 @@ const SidebarArticle = ({
   hierarchy,
   id,
   reload,
+  mainRefetch,
   rootPath,
   selected,
   navigation,
@@ -36,6 +39,9 @@ const SidebarArticle = ({
     fetchPolicy: "no-cache",
   });
 
+  const [toggleFavouriteMutation] = useToggleFavouriteMutation();
+  const [createArticle] = useCreateArticleMutation();
+
   useEffect(() => {
     !!rootPath && !collapsed && setCollapsed(true);
   }, [rootPath]);
@@ -44,8 +50,42 @@ const SidebarArticle = ({
     reload && refetch();
   }, [reload]);
 
+  const toggleFavouriteAction = () =>
+    toggleFavouriteMutation({
+      variables: {
+        articleId: article.id,
+      },
+    })
+      .then(({ data: { toggleFavourite } }) => {
+        setFavourite(toggleFavourite);
+      })
+      .catch((err) => console.log(`Error togglefavourite: ${err}`));
+
+  const addSubArticle = () =>
+    createArticle({
+      variables: {
+        parentId: article.id,
+      },
+    })
+      .then(
+        ({
+          data: {
+            createArticle: { id },
+          },
+        }) => {
+          mainRefetch();
+          navigation.navigate("article", { id: id });
+        }
+      )
+      .catch((err) => {
+        console.log(`Error create subArticle: ${err}`);
+      });
+
+  console.log(mainRefetch);
+
   const article = data?.article;
   const titleId = `${article?.title}-${article?.id}`;
+  isFavourite === null && article && setFavourite(article?.favourited);
 
   return (
     <>
@@ -79,12 +119,12 @@ const SidebarArticle = ({
             <NoMarginIcon
               {...props}
               icon={() => <Heart fill={isFavourite ? "#FFC200" : "#D6D6D6"} />}
-              onPress={() => setFavourite(!isFavourite)}
+              onPress={() => toggleFavouriteAction()}
             />
             <NoMarginIcon
               {...props}
               icon={() => <Plus />}
-              onPress={() => console.log("plus")}
+              onPress={() => addSubArticle()}
             />
           </>
         )}
@@ -97,6 +137,7 @@ const SidebarArticle = ({
               id={subArticle?.id}
               key={index}
               reload={reload}
+              mainRefetch={mainRefetch}
               rootPath={
                 rootPath &&
                 `${subArticle?.title}-${subArticle?.id}` === rootPath[hierarchy]

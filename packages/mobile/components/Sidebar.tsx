@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Image, Dimensions, View } from "react-native";
+import { AsyncStorage, Image, Dimensions, View } from "react-native";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { Appbar, Avatar, Divider, Drawer } from "react-native-paper";
+import { Appbar, Divider, Drawer, IconButton } from "react-native-paper";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 
 import styled from "styled-components/native";
@@ -41,7 +41,7 @@ const StyledImage = styled(Image)`
   height: 33px;
 `;
 
-const AvatarIcon = styled(Avatar.Icon)`
+const StyledIcon = styled(IconButton)`
   margin-right: 4px;
   padding: 0px;
   background-color: #fff;
@@ -65,6 +65,11 @@ const Sidebar = (props: any) => {
     { key: "favourites", title: "Favourites" },
   ]);
 
+  const [reload, setReload] = useState<Date | null>(null);
+
+  const logOut = () =>
+    AsyncStorage.setItem("logged_in", "").then(() => props.setUser(null));
+
   const renderScene = ({ route }: { route: any }) => {
     switch (route.key) {
       case "all":
@@ -74,6 +79,7 @@ const Sidebar = (props: any) => {
               navigation: props.navigation,
               rootPath: props.rootPath,
               selected: props.selected,
+              reload: reload,
             }}
           />
         );
@@ -85,6 +91,7 @@ const Sidebar = (props: any) => {
               rootPath: props.rootPath,
               navigation: props.navigation,
               selected: props.selected,
+              reload: reload,
             }}
           />
         );
@@ -97,7 +104,7 @@ const Sidebar = (props: any) => {
         <Header>
           <StyledImage source={require("../assets/icono-lithium.png")} />
           <Appbar.Content title="Lithium KB." />
-          <AvatarIcon icon={() => <AccountCircle />} size={52} />
+          <StyledIcon icon={() => <AccountCircle />} onPress={() => logOut()} />
         </Header>
         <TabView
           navigationState={{ index, routes }}
@@ -109,7 +116,7 @@ const Sidebar = (props: any) => {
           renderTabBar={renderTabBar}
         />
       </DrawerContentScrollView>
-      <SidebarFooter navigation={props.navigation} />
+      <SidebarFooter navigation={props.navigation} setReload={setReload} />
     </>
   );
 };

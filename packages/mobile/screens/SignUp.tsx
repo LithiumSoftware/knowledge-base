@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import { AsyncStorage, Image, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -47,7 +47,12 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password does not match"),
 });
 
-const SignUp = ({ navigation }: Props) => {
+const SignUp = ({
+  navigation,
+  route: {
+    params: { setUser },
+  },
+}: Props) => {
   const [signUpUser, { data }] = useSignupMutation();
   const [hidePw, setHidePw] = useState(true);
   const [hideRptPw, setHideRptPw] = useState(true);
@@ -63,13 +68,20 @@ const SignUp = ({ navigation }: Props) => {
         password: values.password,
       },
     })
-      .then(({ data }) => {
-        if (data?.signedUser?.id) {
-          console.log("Add session management");
+      .then(
+        ({
+          data: {
+            signedUser: { id },
+          },
+        }) => {
+          if (id) {
+            AsyncStorage.setItem("logged_in", id).then(() => setUser(true));
+          }
         }
-      })
-      .catch(({ Errors, graphQLErrors }) => {
-        const error = graphQLErrors?.map((err: any) => err?.message);
+      )
+      .catch((err) => {
+        console.log(err);
+        const error = err?.graphQLErrors?.map((err: any) => err?.message);
         setErrors({ server: error[0] });
       });
   };
