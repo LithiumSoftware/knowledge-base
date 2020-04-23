@@ -7,7 +7,7 @@ import { Heart, Plus, ChevronDown, ChevronRight, File } from "../assets/icons";
 
 import {
   useArticleQuery,
-  ToggleFavouriteMutation,
+  useToggleFavouriteMutation,
   Article,
 } from "../local_core/generated/graphql";
 
@@ -36,6 +36,8 @@ const SidebarArticle = ({
     fetchPolicy: "no-cache",
   });
 
+  const [toggleFavouriteMutation] = useToggleFavouriteMutation();
+
   useEffect(() => {
     !!rootPath && !collapsed && setCollapsed(true);
   }, [rootPath]);
@@ -44,8 +46,20 @@ const SidebarArticle = ({
     reload && refetch();
   }, [reload]);
 
+  const toggleFavouriteAction = () =>
+    toggleFavouriteMutation({
+      variables: {
+        articleId: article.id,
+      },
+    })
+      .then(({ data: { toggleFavourite } }) => {
+        setFavourite(toggleFavourite);
+      })
+      .catch((err) => console.log(`Error togglefavourite: ${err}`));
+
   const article = data?.article;
   const titleId = `${article?.title}-${article?.id}`;
+  isFavourite === null && article && setFavourite(article?.favourited);
 
   return (
     <>
@@ -77,7 +91,7 @@ const SidebarArticle = ({
             <NoMarginIcon
               {...props}
               icon={() => <Heart fill={isFavourite ? "#FFC200" : "#D6D6D6"} />}
-              onPress={() => setFavourite(!isFavourite)}
+              onPress={() => toggleFavouriteAction()}
             />
             <NoMarginIcon
               {...props}
