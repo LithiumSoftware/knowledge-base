@@ -14,6 +14,7 @@ interface Props {
   rootPath: string[];
   selected: string | null;
   navigation?: any;
+  reload: Date | null;
 }
 
 const SidebarArticles = ({
@@ -21,8 +22,9 @@ const SidebarArticles = ({
   rootPath,
   selected,
   navigation,
+  reload,
 }: Props) => {
-  const [reload, setReload] = useState<Date | null>(null);
+  const [reloadArticle, setReloadArticle] = useState<Date | null>(null);
   const { data, refetch, networkStatus } = favourites
     ? useFavouriteArticlesQuery({
         fetchPolicy: "no-cache",
@@ -34,8 +36,12 @@ const SidebarArticles = ({
       });
 
   useEffect(() => {
-    networkStatus === 4 && setReload(new Date());
+    networkStatus === 4 && setReloadArticle(new Date());
   }, [networkStatus]);
+
+  useEffect(() => {
+    reload && refetch();
+  }, [reload]);
 
   const articles = favourites ? data?.me?.favourites : data?.articles;
 
@@ -52,7 +58,7 @@ const SidebarArticles = ({
                   `${title}-${id}` === rootPath[0] ? rootPath : undefined
                 }
                 navigation={navigation}
-                reload={reload}
+                reload={reloadArticle}
                 selected={selected}
               />
               {favourites && <Divider />}
