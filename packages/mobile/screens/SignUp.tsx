@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import { AsyncStorage, Image, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
-import AsyncStorage from "@react-native-community/async-storage";
 
 import {
   Field,
