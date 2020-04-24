@@ -44,8 +44,7 @@ const StyledImage = styled(Image)`
 const StyledIcon = styled(IconButton)`
   margin-right: 4px;
   padding: 0px;
-  background-color: #fff;
-  color: #dadada;
+  background-color: #fff;=
 `;
 
 const renderTabBar = (props: any) => (
