@@ -51,7 +51,9 @@ export const resolvers = {
       db.article.findByPk(id)
     ),
     articles: authenticated((_, args, { dataSources: { db } }) =>
-      db.article.findAll()
+      db.article.findAll({
+        order: [["createdAt", "ASC"]],
+      })
     ),
   },
   Mutation: {

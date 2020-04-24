@@ -56,10 +56,10 @@ const SidebarArticle = ({
         articleId: article.id,
       },
     })
-      .then(({ data: { toggleFavourite } }) => {
+      .then(({ data: { toggleFavourite } }: { data: { toggleFavourite: boolean }} ) => {
         setFavourite(toggleFavourite);
       })
-      .catch((err) => console.log(`Error togglefavourite: ${err}`));
+      .catch((err: any) => console.log(`Error togglefavourite: ${err}`));
 
   const addSubArticle = () =>
     createArticle({
@@ -72,12 +72,12 @@ const SidebarArticle = ({
           data: {
             createArticle: { id },
           },
-        }) => {
+        }: { data: { createArticle: { id: string } } }) => {
           mainRefetch();
           navigation.navigate("Article", { articleId: id });
         }
       )
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(`Error create subArticle: ${err}`);
       });
 
@@ -89,7 +89,7 @@ const SidebarArticle = ({
 
   return (
     <>
-      <List.Item
+      {article && <List.Item
         style={{
           paddingLeft: hierarchy * 4,
           backgroundColor: selected === titleId ? "#CCC" : "#FFF",
@@ -105,11 +105,11 @@ const SidebarArticle = ({
                 collapsed ? (
                   <ChevronDown />
                 ) : (
-                  <ChevronRight />
-                )
+                    <ChevronRight />
+                  )
               ) : (
-                <File />
-              )
+                  <File />
+                )
             }
             onPress={() => setCollapsed(!collapsed)}
           />
@@ -129,9 +129,10 @@ const SidebarArticle = ({
           </>
         )}
       />
+      }
       <Collapsible collapsed={!collapsed}>
         {article?.children?.map(
-          (subArticle: { id: string; title: string }, index) => (
+          (subArticle: { id: string; title: string }, index: number) => (
             <SidebarArticle
               hierarchy={hierarchy + 8}
               id={subArticle?.id}
