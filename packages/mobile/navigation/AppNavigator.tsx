@@ -32,7 +32,7 @@ const AppNavigator = (props: any) => {
   return (
     <>
       {!loading &&
-        (true ? (
+        (loggedUser ? (
           <Drawer.Navigator
             drawerContent={(props: any) => (
               <Sidebar
@@ -88,7 +88,7 @@ const UserNavigator = ({
   setSelected,
 }: UserProps) => (
   <Stack.Navigator
-    initialRouteName="Article"
+    initialRouteName="Home"
     mode="modal"
     headerMode="float"
     screenOptions={{
