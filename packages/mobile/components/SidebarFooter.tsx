@@ -27,7 +27,7 @@ const SidebarFooter = ({ navigation, setReload }: FooterProps) => {
           },
         }) => {
           setReload(new Date());
-          navigation.navigate("article", { id: id });
+          navigation.navigate("Article", { articleId: id });
         }
       )
       .catch((err) => {

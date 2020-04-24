@@ -45,7 +45,6 @@ const StyledIcon = styled(IconButton)`
   margin-right: 4px;
   padding: 0px;
   background-color: #fff;
-  color: #dadada;
 `;
 
 const renderTabBar = (props: any) => (

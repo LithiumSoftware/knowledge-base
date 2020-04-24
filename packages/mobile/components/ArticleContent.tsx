@@ -57,7 +57,10 @@ interface Props {
 const ArticleContent = ({ route, navigation }: Props) => {
   const { data, loading, error } = useArticleQuery({
     variables: { id: route.params.articleId },
+    fetchPolicy: "no-cache",
   });
+
+  const [title, setTitle] = useState(data?.article?.title);
 
   const [updateArticle] = useUpdateArticleMutation();
 
@@ -70,6 +73,10 @@ const ArticleContent = ({ route, navigation }: Props) => {
   const [lastModificationTime, setLastModificationTime] = useState(
     moment(updatedTime).fromNow()
   );
+
+  useEffect(() => {
+    setTitle(data?.article?.title);
+  }, [data?.article?.title]);
 
   useEffect(() => {
     setLastModificationTime(moment(updatedTime).fromNow());
@@ -118,12 +125,15 @@ const ArticleContent = ({ route, navigation }: Props) => {
                 (titleAndId) => titleAndId?.split("-")[0] || ""
               )
             : []),
-          data.article.title,
+          title ? title : "",
         ]}
       />
       <TitleEditText
-        value={data.article.title}
-        onChangeText={(text: string) => onSaveTitle(text)}
+        value={title}
+        onChangeText={(text: string) => {
+          setTitle(text);
+          onSaveTitle(text);
+        }}
       />
       <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
       {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
