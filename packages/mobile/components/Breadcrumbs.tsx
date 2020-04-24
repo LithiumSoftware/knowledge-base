@@ -43,7 +43,9 @@ interface Props {
 }
 
 const Breadcrumbs = ({ separator, titles }: Props) => {
-  let breadcrumbs = titles.map((title) => <BreadcrumbItem title={title} />);
+  let breadcrumbs = titles.map((title, index) => (
+    <BreadcrumbItem key={index * 2} title={title} />
+  ));
 
   const totalItems = breadcrumbs.length;
   const lastIndex = totalItems - 1;
@@ -51,14 +53,18 @@ const Breadcrumbs = ({ separator, titles }: Props) => {
   if (totalItems > max) {
     breadcrumbs = [
       breadcrumbs[0],
-      <BreadcrumbCollapser />,
+      <BreadcrumbCollapser key={1} />,
       breadcrumbs[lastIndex],
     ];
   }
 
   let i = 1;
   while (i < breadcrumbs.length) {
-    breadcrumbs.splice(i, 0, <BreadcrumbSeparator separator={separator} />);
+    breadcrumbs.splice(
+      i,
+      0,
+      <BreadcrumbSeparator key={i} separator={separator} />
+    );
     i += 2;
   }
 
