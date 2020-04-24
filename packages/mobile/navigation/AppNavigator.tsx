@@ -1,18 +1,11 @@
 import React, { useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Menu, Heart, Search } from "../assets/icons";
 
-import {
-  AsyncStorage,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { AsyncStorage, View } from "react-native";
 import { IconButton } from "react-native-paper";
 
-import { Menu } from "../assets/icons";
 import styled from "styled-components/native";
 
 import HomeScreen from "../screens/Home";
@@ -39,7 +32,7 @@ const AppNavigator = (props: any) => {
   return (
     <>
       {!loading &&
-        (loggedUser ? (
+        (true ? (
           <Drawer.Navigator
             drawerContent={(props: any) => (
               <Sidebar
@@ -95,7 +88,7 @@ const UserNavigator = ({
   setSelected,
 }: UserProps) => (
   <Stack.Navigator
-    initialRouteName="Home"
+    initialRouteName="Article"
     mode="modal"
     headerMode="float"
     screenOptions={{
@@ -128,7 +121,7 @@ const UserNavigator = ({
           <IconButton
             color="black"
             style={{ left: 4, height: "100%" }}
-            icon="menu"
+            icon={() => <Menu />}
             onPress={() => navigation.toggleDrawer()}
           />
         ),
@@ -136,13 +129,11 @@ const UserNavigator = ({
         headerRight: () => (
           <View style={{ flexDirection: "row" }}>
             <IconButton
-              color="#FFC200"
-              icon="heart"
+              icon={() => <Heart fill={"#FFC200"} />}
               onPress={() => console.log("favorite")}
             />
             <IconButton
-              color="#dadada"
-              icon="magnify"
+              icon={() => <Search />}
               onPress={() => console.log("search")}
             />
           </View>
