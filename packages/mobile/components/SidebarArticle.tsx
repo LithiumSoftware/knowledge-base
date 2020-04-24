@@ -74,7 +74,7 @@ const SidebarArticle = ({
           },
         }) => {
           mainRefetch();
-          navigation.navigate("article", { id: id });
+          navigation.navigate("Article", { articleId: id });
         }
       )
       .catch((err) => {
@@ -95,9 +95,9 @@ const SidebarArticle = ({
           backgroundColor: selected === titleId ? "#CCC" : "#FFF",
         }}
         title={article?.title}
-        onPress={() =>
-          navigation.navigate("Article", { articleId: article?.id })
-        }
+        onPress={() => {
+          navigation.navigate("Article", { articleId: article?.id });
+        }}
         left={(props: any) => (
           <NoMarginIcon
             icon={() =>
