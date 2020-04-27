@@ -18,23 +18,16 @@ const StyledView = styled(View)`
 `;
 
 const StyledText = styled(Text)`
-  width: 335px;
-  height: 42px;
-  left: 20px;
-
-  font-size: 12px;
-  line-height: 20px;
-
   display: flex;
-  align-items: center;
+  font-size: 12px;
+  padding: 16px;
   text-align: center;
-
   color: #bdbdbd;
 `;
 
 const TitleEditText = styled(TextInput)`
   width: 100%;
-  padding-top: 36px;
+  padding-top: 26px;
   left: 19px;
   font-weight: bold;
   font-size: 48px;
