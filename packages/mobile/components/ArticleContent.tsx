@@ -27,12 +27,13 @@ const StyledText = styled(Text)`
 
 const TitleEditText = styled(TextInput)`
   width: 100%;
-  padding-top: 26px;
-  left: 19px;
+  margin-top: 26px;
+  padding-left: 16px
   font-weight: bold;
   font-size: 48px;
-  letter-spacing: -1.5px;
-  color: rgba(0, 0, 0, 0.87);
+  flex-wrap: wrap;
+  max-height: 180px;
+  padding-top: -1px;
 `;
 
 const StyledLoadingView = styled(View)`
@@ -127,6 +128,8 @@ const ArticleContent = ({ route, navigation }: Props) => {
         ]}
       />
       <TitleEditText
+        multiline={true}
+        maximumLines={3}
         value={title}
         onChangeText={(text: string) => {
           setTitle(text);
