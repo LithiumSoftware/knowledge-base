@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 
 import styled from "styled-components";
-import { View, Text, SafeAreaView, Button, TextInput } from "react-native";
+import { View, Text, Button, TextInput } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import moment from "moment";
 import Breadcrumbs from "./Breadcrumbs";
@@ -10,8 +10,9 @@ import ArticleEditor from "./ArticleEditor";
 
 import { useArticleQuery } from "../local_core/generated/graphql";
 import { useUpdateArticleMutation } from "../local_core/generated/graphql";
+import { DrawerActions } from "@react-navigation/native";
 
-const StyledSafeAreaView = styled(SafeAreaView)`
+const StyledView = styled(View)`
   flex: 1;
   background: #fff;
 `;
@@ -59,19 +60,16 @@ const ArticleContent = ({ route, navigation }: Props) => {
     variables: { id: route.params.articleId },
     fetchPolicy: "no-cache",
   });
-
-  const [title, setTitle] = useState(data?.article?.title);
-
   const [updateArticle] = useUpdateArticleMutation();
 
+  const [title, setTitle] = useState(data?.article?.title);
   const [updatedTime, setUpdatedTime] = useState(
     data?.article?.updatedAt !== data?.article?.createdAt
       ? data?.article?.updatedAt
       : null
   );
-
   const [lastModificationTime, setLastModificationTime] = useState(
-    moment(updatedTime).fromNow()
+    updatedTime ? moment(updatedTime).fromNow() : ""
   );
 
   useEffect(() => {
@@ -79,19 +77,22 @@ const ArticleContent = ({ route, navigation }: Props) => {
   }, [data?.article?.title]);
 
   useEffect(() => {
-    setLastModificationTime(moment(updatedTime).fromNow());
     setUpdatedTime(
       data?.article?.updatedAt !== data?.article?.createdAt
         ? data?.article?.updatedAt
         : null
     );
+  }, [data?.article?.updatedAt]);
+
+  useEffect(() => {
+    setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : "");
     const timeOut = setInterval(() => {
-      setLastModificationTime(moment(updatedTime).fromNow());
+      setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : "");
     }, 15 * 1000);
     return () => {
       clearInterval(timeOut);
     };
-  }, [updatedTime, data?.article?.updatedAt]);
+  }, [updatedTime]);
 
   function onSaveTitle(newTitle: string) {
     updateArticle({
@@ -99,7 +100,9 @@ const ArticleContent = ({ route, navigation }: Props) => {
         id: data?.article?.id,
         title: newTitle,
       },
-    }).then(({ data }) => setUpdatedTime(data?.updateArticle?.updatedAt));
+    }).then(({ data }) => {
+      setUpdatedTime(data?.updateArticle?.updatedAt);
+    });
   }
 
   function onSaveBody(newBody: string) {
@@ -108,7 +111,9 @@ const ArticleContent = ({ route, navigation }: Props) => {
         id: data?.article?.id,
         body: newBody,
       },
-    }).then(({ data }) => setUpdatedTime(data?.updateArticle?.updatedAt));
+    }).then(({ data }) => {
+      setUpdatedTime(data?.updateArticle?.updatedAt);
+    });
   }
 
   return loading ? (
@@ -116,7 +121,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
       <ActivityIndicator color="primary" />
     </StyledLoadingView>
   ) : data && data.article ? (
-    <StyledSafeAreaView>
+    <StyledView>
       <Breadcrumbs
         separator="/"
         titles={[
@@ -136,12 +141,14 @@ const ArticleContent = ({ route, navigation }: Props) => {
         }}
       />
       <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
-      {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
+      {updatedTime ? (
         <StyledText onPress={() => console.log(lastModificationTime)}>
           Last modified {lastModificationTime}
         </StyledText>
+      ) : (
+        <></>
       )}
-    </StyledSafeAreaView>
+    </StyledView>
   ) : (
     <Text>{error?.message}</Text>
   );
