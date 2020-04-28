@@ -52,7 +52,7 @@ const SidebarArticles = ({
           (!parent || favourites) && (
             <View key={key}>
               <SideBarArticle
-                hierarchy={1}
+                hierarchy={0}
                 id={id}
                 rootPath={
                   `${title}-${id}` === rootPath[0] ? rootPath : undefined

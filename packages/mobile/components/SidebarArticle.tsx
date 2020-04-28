@@ -56,7 +56,7 @@ const SidebarArticle = ({
         articleId: article.id,
       },
     })
-      .then(({ data: { toggleFavourite } }: { data: { toggleFavourite: boolean }} ) => {
+      .then(({ data: { toggleFavourite } }) => {
         setFavourite(toggleFavourite);
       })
       .catch((err: any) => console.log(`Error togglefavourite: ${err}`));
@@ -72,7 +72,7 @@ const SidebarArticle = ({
           data: {
             createArticle: { id },
           },
-        }: { data: { createArticle: { id: string } } }) => {
+        }) => {
           mainRefetch();
           navigation.navigate("Article", { articleId: id });
         }
@@ -81,55 +81,58 @@ const SidebarArticle = ({
         console.log(`Error create subArticle: ${err}`);
       });
 
-  console.log(mainRefetch);
-
   const article = data?.article;
   const titleId = `${article?.title}-${article?.id}`;
   isFavourite === null && article && setFavourite(article?.favourited);
 
   return (
     <>
-      {article && <List.Item
-        style={{
-          paddingLeft: hierarchy * 4,
-          backgroundColor: selected === titleId ? "#CCC" : "#FFF",
-        }}
-        title={article?.title}
-        onPress={() => {
-          navigation.navigate("Article", { articleId: article?.id });
-        }}
-        left={(props: any) => (
-          <NoMarginIcon
-            icon={() =>
-              article?.children?.length ? (
-                collapsed ? (
-                  <ChevronDown />
-                ) : (
+      {article && (
+        <List.Item
+          style={{
+            paddingLeft: hierarchy * 4,
+            backgroundColor: selected === titleId ? "#CCC" : "#FFF",
+          }}
+          title={article?.title}
+          onPress={() => {
+            navigation.navigate("Article", { articleId: article?.id });
+          }}
+          left={(props: any) => (
+            <NoMarginIcon
+              icon={() =>
+                article?.children?.length ? (
+                  collapsed ? (
+                    <ChevronDown />
+                  ) : (
                     <ChevronRight />
                   )
-              ) : (
+                ) : (
                   <File />
                 )
-            }
-            onPress={() => setCollapsed(!collapsed)}
-          />
-        )}
-        right={(props: any) => (
-          <>
-            <NoMarginIcon
-              {...props}
-              icon={() => <Heart fill={isFavourite ? "#FFC200" : "#D6D6D6"} />}
-              onPress={() => toggleFavouriteAction()}
+              }
+              onPress={() => setCollapsed(!collapsed)}
             />
-            <NoMarginIcon
-              {...props}
-              icon={() => <Plus />}
-              onPress={() => addSubArticle()}
-            />
-          </>
-        )}
-      />
-      }
+          )}
+          right={(props: any) => (
+            <>
+              <NoMarginIcon
+                {...props}
+                icon={() => (
+                  <Heart fill={isFavourite ? "#FFC200" : "#D6D6D6"} />
+                )}
+                onPress={() => toggleFavouriteAction()}
+              />
+              {hierarchy < 17 && (
+                <NoMarginIcon
+                  {...props}
+                  icon={() => <Plus />}
+                  onPress={() => addSubArticle()}
+                />
+              )}
+            </>
+          )}
+        />
+      )}
       <Collapsible collapsed={!collapsed}>
         {article?.children?.map(
           (subArticle: { id: string; title: string }, index: number) => (
