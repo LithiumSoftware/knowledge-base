@@ -5,21 +5,25 @@ import WebViewQuillJS, {
   WebviewQuillJSMessage,
 } from "react-native-webview-quilljs";
 
-const StyledKeyboardAvoidingView = styled(View)`
-  padding: 2%;
-  justify-content: flex-start;
-`;
-
 const StyledView = styled(View)`
-  min-height: 100%;
+  flex-grow: 1;
+  margin-top: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
+  justify-content: flex-start;
 `;
 
 interface Props {
   content: string;
   onSave: Function;
+  onEditTextFocus: Function;
 }
 
-export default function ArticleEditor({ content, onSave }: Props) {
+export default function ArticleEditor({
+  content,
+  onSave,
+  onEditTextFocus,
+}: Props) {
   const [articleContent, setArticleContent] = useState(content);
 
   const onMessageReceived = (message: WebviewQuillJSMessage) => {
@@ -30,18 +34,18 @@ export default function ArticleEditor({ content, onSave }: Props) {
         setArticleContent(payload.html);
         onSave(articleContent);
       }
+    } else if (msg === "ON_FOCUS") {
+      onEditTextFocus();
     }
   };
 
   return (
-    <StyledKeyboardAvoidingView>
-      <StyledView>
-        <WebViewQuillJS
-          content={content}
-          backgroundColor={"#FFFFFF"}
-          onMessageReceived={onMessageReceived}
-        />
-      </StyledView>
-    </StyledKeyboardAvoidingView>
+    <StyledView>
+      <WebViewQuillJS
+        content={content}
+        backgroundColor={"#FFFFFF"}
+        onMessageReceived={onMessageReceived}
+      />
+    </StyledView>
   );
 }

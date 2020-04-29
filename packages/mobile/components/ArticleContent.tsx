@@ -9,15 +9,13 @@ import ArticleEditor from "./ArticleEditor";
 import { useArticleQuery } from "../local_core/generated/graphql";
 import { useUpdateArticleMutation } from "../local_core/generated/graphql";
 
-const windowHeight = Dimensions.get("window").height;
-
 const ArticleContent = ({ route, navigation }: Props) => {
   const { data, loading, error } = useArticleQuery({
     variables: { id: route.params.articleId },
     fetchPolicy: "no-cache",
   });
   const [updateArticle] = useUpdateArticleMutation();
-
+  const [scrollViewLevel, setScrollViewLevel] = useState(0);
   const [title, setTitle] = useState(data?.article?.title);
   const [fontSize, setFontSize] = useState(36);
   const [updatedTime, setUpdatedTime] = useState(
@@ -32,7 +30,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
   useEffect(() => {
     setFontSize(
       data?.article?.title?.length
-        ? data?.article?.title?.length > 54
+        ? data?.article?.title?.length > 48
           ? 28
           : 36
         : 36
@@ -88,7 +86,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
     </StyledLoadingView>
   ) : data && data.article ? (
     <StyledScrollView
-      contentContainerStyle={{ flexGrow: 1, minHeight: windowHeight * 0.8 }}
+      contentContainerStyle={{ flexGrow: 1, minHeight: windowHeight }}
       keyboardShouldPersistTaps="handled"
       nestedScrollEnabled={false}
       bounces={true}
@@ -104,7 +102,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
           title ? title : "",
         ]}
       />
-      <TitleEditText
+      <TitleTextInput
         style={{ fontSize: fontSize }}
         multiline={true}
         scrollEnabled={false}
@@ -113,7 +111,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
         nestedScrollEnabled={false}
         onChangeText={(text: string) => {
           if (text.length <= 90) {
-            if (text.length > 54) {
+            if (text.length > 45) {
               setFontSize(28);
             } else {
               setFontSize(36);
@@ -122,8 +120,13 @@ const ArticleContent = ({ route, navigation }: Props) => {
             onSaveTitle(text);
           }
         }}
+        on
       />
-      <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
+      <ArticleEditor
+        content={data.article.body || ""}
+        onSave={onSaveBody}
+        onEditTextFocus={() => console.log("a")}
+      />
       <StyledText onPress={() => console.log(lastModificationTime)}>
         {updatedTime ? `Last modified ${lastModificationTime}` : ""}
       </StyledText>
@@ -133,20 +136,22 @@ const ArticleContent = ({ route, navigation }: Props) => {
   );
 };
 
+const windowHeight = Dimensions.get("window").height;
+
+const StyledLoadingView = styled(View)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const StyledScrollView = styled(ScrollView)`
   flex-grow: 1;
   background: #fff;
 `;
 
-const StyledText = styled(Text)`
-  display: flex;
-  font-size: 12px;
-  padding: 16px;
-  text-align: center;
-  color: #bdbdbd;
-`;
-
-const TitleEditText = styled(TextInput)`
+const TitleTextInput = styled(TextInput)`
   margin-top: 16px;
   padding-left: 16px;
   padding-right: 16px;
@@ -155,12 +160,12 @@ const TitleEditText = styled(TextInput)`
   padding-top: -1px;
 `;
 
-const StyledLoadingView = styled(View)`
-  width: 100%;
-  height: 100%;
+const StyledText = styled(Text)`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 12px;
+  padding: 16px;
+  text-align: center;
+  color: #bdbdbd;
 `;
 
 interface Props {
