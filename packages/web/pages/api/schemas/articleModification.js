@@ -19,11 +19,12 @@ export const typeDef = `
 
 export const resolvers = {
   Query: {
-    articleModifications: (_, { id }, { dataSources: { db } }) =>
+    articleModifications: authenticated((_, { id }, { dataSources: { db } }) =>
       db.article_modification.findAll({
         where: { articleId: id },
         order: [["updatedAt", "DESC"]],
-      }),
+      })
+    ),
   },
 
   ArticleModification: {
