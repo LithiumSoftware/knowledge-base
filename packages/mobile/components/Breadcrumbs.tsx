@@ -71,7 +71,6 @@ interface Props {
 }
 
 const StyledText = styled(Text)`
-  display: flex;
   font-size: 12px;
   padding: 16px;
   color: #bdbdbd;

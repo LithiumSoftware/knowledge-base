@@ -1,19 +1,17 @@
 import React, { useState } from "react";
-import { View, KeyboardAvoidingView, Platform, Text } from "react-native";
+import { View, Platform } from "react-native";
 import styled from "styled-components";
 import WebViewQuillJS, {
   WebviewQuillJSMessage,
-  WebviewQuillJSEvents,
 } from "react-native-webview-quilljs";
 
-const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView)`
-  flex: 1;
+const StyledKeyboardAvoidingView = styled(View)`
   padding: 2%;
   justify-content: flex-start;
 `;
 
 const StyledView = styled(View)`
-  min-height: 70%;
+  min-height: 100%;
 `;
 
 interface Props {
@@ -36,10 +34,7 @@ export default function ArticleEditor({ content, onSave }: Props) {
   };
 
   return (
-    <StyledKeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      enabled
-    >
+    <StyledKeyboardAvoidingView>
       <StyledView>
         <WebViewQuillJS
           content={content}

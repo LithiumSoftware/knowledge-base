@@ -32,7 +32,7 @@ const AppNavigator = (props: any) => {
   return (
     <>
       {!loading &&
-        (loggedUser ? (
+        (true ? (
           <Drawer.Navigator
             drawerContent={(props: any) => (
               <Sidebar

@@ -1,8 +1,6 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text, TextInput, ScrollView, Dimensions } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import moment from "moment";
 import Breadcrumbs from "./Breadcrumbs";
@@ -10,44 +8,8 @@ import ArticleEditor from "./ArticleEditor";
 
 import { useArticleQuery } from "../local_core/generated/graphql";
 import { useUpdateArticleMutation } from "../local_core/generated/graphql";
-import { DrawerActions } from "@react-navigation/native";
 
-const StyledView = styled(View)`
-  flex: 1;
-  background: #fff;
-`;
-
-const StyledText = styled(Text)`
-  display: flex;
-  font-size: 12px;
-  padding: 16px;
-  text-align: center;
-  color: #bdbdbd;
-`;
-
-const TitleEditText = styled(TextInput)`
-  width: 100%;
-  margin-top: 26px;
-  padding-left: 16px
-  font-weight: bold;
-  font-size: 48px;
-  flex-wrap: wrap;
-  max-height: 180px;
-  padding-top: -1px;
-`;
-
-const StyledLoadingView = styled(View)`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-interface Props {
-  route: any;
-  navigation: any;
-}
+const windowHeight = Dimensions.get("window").height;
 
 const ArticleContent = ({ route, navigation }: Props) => {
   const { data, loading, error } = useArticleQuery({
@@ -57,6 +19,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
   const [updateArticle] = useUpdateArticleMutation();
 
   const [title, setTitle] = useState(data?.article?.title);
+  const [fontSize, setFontSize] = useState(36);
   const [updatedTime, setUpdatedTime] = useState(
     data?.article?.updatedAt !== data?.article?.createdAt
       ? data?.article?.updatedAt
@@ -66,6 +29,15 @@ const ArticleContent = ({ route, navigation }: Props) => {
     updatedTime ? moment(updatedTime).fromNow() : ""
   );
 
+  useEffect(() => {
+    setFontSize(
+      data?.article?.title?.length
+        ? data?.article?.title?.length > 54
+          ? 28
+          : 36
+        : 36
+    );
+  }, [data?.article?.title]);
   useEffect(() => {
     setTitle(data?.article?.title);
   }, [data?.article?.title]);
@@ -115,7 +87,12 @@ const ArticleContent = ({ route, navigation }: Props) => {
       <ActivityIndicator color="primary" />
     </StyledLoadingView>
   ) : data && data.article ? (
-    <StyledView>
+    <StyledScrollView
+      contentContainerStyle={{ flexGrow: 1, minHeight: windowHeight * 0.8 }}
+      keyboardShouldPersistTaps="handled"
+      nestedScrollEnabled={false}
+      bounces={true}
+    >
       <Breadcrumbs
         separator="/"
         titles={[
@@ -128,26 +105,67 @@ const ArticleContent = ({ route, navigation }: Props) => {
         ]}
       />
       <TitleEditText
+        style={{ fontSize: fontSize }}
         multiline={true}
-        maximumLines={3}
+        scrollEnabled={false}
         value={title}
+        blurOnSubmit={true}
+        nestedScrollEnabled={false}
         onChangeText={(text: string) => {
-          setTitle(text);
-          onSaveTitle(text);
+          if (text.length <= 90) {
+            if (text.length > 54) {
+              setFontSize(28);
+            } else {
+              setFontSize(36);
+            }
+            setTitle(text);
+            onSaveTitle(text);
+          }
         }}
       />
       <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
-      {updatedTime ? (
-        <StyledText onPress={() => console.log(lastModificationTime)}>
-          Last modified {lastModificationTime}
-        </StyledText>
-      ) : (
-        <></>
-      )}
-    </StyledView>
+      <StyledText onPress={() => console.log(lastModificationTime)}>
+        {updatedTime ? `Last modified ${lastModificationTime}` : ""}
+      </StyledText>
+    </StyledScrollView>
   ) : (
     <Text>{error?.message}</Text>
   );
 };
+
+const StyledScrollView = styled(ScrollView)`
+  flex-grow: 1;
+  background: #fff;
+`;
+
+const StyledText = styled(Text)`
+  display: flex;
+  font-size: 12px;
+  padding: 16px;
+  text-align: center;
+  color: #bdbdbd;
+`;
+
+const TitleEditText = styled(TextInput)`
+  margin-top: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-weight: bold;
+  flex-wrap: wrap;
+  padding-top: -1px;
+`;
+
+const StyledLoadingView = styled(View)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+interface Props {
+  route: any;
+  navigation: any;
+}
 
 export default ArticleContent;
