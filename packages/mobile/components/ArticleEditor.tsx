@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Platform } from "react-native";
+import { View } from "react-native";
 import styled from "styled-components";
 import WebViewQuillJS, {
   WebviewQuillJSMessage,
@@ -16,14 +16,9 @@ const StyledView = styled(View)`
 interface Props {
   content: string;
   onSave: Function;
-  onEditTextFocus: Function;
 }
 
-export default function ArticleEditor({
-  content,
-  onSave,
-  onEditTextFocus,
-}: Props) {
+export default function ArticleEditor({ content, onSave }: Props) {
   const [articleContent, setArticleContent] = useState(content);
 
   const onMessageReceived = (message: WebviewQuillJSMessage) => {
@@ -34,8 +29,6 @@ export default function ArticleEditor({
         setArticleContent(payload.html);
         onSave(articleContent);
       }
-    } else if (msg === "ON_FOCUS") {
-      onEditTextFocus();
     }
   };
 

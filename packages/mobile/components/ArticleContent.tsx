@@ -15,7 +15,6 @@ const ArticleContent = ({ route, navigation }: Props) => {
     fetchPolicy: "no-cache",
   });
   const [updateArticle] = useUpdateArticleMutation();
-  const [scrollViewLevel, setScrollViewLevel] = useState(0);
   const [title, setTitle] = useState(data?.article?.title);
   const [fontSize, setFontSize] = useState(36);
   const [updatedTime, setUpdatedTime] = useState(
@@ -120,13 +119,8 @@ const ArticleContent = ({ route, navigation }: Props) => {
             onSaveTitle(text);
           }
         }}
-        on
       />
-      <ArticleEditor
-        content={data.article.body || ""}
-        onSave={onSaveBody}
-        onEditTextFocus={() => console.log("a")}
-      />
+      <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
       <StyledText onPress={() => console.log(lastModificationTime)}>
         {updatedTime ? `Last modified ${lastModificationTime}` : ""}
       </StyledText>
