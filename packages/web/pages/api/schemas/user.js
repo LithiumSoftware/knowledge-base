@@ -41,30 +41,35 @@ export const typeDef = `
 
 export const resolvers = {
   Query: {
-    me: (root, args, { dataSources: { db }, currentUserId }) => db.user.findByPk(currentUserId),
+    me: (root, args, { db, currentUserId }) => db.user.findByPk(currentUserId),
   },
   Mutation: {
-    signedUser: (_, { input }, { dataSources: { db }, res }) =>
+    signedUser: (_, { input }, { db, res }) =>
       db.user
         .create({ ...input, role: "USER" })
-        .then(user => {
+        .then((user) => {
           const tokens = setTokens(user);
           res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
           return user;
         })
-        .catch(err => {
-          throw new UserInputError("There's already an account with this email");
+        .catch((err) => {
+          throw new UserInputError(
+            "There's already an account with this email"
+          );
         }),
-    loggedUser: (_, { input: { identifier, password } }, { dataSources: { db }, res }) =>
+    loggedUser: (_, { input: { identifier, password } }, { db, res }) =>
       db.user
         .findOne({
           where: { [Op.or]: [{ username: identifier }, { email: identifier }] },
         })
-        .then(user => {
+        .then((user) => {
           if (user) {
             if (bcrypt.compareSync(password, user.password)) {
               const tokens = setTokens(user);
-              res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
+              res.setHeader(
+                "Set-Cookie",
+                `token=${tokens.accessToken}; httpOnly`
+              );
               return user;
             } else {
               throw null;
@@ -73,11 +78,11 @@ export const resolvers = {
             throw null;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.errors[0].message.includes("username")) {
             return dataBase.Users.findOne({
               where: { email: email },
-            }).then(user => {
+            }).then((user) => {
               const message =
                 user && user.dataValues
                   ? "Both username and email address are already in use."
@@ -90,8 +95,8 @@ export const resolvers = {
         }),
   },
   User: {
-    articles: user => user.getArticles(),
-    favourites: user => user.getFavourites(),
+    articles: (user) => user.getArticles(),
+    favourites: (user) => user.getFavourites(),
   },
 };
 
