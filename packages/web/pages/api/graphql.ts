@@ -3,28 +3,27 @@ import { typeDefs, resolvers } from "./schema";
 import db from "./models";
 import jwt from "jsonwebtoken";
 
+console.log("Config", { env: process.env });
+
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req, res }) => {
+    let user;
     try {
       const token = req?.cookies?.token || "";
       const maliciousToken = req?.headers["malicious-token"];
-
       if (token === maliciousToken) throw null;
-      const { user } = await (token
-        ? jwt.verify(token, "supersecret")
-        : undefined);
-
-      return {
-        db,
-        req,
-        res,
-        currentUserId: user?.id,
-      };
+      ({ user } = await (token ? jwt.verify(token, "supersecret") : undefined));
     } catch (err) {
-      return { req, res };
+      console.log("ErrorCreatingContext", err);
     }
+    return {
+      db,
+      req,
+      res,
+      currentUserId: user?.id,
+    };
   },
   introspection: true,
   playground: true,
