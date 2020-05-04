@@ -64,8 +64,6 @@ const Sidebar = (props: any) => {
     { key: "favourites", title: "Favourites" },
   ]);
 
-  const [reload, setReload] = useState<Date | null>(null);
-
   const logOut = () =>
     AsyncStorage.setItem("logged_in", "").then(() => props.setUser(null));
 
@@ -78,7 +76,6 @@ const Sidebar = (props: any) => {
               navigation: props.navigation,
               rootPath: props.rootPath,
               selected: props.selected,
-              reload: reload,
             }}
           />
         );
@@ -90,7 +87,6 @@ const Sidebar = (props: any) => {
               rootPath: props.rootPath,
               navigation: props.navigation,
               selected: props.selected,
-              reload: reload,
             }}
           />
         );
@@ -115,7 +111,7 @@ const Sidebar = (props: any) => {
           renderTabBar={renderTabBar}
         />
       </DrawerContentScrollView>
-      <SidebarFooter navigation={props.navigation} setReload={setReload} />
+      <SidebarFooter navigation={props.navigation} />
     </>
   );
 };
