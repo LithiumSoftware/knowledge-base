@@ -5,6 +5,9 @@ export default gql`
     createArticle(input: { title: $title, parentId: $parentId }) {
       id
       title
+      parent {
+        id
+      }
     }
   }
 `;

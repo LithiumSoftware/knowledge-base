@@ -47,10 +47,10 @@ export const typeDef = `
 
 export const resolvers = {
   Query: {
-    article: authenticated((_, { id }, { dataSources: { db } }) =>
+    article: authenticated((_, { id }, { db }) =>
       db.article.findByPk(id)
     ),
-    articles: authenticated((_, args, { dataSources: { db } }) =>
+    articles: authenticated((_, args, { db }) =>
       db.article.findAll({
         order: [["createdAt", "ASC"]],
       })
@@ -58,11 +58,11 @@ export const resolvers = {
   },
   Mutation: {
     createArticle: authenticated(
-      (_, { input }, { dataSources: { db }, currentUserId }) =>
+      (_, { input }, { db, currentUserId }) =>
         db.article.create({ ...input, authorId: currentUserId })
     ),
     updateArticle: authenticated(
-      (_, { input }, { dataSources: { db }, currentUserId }) =>
+      (_, { input }, { db, currentUserId }) =>
         db.article
           .findByPk(input.id)
           .then((article) =>
@@ -108,7 +108,7 @@ export const resolvers = {
           })
     ),
     toggleFavourite: authenticated(
-      (_, { articleId }, { dataSources: { db }, currentUserId }) =>
+      (_, { articleId }, { db, currentUserId }) =>
         db.favourite_article
           .findOne({
             where: { userId: currentUserId, articleId: articleId },
@@ -125,7 +125,7 @@ export const resolvers = {
           )
     ),
     moveArticle: authenticated(
-      (_, { id, parentId }, { dataSources: { db }, currentUserId }) =>
+      (_, { id, parentId }, { db, currentUserId }) =>
         id === parentId
           ? false
           : db.article.findByPk(parentId).then((parent) =>
@@ -145,7 +145,7 @@ export const resolvers = {
     author: (article) => article.getAuthor(),
     parent: (article) => article.getParent(),
     children: (article) => article.getChildren(),
-    favourited: (article, args, { dataSources: { db }, currentUserId }) =>
+    favourited: (article, args, { db, currentUserId }) =>
       db.favourite_article
         .findOne({
           where: { userId: currentUserId, articleId: article.id },

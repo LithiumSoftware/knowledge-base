@@ -8,8 +8,12 @@ import moment from "moment";
 import Breadcrumbs from "./Breadcrumbs";
 import ArticleEditor from "./ArticleEditor";
 
-import { useArticleQuery } from "../local_core/generated/graphql";
-import { useUpdateArticleMutation } from "../local_core/generated/graphql";
+import {
+  useArticleQuery,
+  useUpdateArticleMutation,
+  ArticlesDocument,
+  ArticleDocument,
+} from "../local_core/generated/graphql";
 
 const StyledSafeAreaView = styled(SafeAreaView)`
   flex: 1;
@@ -98,6 +102,33 @@ const ArticleContent = ({ route, navigation }: Props) => {
       variables: {
         id: data?.article?.id,
         title: newTitle,
+      },
+      update(cache) {
+        const cachedData = cache.readQuery({ query: ArticlesDocument });
+        cachedData.articles.some((el) => {
+          if (el.id == data.article.id) {
+            el.title = newTitle;
+            return true;
+          }
+        });
+        cache.writeQuery({ query: ArticlesDocument, data: cachedData });
+
+        const cachedArticle = cache.readQuery({
+          query: ArticleDocument,
+          variables: {
+            id: data?.article.id,
+          },
+        });
+
+        cachedArticle.article.title = newTitle;
+
+        cache.writeQuery({
+          query: ArticleDocument,
+          variables: {
+            id: data?.article.id,
+          },
+          data: cachedArticle,
+        });
       },
     }).then(({ data }) => setUpdatedTime(data?.updateArticle?.updatedAt));
   }

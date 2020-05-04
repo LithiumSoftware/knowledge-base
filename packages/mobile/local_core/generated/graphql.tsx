@@ -162,6 +162,10 @@ export type CreateArticleMutation = (
   & { createArticle: (
     { __typename?: 'Article' }
     & Pick<Article, 'id' | 'title'>
+    & { parent?: Maybe<(
+      { __typename?: 'Article' }
+      & Pick<Article, 'id'>
+    )> }
   ) }
 );
 
@@ -281,7 +285,10 @@ export type ArticleQuery = (
     )>, children?: Maybe<Array<Maybe<(
       { __typename?: 'Article' }
       & Pick<Article, 'id' | 'title'>
-    )>>> }
+    )>>>, parent?: Maybe<(
+      { __typename?: 'Article' }
+      & Pick<Article, 'id' | 'title'>
+    )> }
   )> }
 );
 
@@ -304,29 +311,15 @@ export type FavouriteArticlesQuery = (
   )> }
 );
 
-export type SidebarArticleQueryVariables = {
-  id: Scalars['ID'];
-};
-
-
-export type SidebarArticleQuery = (
-  { __typename?: 'Query' }
-  & { article?: Maybe<(
-    { __typename?: 'Article' }
-    & Pick<Article, 'id' | 'title' | 'favourited'>
-    & { children?: Maybe<Array<Maybe<(
-      { __typename?: 'Article' }
-      & Pick<Article, 'id' | 'title'>
-    )>>> }
-  )> }
-);
-
 
 export const CreateArticleDocument = gql`
     mutation CreateArticle($title: String! = "Undefined", $parentId: ID) {
   createArticle(input: {title: $title, parentId: $parentId}) {
     id
     title
+    parent {
+      id
+    }
   }
 }
     `;
@@ -614,6 +607,10 @@ export const ArticleDocument = gql`
       id
       title
     }
+    parent {
+      id
+      title
+    }
     updatedAt
     createdAt
   }
@@ -684,42 +681,3 @@ export function useFavouriteArticlesLazyQuery(baseOptions?: ApolloReactHooks.Laz
 export type FavouriteArticlesQueryHookResult = ReturnType<typeof useFavouriteArticlesQuery>;
 export type FavouriteArticlesLazyQueryHookResult = ReturnType<typeof useFavouriteArticlesLazyQuery>;
 export type FavouriteArticlesQueryResult = ApolloReactCommon.QueryResult<FavouriteArticlesQuery, FavouriteArticlesQueryVariables>;
-export const SidebarArticleDocument = gql`
-    query SidebarArticle($id: ID!) {
-  article(id: $id) {
-    id
-    title
-    favourited
-    children {
-      id
-      title
-    }
-  }
-}
-    `;
-
-/**
- * __useSidebarArticleQuery__
- *
- * To run a query within a React component, call `useSidebarArticleQuery` and pass it any options that fit your needs.
- * When your component renders, `useSidebarArticleQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSidebarArticleQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useSidebarArticleQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SidebarArticleQuery, SidebarArticleQueryVariables>) {
-        return ApolloReactHooks.useQuery<SidebarArticleQuery, SidebarArticleQueryVariables>(SidebarArticleDocument, baseOptions);
-      }
-export function useSidebarArticleLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SidebarArticleQuery, SidebarArticleQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<SidebarArticleQuery, SidebarArticleQueryVariables>(SidebarArticleDocument, baseOptions);
-        }
-export type SidebarArticleQueryHookResult = ReturnType<typeof useSidebarArticleQuery>;
-export type SidebarArticleLazyQueryHookResult = ReturnType<typeof useSidebarArticleLazyQuery>;
-export type SidebarArticleQueryResult = ApolloReactCommon.QueryResult<SidebarArticleQuery, SidebarArticleQueryVariables>;

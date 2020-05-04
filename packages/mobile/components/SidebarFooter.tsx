@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Button, Divider } from "react-native-paper";
+import gql from "graphql-tag";
 
 import styled from "styled-components/native";
 import { FilePlus } from "../assets/icons";
 
-import { useCreateArticleMutation } from "../local_core/generated/graphql";
+import {
+  useCreateArticleMutation,
+  ArticlesDocument,
+} from "../local_core/generated/graphql";
 
 const StyledButton = styled(Button)`
   height: 44px;
@@ -12,11 +16,17 @@ const StyledButton = styled(Button)`
 
 interface FooterProps {
   navigation: any;
-  setReload: Function;
 }
 
-const SidebarFooter = ({ navigation, setReload }: FooterProps) => {
-  const [createArticle, { data }] = useCreateArticleMutation();
+const SidebarFooter = ({ navigation }: FooterProps) => {
+  const [createArticle] = useCreateArticleMutation({
+    update(cache, { data: { createArticle } }) {
+      const cachedData = cache.readQuery({ query: ArticlesDocument });
+      createArticle.parent = null;
+      cachedData.articles = [...cachedData.articles, createArticle];
+      cache.writeQuery({ query: ArticlesDocument, data: cachedData });
+    },
+  });
 
   const buttonPressed = () => {
     createArticle()
@@ -26,7 +36,6 @@ const SidebarFooter = ({ navigation, setReload }: FooterProps) => {
             createArticle: { id },
           },
         }) => {
-          setReload(new Date());
           navigation.navigate("Article", { articleId: id });
         }
       )

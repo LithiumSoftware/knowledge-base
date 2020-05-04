@@ -10,33 +10,23 @@ import {
   useToggleFavouriteMutation,
   useCreateArticleMutation,
   Article,
+  ArticleDocument,
+  FavouriteArticlesDocument,
 } from "../local_core/generated/graphql";
 
 interface Props {
   hierarchy: number;
   id: string;
-  reload?: any;
-  mainRefetch: any;
   rootPath?: string[];
-  selected: string | null;
   navigation: any;
 }
 
-const SidebarArticle = ({
-  hierarchy,
-  id,
-  reload,
-  mainRefetch,
-  rootPath,
-  selected,
-  navigation,
-}: Props) => {
+const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [isFavourite, setFavourite] = useState<boolean | null>(null);
 
-  const { loading, error, data, refetch } = useArticleQuery({
+  const { loading, error, data } = useArticleQuery({
     variables: { id: id },
-    fetchPolicy: "no-cache",
   });
 
   const [toggleFavouriteMutation] = useToggleFavouriteMutation();
@@ -47,13 +37,64 @@ const SidebarArticle = ({
   }, [rootPath]);
 
   useEffect(() => {
-    reload && refetch();
-  }, [reload]);
+    setFavourite(data?.article?.favourited);
+  }, [data]);
 
   const toggleFavouriteAction = () =>
     toggleFavouriteMutation({
       variables: {
         articleId: article.id,
+      },
+      update(cache, { data: { toggleFavourite } }) {
+        try {
+          const cachedData = cache.readQuery({
+            query: FavouriteArticlesDocument,
+          });
+
+          if (toggleFavourite) {
+            const newFavourite = {
+              id: article.id,
+              title: article.title,
+              parent: article.parent || null,
+              __typename: "Article",
+            };
+
+            cachedData.me.favourites = [
+              ...cachedData.me.favourites,
+              newFavourite,
+            ];
+          } else {
+            cachedData.me.favourites = cachedData.me.favourites.filter((el) => {
+              return el.id != article.id;
+            });
+          }
+
+          cache.writeQuery({
+            query: FavouriteArticlesDocument,
+            data: cachedData,
+          });
+
+          const cachedArticle = cache.readQuery({
+            query: ArticleDocument,
+            variables: {
+              id: article.id,
+            },
+          });
+
+          cachedArticle.article.favourited = toggleFavourite;
+
+          cache.writeQuery({
+            query: ArticleDocument,
+            variables: {
+              id: article.id,
+            },
+            data: cachedArticle,
+          });
+        } catch (err) {
+          // If the user has not opened the favourite
+          // articles tab the query has not been loaded
+          // yet and it will land on this catch.
+        }
       },
     })
       .then(({ data: { toggleFavourite } }) => {
@@ -66,6 +107,33 @@ const SidebarArticle = ({
       variables: {
         parentId: article.id,
       },
+      update(cache, { data: { createArticle } }) {
+        const cachedData = cache.readQuery({
+          query: ArticleDocument,
+          variables: {
+            id: id,
+          },
+        });
+
+        const newArticle = {
+          id: createArticle.id,
+          title: createArticle.title,
+          __typename: "Article",
+        };
+
+        cachedData.article.children = [
+          ...cachedData.article.children,
+          newArticle,
+        ];
+
+        cache.writeQuery({
+          query: ArticleDocument,
+          variables: {
+            id: id,
+          },
+          data: cachedData,
+        });
+      },
     })
       .then(
         ({
@@ -73,7 +141,6 @@ const SidebarArticle = ({
             createArticle: { id },
           },
         }) => {
-          mainRefetch();
           navigation.navigate("Article", { articleId: id });
         }
       )
@@ -91,7 +158,6 @@ const SidebarArticle = ({
         <List.Item
           style={{
             paddingLeft: hierarchy * 4,
-            backgroundColor: selected === titleId ? "#CCC" : "#FFF",
           }}
           title={article?.title}
           onPress={() => {
@@ -140,15 +206,12 @@ const SidebarArticle = ({
               hierarchy={hierarchy + 8}
               id={subArticle?.id}
               key={index}
-              reload={reload}
-              mainRefetch={mainRefetch}
               rootPath={
                 rootPath &&
                 `${subArticle?.title}-${subArticle?.id}` === rootPath[hierarchy]
                   ? rootPath
                   : undefined
               }
-              selected={selected}
               navigation={navigation}
             />
           )
