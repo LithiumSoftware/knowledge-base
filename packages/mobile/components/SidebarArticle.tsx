@@ -159,7 +159,7 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
           style={{
             paddingLeft: hierarchy * 4,
           }}
-          title={`${article?.id} - ${article?.title}`}
+          title={article?.title}
           onPress={() => {
             navigation.navigate("Article", { articleId: article?.id });
           }}
@@ -188,11 +188,13 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
                 )}
                 onPress={() => toggleFavouriteAction()}
               />
-              <NoMarginIcon
-                {...props}
-                icon={() => <Plus />}
-                onPress={() => addSubArticle()}
-              />
+              {hierarchy < 17 && (
+                <NoMarginIcon
+                  {...props}
+                  icon={() => <Plus />}
+                  onPress={() => addSubArticle()}
+                />
+              )}
             </>
           )}
         />
