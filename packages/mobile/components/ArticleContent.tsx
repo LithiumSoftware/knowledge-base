@@ -85,7 +85,10 @@ const ArticleContent = ({ route, navigation }: Props) => {
     </StyledLoadingView>
   ) : data && data.article ? (
     <StyledScrollView
-      contentContainerStyle={{ flexGrow: 1, minHeight: windowHeight }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        minHeight: windowHeight + windowHeight * 0.4,
+      }}
       keyboardShouldPersistTaps="handled"
       nestedScrollEnabled={false}
       bounces={true}
@@ -157,7 +160,8 @@ const TitleTextInput = styled(TextInput)`
 const StyledText = styled(Text)`
   display: flex;
   font-size: 12px;
-  padding: 16px;
+  margin: 16px;
+  padding-bottom: 78%;
   text-align: center;
   color: #bdbdbd;
 `;
