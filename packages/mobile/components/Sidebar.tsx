@@ -95,7 +95,7 @@ const Sidebar = (props: any) => {
 
   return (
     <>
-      <DrawerContentScrollView {...props}>
+      <DrawerContentScrollView {...props} scrollEnabled={false}>
         <Header>
           <StyledImage source={require("../assets/icono-lithium.png")} />
           <Appbar.Content title="Lithium KB." />

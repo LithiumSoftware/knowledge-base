@@ -18,10 +18,17 @@ interface Props {
   hierarchy: number;
   id: string;
   rootPath?: string[];
+  drag: any;
   navigation: any;
 }
 
-const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
+const SidebarArticle = ({
+  hierarchy,
+  id,
+  rootPath,
+  drag,
+  navigation,
+}: Props) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [isFavourite, setFavourite] = useState<boolean | null>(null);
 
@@ -163,6 +170,7 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
           onPress={() => {
             navigation.navigate("Article", { articleId: article?.id });
           }}
+          onLongPress={drag}
           left={(props: any) => (
             <NoMarginIcon
               icon={() =>
@@ -212,6 +220,7 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
                   ? rootPath
                   : undefined
               }
+              drag={() => {}}
               navigation={navigation}
             />
           )
