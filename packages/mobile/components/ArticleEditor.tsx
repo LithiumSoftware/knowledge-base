@@ -1,19 +1,16 @@
 import React, { useState } from "react";
-import { View, KeyboardAvoidingView, Platform, Text } from "react-native";
+import { View } from "react-native";
 import styled from "styled-components";
 import WebViewQuillJS, {
   WebviewQuillJSMessage,
-  WebviewQuillJSEvents,
 } from "react-native-webview-quilljs";
 
-const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView)`
-  flex: 1;
-  padding: 2%;
-  justify-content: flex-start;
-`;
-
 const StyledView = styled(View)`
-  min-height: 70%;
+  flex-grow: 1;
+  margin-top: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
+  justify-content: flex-start;
 `;
 
 interface Props {
@@ -36,17 +33,12 @@ export default function ArticleEditor({ content, onSave }: Props) {
   };
 
   return (
-    <StyledKeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      enabled
-    >
-      <StyledView>
-        <WebViewQuillJS
-          content={content}
-          backgroundColor={"#FFFFFF"}
-          onMessageReceived={onMessageReceived}
-        />
-      </StyledView>
-    </StyledKeyboardAvoidingView>
+    <StyledView>
+      <WebViewQuillJS
+        content={content}
+        backgroundColor={"#FFFFFF"}
+        onMessageReceived={onMessageReceived}
+      />
+    </StyledView>
   );
 }

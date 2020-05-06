@@ -1,80 +1,71 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
 import styled from "styled-components";
 
-const StyledTouchableOpacity = styled(TouchableOpacity)``;
+const Breadcrumbs = ({ separator, titles }: Props) => {
+  const totalItems = titles.length;
 
-const StyledView = styled(View)`
-  flex-direction: row;
-  background-color: #fff;
-  min-width: 100%;
-  max-width: 100%;
-  padding-top: 9px;
-  padding-left: 19px;
-  font-size: 12px;
-  line-height: 16px;
-`;
+  let breadcrumbText = titles[0];
 
-const StyledText = styled(Text)`
-  color: #bdbdbd;
-  letter-spacing: 0.4px;
-`;
+  if (titles.length > 1) {
+    breadcrumbText += titles
+      .slice(1)
+      .map((title: string) => `  ${separator}  ${title}`)
+      .join("");
 
-const StyledTextSeparator = styled(StyledText)`
-  padding-left: 8px;
-  padding-right: 8px;
-`;
+    if (totalItems > max || breadcrumbText.length >= maxChars) {
+      breadcrumbText = `${titles[0]}  ${separator}  ${
+        titles[titles.length - 1]
+      }`;
+    }
 
-const BreadcrumbItem = ({ title }: { title: string }) => (
-  <StyledText>{title}</StyledText>
-);
+    if (breadcrumbText.length >= maxChars) {
+      breadcrumbText = cutText(titles, separator);
+    }
+  }
 
-const BreadcrumbSeparator = ({ separator }: { separator: string }) => (
-  <StyledTextSeparator>{separator}</StyledTextSeparator>
-);
+  return <StyledText numberOfLines={1}>{breadcrumbText}</StyledText>;
+};
 
-const BreadcrumbCollapser = () => <StyledText>...</StyledText>;
+function cutText(titles: string[], separator: string) {
+  const titlesLenght = titles.length;
+  const firstTitle = titles[0];
+  const lastTitle = titles[titlesLenght - 1];
+  const firstTitleLength = firstTitle.length;
+  const lastTitleLength = lastTitle.length;
+  const shortestTitleLength = Math.min(firstTitleLength, lastTitleLength);
+  const maxTitleLength = (maxChars - 4 - separator.length) / 2 - 3;
+
+  if (shortestTitleLength >= maxTitleLength) {
+    return `${firstTitle.substr(
+      0,
+      maxTitleLength
+    )}...  ${separator}  ${lastTitle.substr(0, maxTitleLength)}...`;
+  } else if (firstTitleLength >= maxTitleLength) {
+    return `${firstTitle.substr(
+      0,
+      maxChars - lastTitleLength - 7 - separator.length
+    )}...  ${separator}  ${lastTitle}`;
+  } else {
+    return `${firstTitle}  ${separator}  ${lastTitle.substr(
+      0,
+      maxChars - firstTitleLength - 7 - separator.length
+    )}...`;
+  }
+}
 
 const max = 4;
+const maxChars = 56;
 
 interface Props {
   separator: string;
   titles: string[];
 }
 
-const Breadcrumbs = ({ separator, titles }: Props) => {
-  let breadcrumbs = titles.map((title, index) => (
-    <BreadcrumbItem key={index * 2} title={title} />
-  ));
-
-  const totalItems = breadcrumbs.length;
-  const lastIndex = totalItems - 1;
-
-  if (totalItems > max) {
-    breadcrumbs = [
-      breadcrumbs[0],
-      <BreadcrumbCollapser key={1} />,
-      breadcrumbs[lastIndex],
-    ];
-  }
-
-  let i = 1;
-  while (i < breadcrumbs.length) {
-    breadcrumbs.splice(
-      i,
-      0,
-      <BreadcrumbSeparator key={i} separator={separator} />
-    );
-    i += 2;
-  }
-
-  return (
-    <StyledTouchableOpacity
-      onPress={() => console.log("Esto va a abrir toda la navegación")}
-    >
-      <StyledView>{breadcrumbs}</StyledView>
-    </StyledTouchableOpacity>
-  );
-};
+const StyledText = styled(Text)`
+  font-size: 12px;
+  padding: 16px;
+  color: #bdbdbd;
+`;
 
 export default Breadcrumbs;

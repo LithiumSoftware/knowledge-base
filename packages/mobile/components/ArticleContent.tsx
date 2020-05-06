@@ -1,8 +1,6 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { View, Text, SafeAreaView, Button, TextInput } from "react-native";
+import { View, Text, TextInput, ScrollView, Dimensions } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import moment from "moment";
 import Breadcrumbs from "./Breadcrumbs";
@@ -15,87 +13,53 @@ import {
   ArticleDocument,
 } from "../local_core/generated/graphql";
 
-const StyledSafeAreaView = styled(SafeAreaView)`
-  flex: 1;
-  background: #fff;
-`;
-
-const StyledText = styled(Text)`
-  width: 335px;
-  height: 42px;
-  left: 20px;
-
-  font-size: 12px;
-  line-height: 20px;
-
-  display: flex;
-  align-items: center;
-  text-align: center;
-
-  color: #bdbdbd;
-`;
-
-const TitleEditText = styled(TextInput)`
-  width: 100%;
-  padding-top: 36px;
-  left: 19px;
-  font-weight: bold;
-  font-size: 48px;
-  letter-spacing: -1.5px;
-  color: rgba(0, 0, 0, 0.87);
-`;
-
-const StyledLoadingView = styled(View)`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-interface Props {
-  route: any;
-  navigation: any;
-}
-
 const ArticleContent = ({ route, navigation }: Props) => {
   const { data, loading, error } = useArticleQuery({
     variables: { id: route.params.articleId },
     fetchPolicy: "no-cache",
   });
-
-  const [title, setTitle] = useState(data?.article?.title);
-
   const [updateArticle] = useUpdateArticleMutation();
-
+  const [title, setTitle] = useState(data?.article?.title);
+  const [fontSize, setFontSize] = useState(36);
   const [updatedTime, setUpdatedTime] = useState(
     data?.article?.updatedAt !== data?.article?.createdAt
       ? data?.article?.updatedAt
       : null
   );
-
   const [lastModificationTime, setLastModificationTime] = useState(
-    moment(updatedTime).fromNow()
+    updatedTime ? moment(updatedTime).fromNow() : ""
   );
 
+  useEffect(() => {
+    setFontSize(
+      data?.article?.title?.length
+        ? data?.article?.title?.length > 48
+          ? 28
+          : 36
+        : 36
+    );
+  }, [data?.article?.title]);
   useEffect(() => {
     setTitle(data?.article?.title);
   }, [data?.article?.title]);
 
   useEffect(() => {
-    setLastModificationTime(moment(updatedTime).fromNow());
     setUpdatedTime(
       data?.article?.updatedAt !== data?.article?.createdAt
         ? data?.article?.updatedAt
         : null
     );
+  }, [data?.article?.updatedAt]);
+
+  useEffect(() => {
+    setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : "");
     const timeOut = setInterval(() => {
-      setLastModificationTime(moment(updatedTime).fromNow());
+      setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : "");
     }, 15 * 1000);
     return () => {
       clearInterval(timeOut);
     };
-  }, [updatedTime, data?.article?.updatedAt]);
+  }, [updatedTime]);
 
   function onSaveTitle(newTitle: string) {
     updateArticle({
@@ -139,7 +103,9 @@ const ArticleContent = ({ route, navigation }: Props) => {
         id: data?.article?.id,
         body: newBody,
       },
-    }).then(({ data }) => setUpdatedTime(data?.updateArticle?.updatedAt));
+    }).then(({ data }) => {
+      setUpdatedTime(data?.updateArticle?.updatedAt);
+    });
   }
 
   return loading ? (
@@ -147,7 +113,15 @@ const ArticleContent = ({ route, navigation }: Props) => {
       <ActivityIndicator color="primary" />
     </StyledLoadingView>
   ) : data && data.article ? (
-    <StyledSafeAreaView>
+    <StyledScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        minHeight: windowHeight + windowHeight * 0.4,
+      }}
+      keyboardShouldPersistTaps="handled"
+      nestedScrollEnabled={false}
+      bounces={true}
+    >
       <Breadcrumbs
         separator="/"
         titles={[
@@ -159,23 +133,71 @@ const ArticleContent = ({ route, navigation }: Props) => {
           title ? title : "",
         ]}
       />
-      <TitleEditText
+      <TitleTextInput
+        style={{ fontSize: fontSize }}
+        multiline={true}
+        scrollEnabled={false}
         value={title}
+        blurOnSubmit={true}
+        nestedScrollEnabled={false}
         onChangeText={(text: string) => {
-          setTitle(text);
-          onSaveTitle(text);
+          if (text.length <= 90) {
+            if (text.length > 45) {
+              setFontSize(28);
+            } else {
+              setFontSize(36);
+            }
+            setTitle(text);
+            onSaveTitle(text);
+          }
         }}
       />
       <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
-      {lastModificationTime && !lastModificationTime?.includes("Invalid") && (
-        <StyledText onPress={() => console.log(lastModificationTime)}>
-          Last modified {lastModificationTime}
-        </StyledText>
-      )}
-    </StyledSafeAreaView>
+      <StyledText>
+        {updatedTime ? `Last modified ${lastModificationTime}` : ""}
+      </StyledText>
+    </StyledScrollView>
   ) : (
     <Text>{error?.message}</Text>
   );
 };
+
+const windowHeight = Dimensions.get("window").height;
+
+const StyledLoadingView = styled(View)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledScrollView = styled(ScrollView)`
+  flex-grow: 1;
+  background: #fff;
+`;
+
+const TitleTextInput = styled(TextInput)`
+  margin-top: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-weight: bold;
+  flex-wrap: wrap;
+  padding-top: -1px;
+`;
+
+const StyledText = styled(Text)`
+  display: flex;
+  font-size: 12px;
+  margin: 16px;
+  padding-bottom: 78%;
+  text-align: center;
+  color: #bdbdbd;
+`;
+
+interface Props {
+  route: any;
+  navigation: any;
+}
 
 export default ArticleContent;
