@@ -19,7 +19,7 @@ export const typeDef = `
 
 export const resolvers = {
   Query: {
-    articleModifications: authenticated((_, { id }, { dataSources: { db } }) =>
+    articleModifications: authenticated((_, { id }, { db }) =>
       db.article_modification.findAll({
         where: { articleId: id },
         order: [["updatedAt", "DESC"]],

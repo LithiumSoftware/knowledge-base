@@ -16,6 +16,10 @@ export default gql`
         id
         title
       }
+      parent {
+        id
+        title
+      }
       updatedAt
       createdAt
     }

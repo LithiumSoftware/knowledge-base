@@ -6,6 +6,8 @@ interface Props {
   route: any;
 }
 
-export default function ArticleScreen({ route, navigation }: Props) {
-  return <ArticleContent route={route} navigation={navigation} />;
-}
+const ArticleScreen = ({ route, navigation }: Props) => (
+  <ArticleContent route={route} navigation={navigation} />
+);
+
+export default ArticleScreen;
