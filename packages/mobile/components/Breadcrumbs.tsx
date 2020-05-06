@@ -33,14 +33,6 @@ function cutText(titles: string[], separator: string) {
   const lastTitle = titles[titlesLenght - 1];
   const firstTitleLength = firstTitle.length;
   const lastTitleLength = lastTitle.length;
-  console.log("BRUNOPINTOS: first: " + firstTitleLength);
-  console.log("BRUNOPINTOS: last: " + lastTitleLength);
-  console.log(
-    "BRUNOPINTOS: todo: " +
-      (firstTitleLength + lastTitleLength + 4 + separator.length) +
-      " = " +
-      maxChars
-  );
   const shortestTitleLength = Math.min(firstTitleLength, lastTitleLength);
   const maxTitleLength = (maxChars - 4 - separator.length) / 2 - 3;
 

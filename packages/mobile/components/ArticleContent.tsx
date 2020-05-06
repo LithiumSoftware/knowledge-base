@@ -124,7 +124,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
         }}
       />
       <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
-      <StyledText onPress={() => console.log(lastModificationTime)}>
+      <StyledText>
         {updatedTime ? `Last modified ${lastModificationTime}` : ""}
       </StyledText>
     </StyledScrollView>
