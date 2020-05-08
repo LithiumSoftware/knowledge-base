@@ -82,7 +82,7 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
               return true;
             }
           });
-          cache.writeQuery({ query: ArticlesDocument, data: cachedData });
+          cache.writeQuery({ query: ArticlesDocument, data: cachedArticles });
 
           const cachedArticle = cache.readQuery({
             query: ArticleDocument,

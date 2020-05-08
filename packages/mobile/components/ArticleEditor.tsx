@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import styled from "styled-components";
 import WebViewQuillJS, {
@@ -18,27 +18,18 @@ interface Props {
   onSave: Function;
 }
 
-export default function ArticleEditor({ content, onSave }: Props) {
-  const [articleContent, setArticleContent] = useState(content);
+const onMessageReceived = (message, onSave, t) => {
+  const { msg, payload } = message;
 
-  const onMessageReceived = (message: WebviewQuillJSMessage) => {
-    const { msg } = message;
-    if (msg === "ON_CHANGE") {
-      const { payload } = message;
-      if (payload?.html && payload?.html != articleContent) {
-        setArticleContent(payload.html);
-        onSave(articleContent);
-      }
-    }
-  };
+  if (msg === "ON_CHANGE") onSave(payload.html);
+};
 
-  return (
-    <StyledView>
-      <WebViewQuillJS
-        content={content}
-        backgroundColor={"#FFFFFF"}
-        onMessageReceived={onMessageReceived}
-      />
-    </StyledView>
-  );
-}
+export default ArticleEditor = ({ content, onSave }: Props) => (
+  <StyledView>
+    <WebViewQuillJS
+      content={content}
+      backgroundColor={"#FFFFFF"}
+      onMessageReceived={(message) => onMessageReceived(message, onSave)}
+    />
+  </StyledView>
+);
