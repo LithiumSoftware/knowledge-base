@@ -11,6 +11,7 @@ import {
   useCreateArticleMutation,
   Article,
   ArticleDocument,
+  ArticlesDocument,
   FavouriteArticlesDocument,
 } from "../local_core/generated/graphql";
 
@@ -23,11 +24,10 @@ interface Props {
 
 const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
   const [collapsed, setCollapsed] = React.useState(false);
-  const [isFavourite, setFavourite] = useState<boolean | null>(null);
-
-  const { loading, error, data } = useArticleQuery({
+  const { data } = useArticleQuery({
     variables: { id: id },
   });
+  const [isFavourite, setFavourite] = useState(data?.article?.favourited);
 
   const [toggleFavouriteMutation] = useToggleFavouriteMutation();
   const [createArticle] = useCreateArticleMutation();
@@ -38,12 +38,13 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
 
   useEffect(() => {
     setFavourite(data?.article?.favourited);
-  }, [data]);
+  }, [data?.article?.favourited]);
 
-  const toggleFavouriteAction = () =>
+  function toggleFavouriteAction() {
+    setFavourite(!isFavourite);
     toggleFavouriteMutation({
       variables: {
-        articleId: article.id,
+        articleId: data?.article?.id,
       },
       update(cache, { data: { toggleFavourite } }) {
         try {
@@ -53,9 +54,9 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
 
           if (toggleFavourite) {
             const newFavourite = {
-              id: article.id,
-              title: article.title,
-              parent: article.parent || null,
+              id: data?.article?.id,
+              title: data?.article?.title,
+              parent: data?.article?.parent || null,
               __typename: "Article",
             };
 
@@ -65,7 +66,7 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
             ];
           } else {
             cachedData.me.favourites = cachedData.me.favourites.filter((el) => {
-              return el.id != article.id;
+              return el.id != data?.article?.id;
             });
           }
 
@@ -74,10 +75,19 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
             data: cachedData,
           });
 
+          const cachedArticles = cache.readQuery({ query: ArticlesDocument });
+          cachedArticles.articles.some((el) => {
+            if (el.id == data?.article?.id) {
+              el.favourited = toggleFavourite;
+              return true;
+            }
+          });
+          cache.writeQuery({ query: ArticlesDocument, data: cachedData });
+
           const cachedArticle = cache.readQuery({
             query: ArticleDocument,
             variables: {
-              id: article.id,
+              id: data?.article?.id,
             },
           });
 
@@ -86,7 +96,7 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
           cache.writeQuery({
             query: ArticleDocument,
             variables: {
-              id: article.id,
+              id: data?.article?.id,
             },
             data: cachedArticle,
           });
@@ -101,11 +111,12 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
         setFavourite(toggleFavourite);
       })
       .catch((err: any) => console.log(`Error togglefavourite: ${err}`));
+  }
 
   const addSubArticle = () =>
     createArticle({
       variables: {
-        parentId: article.id,
+        parentId: data?.article?.id,
       },
       update(cache, { data: { createArticle } }) {
         const cachedData = cache.readQuery({
@@ -148,25 +159,23 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
         console.log(`Error create subArticle: ${err}`);
       });
 
-  const article = data?.article;
-  const titleId = `${article?.title}-${article?.id}`;
-  isFavourite === null && article && setFavourite(article?.favourited);
+  const titleId = `${data?.article?.title}-${data?.article?.id}`;
 
   return (
     <>
-      {article && (
+      {data?.article && (
         <List.Item
           style={{
             paddingLeft: hierarchy * 4,
           }}
-          title={article?.title}
+          title={data?.article?.title}
           onPress={() => {
-            navigation.navigate("Article", { articleId: article?.id });
+            navigation.navigate("Article", { articleId: data?.article?.id });
           }}
           left={(props: any) => (
             <NoMarginIcon
               icon={() =>
-                article?.children?.length ? (
+                data?.article?.children?.length ? (
                   collapsed ? (
                     <ChevronDown />
                   ) : (
@@ -200,7 +209,7 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
         />
       )}
       <Collapsible collapsed={!collapsed}>
-        {article?.children?.map(
+        {data?.article?.children?.map(
           (subArticle: { id: string; title: string }, index: number) => (
             <SidebarArticle
               hierarchy={hierarchy + 8}

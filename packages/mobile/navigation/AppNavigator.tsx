@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Menu, Heart, Search } from "../assets/icons";
+import { Menu } from "../assets/icons";
 
-import { AsyncStorage, View } from "react-native";
+import { AsyncStorage } from "react-native";
 import { IconButton } from "react-native-paper";
 
 import styled from "styled-components/native";
@@ -126,18 +126,6 @@ const UserNavigator = ({
           />
         ),
         headerTitleContainerStyle: { left: 4 },
-        headerRight: () => (
-          <View style={{ flexDirection: "row" }}>
-            <IconButton
-              icon={() => <Heart fill={"#FFC200"} />}
-              onPress={() => console.log("favorite")}
-            />
-            <IconButton
-              icon={() => <Search />}
-              onPress={() => console.log("search")}
-            />
-          </View>
-        ),
       }}
     />
   </Stack.Navigator>
