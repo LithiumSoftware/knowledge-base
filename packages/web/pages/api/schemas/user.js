@@ -53,18 +53,6 @@ export const resolvers = {
         .then((user) => {
           const tokens = setTokens(user);
           res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
-          if (user?.dataValues?.id === 1) {
-            return db.article
-              .create({
-                title: "Get Started",
-                body: `<p><span style="background-color: unset; text-align: inherit; font-family: Roboto, &quot;Segoe UI&quot;, GeezaPro, &quot;DejaVu Serif&quot;, sans-serif, -apple-system, BlinkMacSystemFont;">👋 Welcome to Lithium KB! This is an introduction page for all new members of the platform.</span><br></p><p><br></p><p><strong>Give these things a try:</strong></p><ol><li>﻿﻿<span style="text-decoration: line-through;">Create an account<br></span></li><li>Create a new article:</li><ul><li>With the "New article" button on the bottom left corner of the screen.</li><li>With the "+" button in each article on the left, to create an article inside another.</li></ul><li>Breadcrumbs!.</li><li>Favorite a specific article.</li><li>Modify the content of an article and watch the last modification.</li></ol>`,
-                authorId: 1,
-                parentId: null,
-              })
-              .then(() => {
-                return user;
-              });
-          }
           return user;
         })
         .catch((err) => {
