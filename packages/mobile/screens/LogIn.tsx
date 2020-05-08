@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { AsyncStorage, Image, TouchableOpacity, View } from "react-native";
-import { TextInput, IconButton } from "react-native-paper";
+import {
+  AsyncStorage,
+  Image,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from "react-native";
+import { TextInput, IconButton, HelperText } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
-
 import {
   Field,
   Formik,
@@ -11,32 +16,9 @@ import {
   FormikTouched,
 } from "formik";
 import * as Yup from "yup";
-
 import styled from "styled-components/native";
 import { Eye, EyeOff } from "../assets/icons";
-
 import { useLoginMutation } from "../local_core/generated/graphql";
-
-const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Please enter a valid email")
-    .required("Please enter an email"),
-  password: Yup.string().required("Required"),
-});
-
-export interface FormikProps {
-  handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
-  values: FormikValues;
-  handleChange: (f: string) => void;
-  errors: FormikErrors<FormikValues>;
-  touched: FormikTouched<FormikValues>;
-  handleBlur: (f: string) => void;
-}
-
-export interface Props {
-  navigation: StackNavigationProp<any>;
-  route: any;
-}
 
 const LogIn = ({
   navigation,
@@ -49,7 +31,7 @@ const LogIn = ({
 
   const submition = (
     values: FormikValues,
-    { setErrors }: { setErrors: (errors: FormikErrors<FormikValues>) => void }
+    { setSubmitting, setErrors }: SubmitionProps
   ) => {
     logInUser({
       variables: {
@@ -68,9 +50,17 @@ const LogIn = ({
           }
         }
       )
-      .catch(({ Errors, graphQLErrors }) => {
-        const error = graphQLErrors?.map((err: any) => err?.message);
-        setErrors({ server: error[0] });
+      .catch((err) => {
+        if (err.message.includes("email")) {
+          setErrors({
+            email: err?.graphQLErrors?.map((x) => x.message),
+          });
+        } else {
+          setErrors({
+            password: err?.graphQLErrors?.map((x) => x.message),
+          });
+        }
+        setSubmitting(false);
       });
   };
 
@@ -86,54 +76,54 @@ const LogIn = ({
         >
           {({
             values: { email, password },
-            handleChange,
-            handleSubmit,
             errors,
             touched,
+            handleChange,
             handleBlur,
+            handleSubmit,
           }: FormikProps) => (
             <>
-              <InputContainer>
-                <StyledField
-                  id="email"
-                  name="email"
-                  label="Name"
-                  component={TextInput}
-                  value={email}
-                  placeholder="Name"
-                  selectionColor="#ffb900"
-                  placeholderTextColor="#003f5c"
-                  onChangeText={handleChange("email")}
-                  error={touched.email && errors?.email?.length}
-                  onBlur={handleBlur("email")}
-                  keyboardType="email-address"
-                />
-              </InputContainer>
-
-              <InputContainer>
-                <StyledField
-                  id="password"
-                  name="password"
-                  label="Password"
-                  component={TextInput}
-                  value={password}
-                  secureTextEntry={hidePw}
-                  placeholder="Password"
-                  selectionColor="#ffb900"
-                  placeholderTextColor="#003f5c"
-                  onChangeText={handleChange("password")}
-                  error={touched.password && errors?.password?.length}
-                  onBlur={handleBlur("password")}
-                />
-                <StyledIconButton
-                  icon={() => (hidePw ? <EyeOff /> : <Eye />)}
-                  onPress={() => setHidePw(!hidePw)}
-                />
-              </InputContainer>
-
-              <ForgotText>Forgot password?</ForgotText>
-
-              {errors?.server && <ErrorText>{errors.server}</ErrorText>}
+              <View
+                style={{
+                  height: Dimensions.get("window").height * 0.52,
+                }}
+              >
+                <InputContainer>
+                  <TextInput
+                    label="Name or email"
+                    placeholder="Name or email"
+                    selectionColor="#ffb900"
+                    value={email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    keyboardType="email-address"
+                  />
+                  <HelperText type="error" visible={true}>
+                    {touched.email && errors?.email ? errors?.email : ""}
+                  </HelperText>
+                </InputContainer>
+                <InputContainer>
+                  <TextInput
+                    label="Password"
+                    placeholder="Password"
+                    selectionColor="#ffb900"
+                    secureTextEntry={hidePw}
+                    value={password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                  />
+                  <HelperText type="error" visible={true}>
+                    {touched.password && errors?.password
+                      ? errors?.password
+                      : ""}
+                  </HelperText>
+                  <StyledIconButton
+                    icon={() => (hidePw ? <EyeOff /> : <Eye />)}
+                    onPress={() => setHidePw(!hidePw)}
+                  />
+                </InputContainer>
+                <ForgotText>Forgot password?</ForgotText>
+              </View>
               <FormButton onPress={handleSubmit}>
                 <ButtonText>LOGIN</ButtonText>
               </FormButton>
@@ -172,21 +162,40 @@ export const Header = () => {
         resizeMode={"contain"}
         source={require("../assets/logo-lithium.png")}
       />
-      <WelcomeText>{"Welcome to Lithium KB"}</WelcomeText>
+      <WelcomeText>{"Welcome to Lithium KB."}</WelcomeText>
     </View>
   );
 };
 
-export default LogIn;
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().required("Please enter a username or email"),
+  password: Yup.string().required("Please enter the password"),
+});
+
+export interface FormikProps {
+  handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
+  values: FormikValues;
+  handleChange: (f: string) => void;
+  errors: FormikErrors<FormikValues>;
+  touched: FormikTouched<FormikValues>;
+  handleBlur: (f: string) => void;
+}
+
+export interface Props {
+  navigation: StackNavigationProp<any>;
+  route: any;
+}
 
 export const Container = styled.View`
   flex: 1;
   background-color: #ffffff;
-  justify-content: space-between;
+  justify-content: center;
   padding: 50px 30px 30px;
 `;
 
 export const Title = styled.Text`
+  padding-top: 15px;
+  padding-bottom: 25px;
   font-weight: bold;
   font-size: 50px;
   color: #000;
@@ -195,9 +204,8 @@ export const Title = styled.Text`
 
 export const InputContainer = styled.View`
   background-color: #fff;
-  height: 65px;
-  margin: 6px 0px;
   flex-wrap: nowrap;
+  padding-bottom: 5px;
 `;
 
 export const StyledField = styled(Field)`
@@ -216,8 +224,9 @@ export const StyledIconButton = styled(IconButton)`
 export const Navigation = styled.View`
   flex-direction: row
   justify-content: center;
-  width: 100%;
-  margin-top: 5%;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 5px;
 `;
 
 export const ButtonText = styled.Text`
@@ -230,10 +239,10 @@ export const Text = styled.Text`
 `;
 
 const ForgotText = styled.Text`
-  margin-left: 4%;
-  margin-top: 3%;
   color: rgba(0, 0, 0, 0.6);
-  margin-bottom: 46%;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-bottom: 20px;
 `;
 
 export const PrimaryText = styled.Text`
@@ -245,11 +254,9 @@ export const FormButton = styled.TouchableOpacity`
   width: 100%;
   background-color: #ffb900;
   border-radius: 25px;
-  height: 50px;
   align-items: center;
   justify-content: center;
-  align-self: flex-end;
-  display: flex;
+  padding: 16px;
 `;
 
 export const ErrorText = styled.Text`
@@ -257,3 +264,10 @@ export const ErrorText = styled.Text`
   font-size: 15px;
   margin-top: 20px;
 `;
+
+interface SubmitionProps {
+  setSubmitting: (isSubmitting: boolean) => void;
+  setErrors: (errors: FormikErrors<FormikValues>) => void;
+}
+
+export default LogIn;
