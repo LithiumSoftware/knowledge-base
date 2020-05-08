@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { AsyncStorage, Image, TouchableOpacity, View } from "react-native";
-import { TextInput } from "react-native-paper";
+import {
+  AsyncStorage,
+  Image,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from "react-native";
+import { TextInput, HelperText } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
-
 import {
   Field,
   Formik,
@@ -11,7 +16,6 @@ import {
   FormikValues,
 } from "formik";
 import * as Yup from "yup";
-
 import {
   Container,
   Header,
@@ -29,23 +33,7 @@ import {
   Props,
 } from "./LogIn";
 import { Eye, EyeOff } from "../assets/icons";
-import styled from "styled-components/native";
-
 import { useSignupMutation } from "../local_core/generated/graphql";
-
-const signupSchema = Yup.object().shape({
-  username: Yup.string()
-    .required("Please enter your name")
-    .min(4, "Name is too short")
-    .max(12, "Thats a long name you have there"),
-  email: Yup.string()
-    .email("Please enter a valid email")
-    .required("Please enter an email"),
-  password: Yup.string().required("Please enter the password"),
-  confirmation: Yup.string()
-    .required("Please enter the password confirmation")
-    .oneOf([Yup.ref("password")], "Password does not match"),
-});
 
 const SignUp = ({
   navigation,
@@ -59,7 +47,7 @@ const SignUp = ({
 
   const submition = (
     values: FormikValues,
-    { setErrors }: { setErrors: (errors: FormikErrors<FormikValues>) => void }
+    { setSubmitting, setErrors }: SubmitionProps
   ) => {
     signUpUser({
       variables: {
@@ -80,9 +68,22 @@ const SignUp = ({
         }
       )
       .catch((err) => {
-        console.log(err);
-        const error = err?.graphQLErrors?.map((err: any) => err?.message);
-        setErrors({ server: error[0] });
+        if (err.message.includes("Both")) {
+          setErrors({
+            username: "Username is already in use.",
+            email: "Email address is already in use.",
+          });
+        } else {
+          if (err.message.includes("Username")) {
+            setErrors({
+              username: err?.graphQLErrors?.map((x) => x.message),
+            });
+          } else {
+            setErrors({
+              email: err?.graphQLErrors?.map((x) => x.message),
+            });
+          }
+        }
       });
   };
 
@@ -103,91 +104,94 @@ const SignUp = ({
         >
           {({
             values: { username, email, password, confirmation },
-            handleChange,
-            handleSubmit,
             errors,
             touched,
+            handleChange,
             handleBlur,
+            handleSubmit,
           }: FormikProps) => (
             <>
-              <InputContainer>
-                <StyledField
-                  id="username"
-                  label="Name"
-                  component={TextInput}
-                  value={username}
-                  placeholder="Name"
-                  selectionColor="#ffb900"
-                  placeholderTextColor="#003f5c"
-                  error={touched.username && errors?.username?.length}
-                  onBlur={handleBlur("username")}
-                  onChangeText={handleChange("username")}
-                />
-              </InputContainer>
-
-              <InputContainer>
-                <StyledField
-                  id="email"
-                  label="Email"
-                  component={TextInput}
-                  value={email}
-                  placeholder="Email"
-                  selectionColor="#ffb900"
-                  placeholderTextColor="#003f5c"
-                  error={touched.email && errors?.email?.length}
-                  onBlur={handleBlur("email")}
-                  onChangeText={handleChange("email")}
-                  keyboardType="email-address"
-                />
-              </InputContainer>
-              <InputContainer>
-                <StyledField
-                  id="password"
-                  label="Password"
-                  component={TextInput}
-                  value={password}
-                  secureTextEntry={hidePw}
-                  placeholder="Password"
-                  selectionColor="#ffb900"
-                  placeholderTextColor="#003f5c"
-                  error={touched.password && errors.password?.length}
-                  onBlur={handleBlur("password")}
-                  onChangeText={handleChange("password")}
-                />
-                <StyledIconButton
-                  icon={() => (hidePw ? <EyeOff /> : <Eye />)}
-                  onPress={() => setHidePw(!hidePw)}
-                />
-              </InputContainer>
-
-              <InputContainer style={{ marginBottom: "14%" }}>
-                <StyledField
-                  id="confirmation"
-                  label="Repeat password"
-                  component={TextInput}
-                  value={confirmation}
-                  secureTextEntry={hideRptPw}
-                  placeholder="Repeat password"
-                  selectionColor="#ffb900"
-                  placeholderTextColor="#003f5c"
-                  error={touched.confirmation && errors?.confirmation?.length}
-                  onBlur={handleBlur("confirmation")}
-                  onChangeText={handleChange("confirmation")}
-                />
-                <StyledIconButton
-                  icon={() => (hideRptPw ? <EyeOff /> : <Eye />)}
-                  onPress={() => setHideRptPw(!hideRptPw)}
-                />
-              </InputContainer>
-
-              {errors?.server && <ErrorText>{errors.server}</ErrorText>}
+              <View
+                style={{
+                  height: Dimensions.get("window").height * 0.52,
+                }}
+              >
+                <InputContainer>
+                  <TextInput
+                    label="Name"
+                    placeholder="Name"
+                    selectionColor="#ffb900"
+                    value={username}
+                    onChangeText={handleChange("username")}
+                    onBlur={handleBlur("username")}
+                  />
+                  <HelperText type="error" visible={true}>
+                    {touched.username && errors?.username
+                      ? errors?.username
+                      : ""}
+                  </HelperText>
+                </InputContainer>
+                <InputContainer>
+                  <TextInput
+                    label="Email"
+                    placeholder="Email"
+                    selectionColor="#ffb900"
+                    value={email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    keyboardType="email-address"
+                  />
+                  <HelperText type="error" visible={true}>
+                    {touched.email && errors?.email ? errors?.email : ""}
+                  </HelperText>
+                </InputContainer>
+                <InputContainer>
+                  <TextInput
+                    label="Password"
+                    placeholder="Password"
+                    selectionColor="#ffb900"
+                    secureTextEntry={hidePw}
+                    value={password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                  />
+                  <HelperText type="error" visible={true}>
+                    {touched.password && errors?.password
+                      ? errors?.password
+                      : ""}
+                  </HelperText>
+                  <StyledIconButton
+                    icon={() => (hidePw ? <EyeOff /> : <Eye />)}
+                    onPress={() => setHidePw(!hidePw)}
+                  />
+                </InputContainer>
+                <InputContainer style={{ marginBottom: "14%" }}>
+                  <TextInput
+                    label="Repeat password"
+                    placeholder="Repeat password"
+                    selectionColor="#ffb900"
+                    secureTextEntry={hidePw}
+                    value={confirmation}
+                    onChangeText={handleChange("confirmation")}
+                    onBlur={handleBlur("confirmation")}
+                  />
+                  <HelperText type="error" visible={true}>
+                    {touched.confirmation && errors?.confirmation
+                      ? errors?.confirmation
+                      : ""}
+                  </HelperText>
+                  <StyledIconButton
+                    icon={() => (hidePw ? <EyeOff /> : <Eye />)}
+                    onPress={() => setHidePw(!hidePw)}
+                  />
+                </InputContainer>
+              </View>
               <FormButton onPress={handleSubmit}>
                 <ButtonText>SIGN UP</ButtonText>
               </FormButton>
             </>
           )}
         </Formik>
-
         <Navigation>
           <Text>Already have an acount?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
@@ -198,5 +202,26 @@ const SignUp = ({
     </Container>
   );
 };
+
+const signupSchema = Yup.object().shape({
+  username: Yup.string()
+    .required("Please enter your name")
+    .min(4, "Name is too short")
+    .max(12, "Thats a long name you have there"),
+  email: Yup.string()
+    .email("Please enter a valid email")
+    .required("Please enter an email"),
+  password: Yup.string()
+    .required("Please enter the password")
+    .min(8, "Password is too short"),
+  confirmation: Yup.string()
+    .required("Please enter the password confirmation")
+    .oneOf([Yup.ref("password")], "Passwords do not match"),
+});
+
+interface SubmitionProps {
+  setSubmitting: (isSubmitting: boolean) => void;
+  setErrors: (errors: FormikErrors<FormikValues>) => void;
+}
 
 export default SignUp;

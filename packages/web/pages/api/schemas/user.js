@@ -46,16 +46,43 @@ export const resolvers = {
   Mutation: {
     signedUser: (_, { input }, { db, res }) =>
       db.user
-        .create({ ...input, role: "USER" })
+        .create({
+          ...input,
+          role: "USER",
+        })
         .then((user) => {
           const tokens = setTokens(user);
           res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
+          if (user?.dataValues?.id === 1) {
+            return db.article
+              .create({
+                title: "Get Started",
+                body: `<p><span style="background-color: unset; text-align: inherit; font-family: Roboto, &quot;Segoe UI&quot;, GeezaPro, &quot;DejaVu Serif&quot;, sans-serif, -apple-system, BlinkMacSystemFont;">👋 Welcome to Lithium KB! This is an introduction page for all new members of the platform.</span><br></p><p><br></p><p><strong>Give these things a try:</strong></p><ol><li>﻿﻿<span style="text-decoration: line-through;">Create an account<br></span></li><li>Create a new article:</li><ul><li>With the "New article" button on the bottom left corner of the screen.</li><li>With the "+" button in each article on the left, to create an article inside another.</li></ul><li>Breadcrumbs!.</li><li>Favorite a specific article.</li><li>Modify the content of an article and watch the last modification.</li></ol>`,
+                authorId: 1,
+                parentId: null,
+              })
+              .then(() => {
+                return user;
+              });
+          }
           return user;
         })
         .catch((err) => {
-          throw new UserInputError(
-            "There's already an account with this email"
-          );
+          if (err.errors[0].message.includes("username")) {
+            return db.user
+              .findOne({
+                where: { email: input.email },
+              })
+              .then((user) => {
+                const message =
+                  user && user.dataValues
+                    ? "Both username and email address are already in use."
+                    : "Username is already in use.";
+                throw new UserInputError(message);
+              });
+          } else {
+            throw new UserInputError("Email address is already in use.");
+          }
         }),
     loggedUser: (_, { input: { identifier, password } }, { db, res }) =>
       db.user
@@ -63,35 +90,20 @@ export const resolvers = {
           where: { [Op.or]: [{ username: identifier }, { email: identifier }] },
         })
         .then((user) => {
-          if (user) {
-            if (bcrypt.compareSync(password, user.password)) {
-              const tokens = setTokens(user);
-              res.setHeader(
-                "Set-Cookie",
-                `token=${tokens.accessToken}; httpOnly`
-              );
-              return user;
-            } else {
-              throw null;
-            }
-          } else {
-            throw null;
+          if (!user || !user.dataValues) {
+            throw new UserInputError(
+              "The username or email address is not registered."
+            );
           }
+          if (!bcrypt.compareSync(password, user.dataValues.password)) {
+            throw new UserInputError("Incorrect password.");
+          }
+          const tokens = setTokens(user);
+          res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
+          return user;
         })
         .catch((err) => {
-          if (err.errors[0].message.includes("username")) {
-            return dataBase.Users.findOne({
-              where: { email: email },
-            }).then((user) => {
-              const message =
-                user && user.dataValues
-                  ? "Both username and email address are already in use."
-                  : "Username is already in use.";
-              throw new UserInputError(message);
-            });
-          } else {
-            throw new UserInputError("Email address is already in use.");
-          }
+          throw new UserInputError("Username or email isn't registered.");
         }),
   },
   User: {
