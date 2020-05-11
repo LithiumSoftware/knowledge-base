@@ -11,6 +11,7 @@ import {
   useArticleQuery,
   useUpdateArticleMutation,
   useToggleFavouriteMutation,
+  Article,
   ArticlesDocument,
   ArticleDocument,
   FavouriteArticlesDocument,
@@ -19,116 +20,74 @@ import {
 const ArticleContent = ({ route, navigation }: Props) => {
   const { data, loading, error } = useArticleQuery({
     variables: { id: route.params.articleId },
+    fetchPolicy: "network-only",
   });
+
   const [updateArticle] = useUpdateArticleMutation();
-  const [title, setTitle] = useState(data?.article?.title);
-  const [fontSize, setFontSize] = useState(36);
-  const [updatedTime, setUpdatedTime] = useState(
-    data?.article?.updatedAt !== data?.article?.createdAt
-      ? data?.article?.updatedAt
-      : null
-  );
-  const [lastModificationTime, setLastModificationTime] = useState(
-    updatedTime ? moment(updatedTime).fromNow() : ""
-  );
   const [toggleFavouriteMutation] = useToggleFavouriteMutation();
-  const [isFavourite, setFavourite] = useState(data?.article?.favourited);
+
+  const [fontSize, setFontSize] = useState(36);
+
+  const [lastModificationTime, setLastModificationTime] = useState("");
+
+  const [article, setArticle] = useState<Article | undefined | null>(undefined);
 
   useEffect(() => {
-    setFontSize(
-      data?.article?.title?.length
-        ? data?.article?.title?.length > 48
-          ? 28
-          : 36
-        : 36
-    );
-    setTitle(data?.article?.title);
-  }, [data?.article?.title]);
+    setArticle(data?.article);
+  }, [data]);
 
   useEffect(() => {
-    setUpdatedTime(
-      data?.article?.updatedAt !== data?.article?.createdAt
-        ? data?.article?.updatedAt
-        : null
-    );
-  }, [data?.article?.updatedAt]);
+    setFontSize(article?.title?.length > 48 ? 28 : 36);
+  }, [article?.title]);
 
   useEffect(() => {
-    setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : "");
     const timeOut = setInterval(() => {
-      setLastModificationTime(updatedTime ? moment(updatedTime).fromNow() : "");
+      setLastModificationTime(
+        article ? moment(article.updatedAt).fromNow() : ""
+      );
     }, 15 * 1000);
+
     return () => {
       clearInterval(timeOut);
     };
-  }, [updatedTime]);
-
-  useEffect(() => {
-    setFavourite(data?.article?.favourited);
-  }, [data?.article?.favourited]);
+  }, [article?.updatedAt]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row", paddingRight: 8 }}>
           <IconButton
-            icon={() => <Heart fill={isFavourite ? "#FFC200" : "#D6D6D6"} />}
+            icon={() => (
+              <Heart fill={article?.favourited ? "#FFC200" : "#D6D6D6"} />
+            )}
             onPress={() => toggleFavouriteAction()}
           />
           <IconButton icon={() => <Search fill={Colors.grey300} />} />
         </View>
       ),
     });
-  }, [navigation, data?.article?.favourited, isFavourite]);
+  }, [navigation, article]);
 
   function toggleFavouriteAction() {
-    setFavourite(!isFavourite);
     toggleFavouriteMutation({
       variables: {
-        articleId: data?.article?.id,
+        articleId: article?.id,
       },
       update(cache, { data: { toggleFavourite } }) {
         try {
-          const cachedData = cache.readQuery({
-            query: FavouriteArticlesDocument,
-          });
-
-          if (toggleFavourite) {
-            const newFavourite = {
-              id: data?.article?.id,
-              title: data?.article?.title,
-              parent: data?.article?.parent || null,
-              __typename: "Article",
-            };
-
-            cachedData.me.favourites = [
-              ...cachedData.me.favourites,
-              newFavourite,
-            ];
-          } else {
-            cachedData.me.favourites = cachedData.me.favourites.filter((el) => {
-              return el.id != data?.article?.id;
-            });
-          }
-
-          cache.writeQuery({
-            query: FavouriteArticlesDocument,
-            data: cachedData,
-          });
-
           const cachedArticles = cache.readQuery({ query: ArticlesDocument });
           cachedArticles.articles.some((el) => {
-            if (el.id == data.article?.id) {
+            if (el.id == article?.id) {
               el.favourited = toggleFavourite;
               return true;
             }
           });
-          cache.writeQuery({ query: ArticlesDocument, data: cachedData });
+          cache.writeQuery({ query: ArticlesDocument, data: cachedArticles });
 
           const cachedArticle = cache.readQuery({
             query: ArticleDocument,
             variables: {
-              id: data?.article?.id,
+              id: article?.id,
             },
           });
 
@@ -137,9 +96,38 @@ const ArticleContent = ({ route, navigation }: Props) => {
           cache.writeQuery({
             query: ArticleDocument,
             variables: {
-              id: data?.article?.id,
+              id: article?.id,
             },
             data: cachedArticle,
+          });
+
+          const cachedFavouriteList = cache.readQuery({
+            query: FavouriteArticlesDocument,
+          });
+
+          if (toggleFavourite) {
+            const newFavourite = {
+              id: article?.id,
+              title: article?.title,
+              parent: article?.parent || null,
+              __typename: "Article",
+            };
+
+            cachedFavouriteList.me.favourites = [
+              ...cachedFavouriteList.me.favourites,
+              newFavourite,
+            ];
+          } else {
+            cachedFavouriteList.me.favourites = cachedFavouriteList.me.favourites.filter(
+              (el) => {
+                return el.id != article?.id;
+              }
+            );
+          }
+
+          cache.writeQuery({
+            query: FavouriteArticlesDocument,
+            data: cachedFavouriteList,
           });
         } catch (err) {
           // If the user has not opened the favourite
@@ -149,7 +137,9 @@ const ArticleContent = ({ route, navigation }: Props) => {
       },
     })
       .then(({ data: { toggleFavourite } }) => {
-        setFavourite(toggleFavourite);
+        // Add optimistic response so we dont have to await the response to change the icon.
+        article.favourited = toggleFavourite;
+        setArticle(article);
       })
       .catch((err: any) => console.log(`Error togglefavourite: ${err}`));
   }
@@ -163,7 +153,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
       update(cache) {
         const cachedData = cache.readQuery({ query: ArticlesDocument });
         cachedData.articles.some((el) => {
-          if (el.id == data.article?.id) {
+          if (el.id == article?.id) {
             el.title = newTitle;
             return true;
           }
@@ -173,7 +163,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
         const cachedArticle = cache.readQuery({
           query: ArticleDocument,
           variables: {
-            id: data?.article?.id,
+            id: article?.id,
           },
         });
 
@@ -182,30 +172,50 @@ const ArticleContent = ({ route, navigation }: Props) => {
         cache.writeQuery({
           query: ArticleDocument,
           variables: {
-            id: data?.article?.id,
+            id: article?.id,
           },
           data: cachedArticle,
         });
       },
-    }).then(({ data }) => setUpdatedTime(data?.updateArticle?.updatedAt));
+    })
+      .then(
+        ({
+          data: {
+            updateArticle: { updatedAt },
+          },
+        }) => {
+          article.updatedAt = updatedAt;
+          setArticle(article);
+        }
+      )
+      .catch((err: any) => console.log(`Error onSaveTitle: ${err}`));
   }
 
   function onSaveBody(newBody: string) {
     updateArticle({
       variables: {
-        id: data?.article?.id,
+        id: article.id,
         body: newBody,
       },
-    }).then(({ data }) => {
-      setUpdatedTime(data?.updateArticle?.updatedAt);
-    });
+    })
+      .then(
+        ({
+          data: {
+            updateArticle: { updatedAt },
+          },
+        }) => {
+          article.updatedAt = updatedAt;
+          setArticle(article);
+        }
+      )
+      .catch((err) => console.log(`Error onSaveBody: ${err}`));
   }
 
   return loading ? (
     <StyledLoadingView>
       <ActivityIndicator color="primary" />
     </StyledLoadingView>
-  ) : data && data.article ? (
+  ) : article ? (
     <StyledScrollView
       contentContainerStyle={{
         flexGrow: 1,
@@ -218,40 +228,38 @@ const ArticleContent = ({ route, navigation }: Props) => {
       <Breadcrumbs
         separator="/"
         titles={[
-          ...(data.article.rootPath
-            ? data.article.rootPath.map(
+          ...(article.rootPath
+            ? article.rootPath.map(
                 (titleAndId) => titleAndId?.split("-")[0] || ""
               )
             : []),
-          title ? title : "",
+          article.title,
         ]}
       />
       <TitleTextInput
         style={{ fontSize: fontSize }}
         multiline={true}
         scrollEnabled={false}
-        value={title}
+        value={article.title}
         blurOnSubmit={true}
         nestedScrollEnabled={false}
         onChangeText={(text: string) => {
           if (text.length <= 90) {
+            article.title = text;
             if (text.length > 45) {
               setFontSize(28);
             } else {
               setFontSize(36);
             }
-            setTitle(text);
             onSaveTitle(text);
           }
         }}
       />
-      <ArticleEditor content={data.article.body || ""} onSave={onSaveBody} />
-      <StyledText>
-        {updatedTime ? `Last modified ${lastModificationTime}` : ""}
-      </StyledText>
+      <ArticleEditor content={article.body} onSave={onSaveBody} />
+      <StyledText>{`Last modified ${lastModificationTime}`}</StyledText>
     </StyledScrollView>
   ) : (
-    <Text>{error?.message}</Text>
+    <Text>{error}</Text>
   );
 };
 
