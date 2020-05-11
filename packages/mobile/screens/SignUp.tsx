@@ -88,7 +88,16 @@ const SignUp = ({
   };
 
   return (
-    <Container>
+    <Container
+      contentContainerStyle={{
+        justifyContent: "center",
+        backgroundColor: "#ffffff",
+        paddingTop: 50,
+        paddingRight: 30,
+        paddingBottom: 275,
+        paddingLeft: 30,
+      }}
+    >
       <Header />
       <Title>Sign up</Title>
       <View>

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { TextInput, IconButton, HelperText } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -65,7 +66,16 @@ const LogIn = ({
   };
 
   return (
-    <Container>
+    <Container
+      contentContainerStyle={{
+        justifyContent: "center",
+        backgroundColor: "#ffffff",
+        paddingTop: 50,
+        paddingRight: 30,
+        paddingBottom: 275,
+        paddingLeft: 30,
+      }}
+    >
       <Header />
       <Title>Login</Title>
       <View>
@@ -186,11 +196,8 @@ export interface Props {
   route: any;
 }
 
-export const Container = styled.View`
+export const Container = styled.ScrollView`
   flex: 1;
-  background-color: #ffffff;
-  justify-content: center;
-  padding: 50px 30px 30px;
 `;
 
 export const Title = styled.Text`
