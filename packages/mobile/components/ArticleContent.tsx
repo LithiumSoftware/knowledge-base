@@ -222,22 +222,22 @@ const ArticleContent = ({ route, navigation }: Props) => {
         });
         cache.writeQuery({ query: ArticlesDocument, data: cachedData });
 
-        // const cachedArticle = cache.readQuery({
-        //   query: ArticleDocument,
-        //   variables: {
-        //     id: article?.id,
-        //   },
-        // });
+        const cachedArticle = cache.readQuery({
+          query: ArticleDocument,
+          variables: {
+            id: article?.id,
+          },
+        });
 
-        // cachedArticle.article.title = newTitle;
+        cachedArticle.article.title = newTitle;
 
-        // cache.writeQuery({
-        //   query: ArticleDocument,
-        //   variables: {
-        //     id: article?.id,
-        //   },
-        //   data: cachedArticle,
-        // });
+        cache.writeQuery({
+          query: ArticleDocument,
+          variables: {
+            id: article?.id,
+          },
+          data: cachedArticle,
+        });
       },
     })
       .then(
