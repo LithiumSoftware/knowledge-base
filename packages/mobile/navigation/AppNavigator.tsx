@@ -116,15 +116,6 @@ const UserNavigator = ({
       initialParams={{ ...route.params }}
       options={{
         title: "",
-        headerStyle: { backgroundColor: "#fff" },
-        headerLeft: () => (
-          <IconButton
-            color="black"
-            style={{ left: 4, height: "100%" }}
-            icon={() => <Menu />}
-            onPress={() => navigation.toggleDrawer()}
-          />
-        ),
         headerTitleContainerStyle: { left: 4 },
       }}
     />
