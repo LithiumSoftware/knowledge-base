@@ -1,11 +1,19 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import styled from "styled-components";
-import { View, Text, TextInput, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  Dimensions,
+  Button,
+} from "react-native";
 import { ActivityIndicator, IconButton, Colors } from "react-native-paper";
 import moment, { isDate } from "moment";
 import Breadcrumbs from "./Breadcrumbs";
 import ArticleEditor from "./ArticleEditor";
-import { Heart, Search } from "../assets/icons";
+import ArticleViewer from "./ArticleViewer";
+import { Heart, Menu, Save, Edit } from "../assets/icons";
 
 import {
   useArticleQuery,
@@ -32,6 +40,8 @@ const ArticleContent = ({ route, navigation }: Props) => {
 
   const [article, setArticle] = useState<Article | undefined | null>(undefined);
 
+  const [isEditing, setIsEditing] = useState(false);
+
   useEffect(() => {
     setArticle(data?.article);
   }, [data]);
@@ -54,19 +64,54 @@ const ArticleContent = ({ route, navigation }: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerStyle: { backgroundColor: isEditing ? "#FFC200" : "white" },
+      headerLeft: () => (
+        <IconButton
+          color="black"
+          style={{ left: 4, height: "100%" }}
+          icon={() => <Menu />}
+          onPress={() => navigation.toggleDrawer()}
+        />
+      ),
       headerRight: () => (
-        <View style={{ flexDirection: "row", paddingRight: 8 }}>
-          <IconButton
-            icon={() => (
-              <Heart fill={article?.favourited ? "#FFC200" : "#D6D6D6"} />
-            )}
-            onPress={() => toggleFavouriteAction()}
-          />
-          <IconButton icon={() => <Search fill={Colors.grey300} />} />
+        <View
+          style={{
+            flexDirection: "row",
+            paddingRight: 8,
+            alignItems: "center",
+          }}
+        >
+          {isEditing ? (
+            <>
+              <IconButton
+                icon={() => (
+                  <Heart fill={article?.favourited ? "black" : "#E0AA00"} />
+                )}
+                onPress={() => toggleFavouriteAction()}
+              />
+              <IconButton
+                icon={() => <Save fill={"black"} />}
+                onPress={() => setIsEditing(!isEditing)}
+              />
+            </>
+          ) : (
+            <>
+              <IconButton
+                icon={() => (
+                  <Heart fill={article?.favourited ? "#FFC200" : "#D6D6D6"} />
+                )}
+                onPress={() => toggleFavouriteAction()}
+              />
+              <IconButton
+                icon={() => <Edit fill={"black"} />}
+                onPress={() => setIsEditing(!isEditing)}
+              />
+            </>
+          )}
         </View>
       ),
     });
-  }, [navigation, article]);
+  }, [navigation, article, article?.title, isEditing]);
 
   function toggleFavouriteAction() {
     toggleFavouriteMutation({
@@ -219,7 +264,8 @@ const ArticleContent = ({ route, navigation }: Props) => {
     <StyledScrollView
       contentContainerStyle={{
         flexGrow: 1,
-        minHeight: windowHeight + windowHeight * 0.4,
+        minHeight: windowHeight * 0.9 + (isEditing ? windowHeight * 0.5 : 0),
+        paddingBottom: isEditing ? "55.5%" : "2.1%",
       }}
       keyboardShouldPersistTaps="handled"
       nestedScrollEnabled={false}
@@ -237,6 +283,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
         ]}
       />
       <TitleTextInput
+        editable={isEditing}
         style={{ fontSize: fontSize }}
         multiline={true}
         scrollEnabled={false}
@@ -255,7 +302,11 @@ const ArticleContent = ({ route, navigation }: Props) => {
           }
         }}
       />
-      <ArticleEditor content={article.body} onSave={onSaveBody} />
+      {isEditing ? (
+        <ArticleEditor content={article.body} onSave={onSaveBody} />
+      ) : (
+        <ArticleViewer content={article.body} />
+      )}
       <StyledText>{`Last modified ${lastModificationTime}`}</StyledText>
     </StyledScrollView>
   ) : (
@@ -291,7 +342,6 @@ const StyledText = styled(Text)`
   display: flex;
   font-size: 12px;
   margin: 16px;
-  padding-bottom: 78%;
   text-align: center;
   color: #bdbdbd;
 `;

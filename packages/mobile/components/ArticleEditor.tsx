@@ -18,7 +18,7 @@ interface Props {
   onSave: Function;
 }
 
-const onMessageReceived = (message, onSave, t) => {
+const onMessageReceived = (message, onSave) => {
   const { msg, payload } = message;
 
   if (msg === "ON_CHANGE") onSave(payload.html);
