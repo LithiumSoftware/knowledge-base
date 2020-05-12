@@ -31,36 +31,51 @@ const ArticleContent = ({ route, navigation }: Props) => {
     fetchPolicy: "network-only",
   });
 
+  const [article, setArticle] = useState<Article | undefined | null>(
+    data?.article
+  );
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(data?.article?.updatedAt);
+  const [title, setTitle] = useState(data?.article?.title);
+  const [content, setContent] = useState(data?.article?.body);
+  const [favourited, setFavourited] = useState(data?.article?.favourited);
+
   const [updateArticle] = useUpdateArticleMutation();
   const [toggleFavouriteMutation] = useToggleFavouriteMutation();
-
   const [fontSize, setFontSize] = useState(36);
-
   const [lastModificationTime, setLastModificationTime] = useState("");
-
-  const [article, setArticle] = useState<Article | undefined | null>(undefined);
-
   const [isEditing, setIsEditing] = useState(false);
+  const [lastEditedBody, setLastEditedBody] = useState(data?.article?.body);
 
   useEffect(() => {
     setArticle(data?.article);
-  }, [data]);
+    setLastUpdatedAt(data?.article?.updatedAt);
+    setLastModificationTime(
+      data?.article?.updatedAt ? moment(data?.article?.updatedAt).fromNow() : ""
+    );
+    setTitle(data?.article?.title);
+    setContent(data?.article?.body);
+    setFavourited(data?.article?.favourited);
+    setLastEditedBody(data?.article?.body);
+  }, [data?.article?.id]);
 
   useEffect(() => {
-    setFontSize(article?.title?.length > 48 ? 28 : 36);
-  }, [article?.title]);
+    setFavourited(data?.article?.favourited);
+  }, [data?.article?.favourited]);
+
+  useEffect(() => {
+    setFontSize(title && title.length > 48 ? 28 : 36);
+  }, [title]);
 
   useEffect(() => {
     const timeOut = setInterval(() => {
       setLastModificationTime(
-        article ? moment(article.updatedAt).fromNow() : ""
+        lastUpdatedAt ? moment(lastUpdatedAt).fromNow() : ""
       );
     }, 15 * 1000);
-
     return () => {
       clearInterval(timeOut);
     };
-  }, [article?.updatedAt]);
+  }, [lastUpdatedAt]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -84,34 +99,42 @@ const ArticleContent = ({ route, navigation }: Props) => {
           {isEditing ? (
             <>
               <IconButton
-                icon={() => (
-                  <Heart fill={article?.favourited ? "black" : "#E0AA00"} />
-                )}
-                onPress={() => toggleFavouriteAction()}
+                icon={() => <Heart fill={favourited ? "black" : "#E0AA00"} />}
+                onPress={() => {
+                  setFavourited(!favourited);
+                  toggleFavouriteAction();
+                }}
               />
               <IconButton
                 icon={() => <Save fill={"black"} />}
-                onPress={() => setIsEditing(!isEditing)}
+                onPress={() => {
+                  setContent(lastEditedBody);
+                  setIsEditing(!isEditing);
+                }}
               />
             </>
           ) : (
             <>
               <IconButton
-                icon={() => (
-                  <Heart fill={article?.favourited ? "#FFC200" : "#D6D6D6"} />
-                )}
-                onPress={() => toggleFavouriteAction()}
+                icon={() => <Heart fill={favourited ? "#FFC200" : "#D6D6D6"} />}
+                onPress={() => {
+                  setFavourited(!favourited);
+                  toggleFavouriteAction();
+                }}
               />
               <IconButton
                 icon={() => <Edit fill={"black"} />}
-                onPress={() => setIsEditing(!isEditing)}
+                onPress={() => {
+                  setContent(lastEditedBody);
+                  setIsEditing(!isEditing);
+                }}
               />
             </>
           )}
         </View>
       ),
     });
-  }, [navigation, article, article?.title, isEditing]);
+  }, [navigation, article, favourited, isEditing, lastEditedBody]);
 
   function toggleFavouriteAction() {
     toggleFavouriteMutation({
@@ -180,13 +203,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
           // yet and it will land on this catch.
         }
       },
-    })
-      .then(({ data: { toggleFavourite } }) => {
-        // Add optimistic response so we dont have to await the response to change the icon.
-        article.favourited = toggleFavourite;
-        setArticle(article);
-      })
-      .catch((err: any) => console.log(`Error togglefavourite: ${err}`));
+    }).catch((err: any) => console.log(`Error togglefavourite: ${err}`));
   }
 
   function onSaveTitle(newTitle: string) {
@@ -205,22 +222,22 @@ const ArticleContent = ({ route, navigation }: Props) => {
         });
         cache.writeQuery({ query: ArticlesDocument, data: cachedData });
 
-        const cachedArticle = cache.readQuery({
-          query: ArticleDocument,
-          variables: {
-            id: article?.id,
-          },
-        });
+        // const cachedArticle = cache.readQuery({
+        //   query: ArticleDocument,
+        //   variables: {
+        //     id: article?.id,
+        //   },
+        // });
 
-        cachedArticle.article.title = newTitle;
+        // cachedArticle.article.title = newTitle;
 
-        cache.writeQuery({
-          query: ArticleDocument,
-          variables: {
-            id: article?.id,
-          },
-          data: cachedArticle,
-        });
+        // cache.writeQuery({
+        //   query: ArticleDocument,
+        //   variables: {
+        //     id: article?.id,
+        //   },
+        //   data: cachedArticle,
+        // });
       },
     })
       .then(
@@ -229,8 +246,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
             updateArticle: { updatedAt },
           },
         }) => {
-          article.updatedAt = updatedAt;
-          setArticle(article);
+          setLastUpdatedAt(updatedAt);
         }
       )
       .catch((err: any) => console.log(`Error onSaveTitle: ${err}`));
@@ -249,8 +265,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
             updateArticle: { updatedAt },
           },
         }) => {
-          article.updatedAt = updatedAt;
-          setArticle(article);
+          setLastUpdatedAt(updatedAt);
         }
       )
       .catch((err) => console.log(`Error onSaveBody: ${err}`));
@@ -264,8 +279,8 @@ const ArticleContent = ({ route, navigation }: Props) => {
     <StyledScrollView
       contentContainerStyle={{
         flexGrow: 1,
-        minHeight: windowHeight * 0.9 + (isEditing ? windowHeight * 0.5 : 0),
-        paddingBottom: isEditing ? "55.5%" : "2.1%",
+        minHeight: windowHeight * 0.9 + (isEditing ? windowHeight * 0.48 : 0),
+        paddingBottom: isEditing ? windowHeight * 0.46 : "2.1%",
       }}
       keyboardShouldPersistTaps="handled"
       nestedScrollEnabled={false}
@@ -279,7 +294,7 @@ const ArticleContent = ({ route, navigation }: Props) => {
                 (titleAndId) => titleAndId?.split("-")[0] || ""
               )
             : []),
-          article.title,
+          title,
         ]}
       />
       <TitleTextInput
@@ -287,12 +302,12 @@ const ArticleContent = ({ route, navigation }: Props) => {
         style={{ fontSize: fontSize }}
         multiline={true}
         scrollEnabled={false}
-        value={article.title}
+        value={title}
         blurOnSubmit={true}
         nestedScrollEnabled={false}
         onChangeText={(text: string) => {
           if (text.length <= 90) {
-            article.title = text;
+            setTitle(text);
             if (text.length > 45) {
               setFontSize(28);
             } else {
@@ -303,9 +318,12 @@ const ArticleContent = ({ route, navigation }: Props) => {
         }}
       />
       {isEditing ? (
-        <ArticleEditor content={article.body} onSave={onSaveBody} />
+        <ArticleEditor
+          content={content}
+          onSave={{ setLastEditedBody, onSaveBody }}
+        />
       ) : (
-        <ArticleViewer content={article.body} />
+        <ArticleViewer content={content} />
       )}
       <StyledText>{`Last modified ${lastModificationTime}`}</StyledText>
     </StyledScrollView>

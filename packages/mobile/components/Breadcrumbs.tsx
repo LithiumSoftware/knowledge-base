@@ -34,21 +34,23 @@ function cutText(titles: string[], separator: string) {
   const firstTitleLength = firstTitle.length;
   const lastTitleLength = lastTitle.length;
   const shortestTitleLength = Math.min(firstTitleLength, lastTitleLength);
-  const dotsAndSeparator = `  ${separator}  ...  ${separator}  `;
-  const maxTitleLength = (maxChars - dotsAndSeparator.length) / 2 - 3;
+  const fullSeparator = `  ${separator}  ${
+    titlesLenght > 2 ? `...  ${separator}  ` : ""
+  }`;
+  const maxTitleLength = (maxChars - fullSeparator.length) / 2 - 3;
 
   if (shortestTitleLength > maxTitleLength) {
     return `${firstTitle.substr(
       0,
       maxTitleLength
-    )}...${dotsAndSeparator}${lastTitle.substr(0, maxTitleLength)}...`;
+    )}...${fullSeparator}${lastTitle.substr(0, maxTitleLength)}...`;
   } else if (firstTitleLength >= maxTitleLength) {
     return `${firstTitle.substr(
       0,
       maxChars - lastTitleLength - 14 - separator.length
-    )}...${dotsAndSeparator}${lastTitle}`;
+    )}...${fullSeparator}${lastTitle}`;
   } else {
-    return `${firstTitle}${dotsAndSeparator}${lastTitle.substr(
+    return `${firstTitle}${fullSeparator}${lastTitle.substr(
       0,
       maxChars - firstTitleLength - 14 - separator.length
     )}...`;

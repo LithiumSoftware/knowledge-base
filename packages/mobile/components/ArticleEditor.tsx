@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import styled from "styled-components";
-import WebViewQuillJS, {
-  WebviewQuillJSMessage,
-} from "react-native-webview-quilljs";
+import WebViewQuillJS from "react-native-webview-quilljs";
 
 const StyledView = styled(View)`
   flex-grow: 1;
   margin-top: 2%;
   margin-left: 2%;
   margin-right: 2%;
-  justify-content: flex-start;
 `;
 
 interface Props {
   content: string;
-  onSave: Function;
+  onSave: { setLastEditedBody: Function; onSaveBody: Function };
 }
 
 const onMessageReceived = (message, onSave) => {
   const { msg, payload } = message;
 
-  if (msg === "ON_CHANGE") onSave(payload.html);
+  if (msg === "ON_CHANGE") {
+    onSave.setLastEditedBody(payload.html);
+    onSave.onSaveBody(payload.html);
+  }
 };
 
 export default ArticleEditor = ({ content, onSave }: Props) => (

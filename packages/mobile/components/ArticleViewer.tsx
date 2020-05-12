@@ -29,5 +29,7 @@ interface Props {
 
 const StyledView = styled(View)`
   flex-grow: 1;
-  padding: 4%;
+  margin-top: 4%;
+  margin-left: 4%;
+  margin-right: 4%;
 `;
