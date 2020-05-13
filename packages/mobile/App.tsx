@@ -24,7 +24,7 @@ const theme: Theme = {
 };
 
 const link = new HttpLink({
-  uri: "http://192.168.1.2:3000/api/graphql", // Server URL (must be absolute)
+  uri: "https://workspace-library.now.sh/api/graphql", // Server URL (must be absolute)
 });
 const cache = new InMemoryCache();
 
