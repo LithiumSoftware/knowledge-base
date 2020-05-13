@@ -107,7 +107,7 @@ const UserNavigator = ({
       component={HomeScreen}
       initialParams={{ ...route.params }}
       options={{
-        title: "Lithium KB App",
+        title: "Welcome to Lithium KB",
       }}
     />
     <Stack.Screen
