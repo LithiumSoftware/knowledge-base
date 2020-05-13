@@ -99,7 +99,7 @@ const UserNavigator = ({
           onPress={() => navigation.toggleDrawer()}
         />
       ),
-      headerTitleContainerStyle: { left: 44 },
+      headerTitleContainerStyle: { justifyContent: "center" },
     }}
   >
     <Stack.Screen
@@ -116,7 +116,7 @@ const UserNavigator = ({
       initialParams={{ ...route.params }}
       options={{
         title: "",
-        headerTitleContainerStyle: { left: 4 },
+        headerTitleContainerStyle: {},
       }}
     />
   </Stack.Navigator>
