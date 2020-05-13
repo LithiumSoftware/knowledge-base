@@ -10,7 +10,7 @@ import { Appbar, Divider, Drawer, IconButton } from "react-native-paper";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 
 import styled from "styled-components/native";
-import { AccountCircle } from "../assets/icons";
+import { Exit } from "../assets/icons";
 
 import SidebarArticles from "./SidebarArticles";
 import SidebarFooter from "./SidebarFooter";
@@ -99,7 +99,7 @@ const Sidebar = (props: any) => {
         <Header>
           <StyledImage source={require("../assets/icono-lithium.png")} />
           <Appbar.Content title="Lithium KB." />
-          <StyledIcon icon={() => <AccountCircle />} onPress={() => logOut()} />
+          <StyledIcon icon={() => <Exit />} onPress={() => logOut()} />
         </Header>
         <TabView
           navigationState={{ index, routes }}
