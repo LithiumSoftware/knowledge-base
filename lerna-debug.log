@@ -1,0 +1,16 @@
+0 silly argv { _: [ 'clean' ], lernaVersion: '3.20.2', '$0': 'lerna' }
+1 notice cli v3.20.2
+2 verbose rootPath /home/gero/Development/workspace-library
+3 info Removing the following directories:
+4 info clean packages/kbcore/node_modules
+4 info clean packages/mobile/node_modules
+4 info clean packages/web/node_modules
+5 info clean removing /home/gero/Development/workspace-library/packages/kbcore/node_modules
+6 silly rimrafDir /home/gero/Development/workspace-library/packages/kbcore/node_modules
+7 info clean removing /home/gero/Development/workspace-library/packages/mobile/node_modules
+8 silly rimrafDir /home/gero/Development/workspace-library/packages/mobile/node_modules
+9 info clean removing /home/gero/Development/workspace-library/packages/web/node_modules
+10 silly rimrafDir /home/gero/Development/workspace-library/packages/web/node_modules
+11 error Error: Command failed: /usr/local/bin/node /home/gero/Development/workspace-library/node_modules/rimraf/bin.js --no-glob /home/gero/Development/workspace-library/packages/web/node_modules/
+11 error     at makeError (/home/gero/Development/workspace-library/node_modules/execa/index.js:174:9)
+11 error     at /home/gero/Development/workspace-library/node_modules/execa/index.js:278:16

@@ -1,6 +1,6 @@
 import { ApolloServer, AuthenticationError } from "apollo-server-micro";
-import { typeDefs, resolvers } from "./schema";
-import db from "./models";
+import { typeDefs, resolvers } from "../../graphql/schema";
+import db from "../../graphql/models";
 import jwt from "jsonwebtoken";
 
 const apolloServer = new ApolloServer({

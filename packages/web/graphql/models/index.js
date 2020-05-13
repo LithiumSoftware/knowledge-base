@@ -9,7 +9,7 @@ const sequelize = new Sequelize(
 );
 
 const db = {};
-const route = `${process.cwd()}/pages/api/models`;
+const route = `${process.cwd()}/graphql/models`;
 
 fs.readdirSync(route)
   .filter(
