@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "workspaces": {
+    "nohoist": [
+      "**/core/**",
+      "**/mobile/**"
+    ],
+    "packages": [
+      "packages/core",
+      "packages/mobile"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@graphql-codegen/typescript": "^1.13.1",
+    "@graphql-codegen/typescript-operations": "^1.13.1",
+    "@graphql-codegen/typescript-react-apollo": "^1.13.1",
+    "babel-plugin-styled-components": "^1.10.7",
+    "lerna": "^3.20.2",
+    "prettier": "^2.0.2",
+    "styled-components": "^5.0.1",
+    "typescript": "^3.8.3"
+  },
+  "name": "workspace-library",
+  "dependencies": {}
+}

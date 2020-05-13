@@ -1,8 +1,8 @@
 import App from "next/app";
 import Head from "next/head";
-import { withApollo } from "../lib/apollo";
+import { withApollo } from "../core/apollo";
 import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "./_theme";
+// import theme from "./_theme";
 import { CssBaseline } from "@material-ui/core";
 import { DndProvider } from "react-dnd";
 import Backend from "react-dnd-html5-backend";
@@ -14,10 +14,7 @@ const MyApp = ({ Component, pageProps, router }) => {
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <link
-          href="https://cdn.syncfusion.com/ej2/material.css"
-          rel="stylesheet"
-        />
+        <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet" />
         <link
           href="//cdn.syncfusion.com/ej2/ej2-react-richtexteditor/styles/material.css"
           rel="stylesheet"
@@ -28,7 +25,7 @@ const MyApp = ({ Component, pageProps, router }) => {
         />
       </Head>
 
-      <ThemeProvider theme={theme}>
+      <ThemeProvider>
         <DndProvider backend={Backend}>
           <CssBaseline />
           {getLayout(<Component {...pageProps} />, pageProps)}

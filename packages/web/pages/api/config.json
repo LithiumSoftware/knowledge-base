@@ -1,26 +1,27 @@
 {
   "development": {
-    "username": "pg_user",
-    "password": "pg_password",
-    "database": "likbdb",
+    "username": "lotion",
+    "password": "lotion",
+    "database": "lotion",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
   },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
+  "preview": {
+    "username": "ws_library",
+    "password": "UQEsbTxOMH4CA6cBEFIk",
+    "database": "ws_library_preview",
+    "host": "workspace-library-db-instance-1.cccreera0i2z.us-east-1.rds.amazonaws.com",
+    "dialect": "postgres",
+    "string": "postgres://ws_library:UQEsbTxOMH4CA6cBEFIk@workspace-library-db-instance-1.cccreera0i2z.us-east-1.rds.amazonaws.com:5432/ws_library_preview",
     "operatorsAliases": false
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "username": "ws_library",
+    "password": "UQEsbTxOMH4CA6cBEFIk",
+    "database": "ws_library",
+    "host": "workspace-library-db-instance-1.cccreera0i2z.us-east-1.rds.amazonaws.com",
+    "dialect": "postgres",
+    "string": "postgres://ws_library:UQEsbTxOMH4CA6cBEFIk@workspace-library-db-instance-1.cccreera0i2z.us-east-1.rds.amazonaws.com:5432/ws_library"
   }
 }
