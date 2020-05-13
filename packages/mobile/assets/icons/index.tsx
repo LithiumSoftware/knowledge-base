@@ -23,17 +23,6 @@ const Icon = ({
 
 export default Icon;
 
-//Sidebar Icons
-export const AccountCircle = ({ fill = "#757575" }: IconProps) => (
-  <Icon
-    fill={fill}
-    path="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.232 7.232 0 01-6 3.2M12 5a3 3 0 013 3 3 3 0 01-3 3 3 3 0 01-3-3 3 3 0 013-3m0-3A10 10 0 002 12a10 10 0 0010 10 10 10 0 0010-10c0-5.53-4.5-10-10-10z"
-    width={32}
-    height={32}
-    viewBox={"0 0 24 24"}
-  />
-);
-
 export const ChevronDown = ({ fill = "#757575" }: IconProps) => (
   <Icon
     fill={fill}
@@ -114,5 +103,12 @@ export const Edit = ({ fill = "757575" }: IconProps) => (
   <Icon
     fill={fill}
     path="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"
+  />
+);
+
+export const Exit = ({ fill = "#757575" }: IconProps) => (
+  <Icon
+    fill={fill}
+    path="M19,3H5C3.89,3 3,3.89 3,5V9H5V5H19V19H5V15H3V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M10.08,15.58L11.5,17L16.5,12L11.5,7L10.08,8.41L12.67,11H3V13H12.67L10.08,15.58Z"
   />
 );
