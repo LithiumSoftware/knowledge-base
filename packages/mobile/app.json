@@ -1,24 +1,32 @@
 {
   "expo": {
-    "name": "Blank Template (TypeScript)",
-    "slug": "mobile",
+    "name": "Lithium KB",
+    "slug": "lithium-kb",
+    "icon": "./assets/icon.png",
     "privacy": "public",
     "sdkVersion": "36.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": ["ios", "android"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
-    }
+      "bundleIdentifier": "com.lithium.lithium-kb",
+      "buildNumber": "1.0.0",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.lithium.lithium_kb",
+      "permissions": [],
+      "versionCode": 1
+    },
+    "description": "Lithium KB: A knowledgebase inspired on Notion and created to use as a tool that helps teams to documenting projects, processes, and all the things related to the team workflow.",
+    "githubUrl": "https://github.com/LithiumSoftware/workspace-library"
   }
 }

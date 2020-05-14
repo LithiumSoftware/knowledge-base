@@ -1,6 +1,6 @@
 import { ApolloError } from "apollo-server-micro";
 import { authenticated } from "./scalars";
-import { getRootPath, moment } from "../getRoothPath";
+import { getRootPath, moment } from "../getRootPath";
 
 export const typeDef = `
   extend type Query {
