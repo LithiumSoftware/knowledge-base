@@ -216,13 +216,13 @@ const signupSchema = Yup.object().shape({
   username: Yup.string()
     .required("Please enter your name")
     .min(4, "Name is too short")
-    .max(12, "Thats a long name you have there"),
+    .max(30, "Thats a long name you have there"),
   email: Yup.string()
     .email("Please enter a valid email")
     .required("Please enter an email"),
   password: Yup.string()
     .required("Please enter the password")
-    .min(8, "Password is too short"),
+    .min(4, "Password is too short"),
   confirmation: Yup.string()
     .required("Please enter the password confirmation")
     .oneOf([Yup.ref("password")], "Passwords do not match"),
