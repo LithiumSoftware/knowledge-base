@@ -5,6 +5,7 @@ import {
   Provider as PaperProvider,
   Theme,
 } from "react-native-paper";
+import { StatusBar } from "react-native";
 
 import { ApolloProvider } from "react-apollo";
 import { ApolloClient } from "apollo-client";
@@ -37,6 +38,7 @@ const MyApp = () => (
   <PaperProvider theme={theme}>
     <ApolloProvider client={client}>
       <NavigationContainer>
+        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <AppNavigator />
       </NavigationContainer>
     </ApolloProvider>
