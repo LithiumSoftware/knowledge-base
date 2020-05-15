@@ -94,7 +94,7 @@ const LogIn = ({
             <>
               <View
                 style={{
-                  height: Dimensions.get("window").height - 320,
+                  height: Dimensions.get("window").height - 350,
                 }}
               >
                 <InputContainer>
@@ -154,11 +154,6 @@ const LogIn = ({
 };
 
 export const Header = () => {
-  const StyledImage = styled(Image)`
-    margin-top: -10px;
-    margin-bottom: 3%;
-  `;
-
   const WelcomeText = styled.Text`
     color: #ffb900;
     font-size: 17px;
@@ -167,8 +162,8 @@ export const Header = () => {
 
   return (
     <View>
-      <StyledImage
-        resizeMode={"contain"}
+      <Image
+        style={{ marginBottom: "5%", width: 115, height: 38 }}
         source={require("../assets/logo-lithium.png")}
       />
       <WelcomeText>{"Welcome to Lithium KB."}</WelcomeText>
@@ -200,7 +195,7 @@ export const Container = styled.ScrollView`
 `;
 
 export const Title = styled.Text`
-  padding-top: 10px;
+  padding-top: 30px;
   padding-bottom: 25px;
   font-weight: bold;
   font-size: 46px;

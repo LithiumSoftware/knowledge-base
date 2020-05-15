@@ -98,7 +98,7 @@ const SignUp = ({
         paddingLeft: 30,
       }}
     >
-      <Title style={{ paddingBottom: 36 }}>Sign up</Title>
+      <Title style={{ paddingTop: 10, paddingBottom: 36 }}>Sign up</Title>
       <View>
         <Formik
           initialValues={{
