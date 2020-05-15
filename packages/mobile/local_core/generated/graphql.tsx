@@ -1,6 +1,6 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import gql from "graphql-tag";
+import * as ApolloReactCommon from "@apollo/react-common";
+import * as ApolloReactHooks from "@apollo/react-hooks";
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -16,314 +16,290 @@ export type Scalars = {
 };
 
 export type Article = {
-   __typename?: 'Article';
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  body?: Maybe<Scalars['String']>;
+  __typename?: "Article";
+  id: Scalars["ID"];
+  title: Scalars["String"];
+  body?: Maybe<Scalars["String"]>;
   author?: Maybe<User>;
   parent?: Maybe<Article>;
   children?: Maybe<Array<Maybe<Article>>>;
-  rootPath?: Maybe<Array<Maybe<Scalars['String']>>>;
-  favourited: Scalars['Boolean'];
-  createdAt?: Maybe<Scalars['Date']>;
-  updatedAt?: Maybe<Scalars['Date']>;
+  rootPath?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  favourited: Scalars["Boolean"];
+  createdAt?: Maybe<Scalars["Date"]>;
+  updatedAt?: Maybe<Scalars["Date"]>;
 };
 
 export type ArticleModification = {
-   __typename?: 'ArticleModification';
-  id: Scalars['ID'];
-  articleId: Scalars['ID'];
-  title: Scalars['String'];
-  body?: Maybe<Scalars['String']>;
+  __typename?: "ArticleModification";
+  id: Scalars["ID"];
+  articleId: Scalars["ID"];
+  title: Scalars["String"];
+  body?: Maybe<Scalars["String"]>;
   user: User;
   author: User;
-  createdAt?: Maybe<Scalars['Date']>;
-  updatedAt?: Maybe<Scalars['Date']>;
+  createdAt?: Maybe<Scalars["Date"]>;
+  updatedAt?: Maybe<Scalars["Date"]>;
 };
 
 export enum CacheControlScope {
-  Public = 'PUBLIC',
-  Private = 'PRIVATE'
+  Public = "PUBLIC",
+  Private = "PRIVATE",
 }
 
 export type CreateInput = {
-  title: Scalars['String'];
-  body?: Maybe<Scalars['String']>;
-  authorId?: Maybe<Scalars['ID']>;
-  parentId?: Maybe<Scalars['ID']>;
+  title: Scalars["String"];
+  body?: Maybe<Scalars["String"]>;
+  authorId?: Maybe<Scalars["ID"]>;
+  parentId?: Maybe<Scalars["ID"]>;
 };
 
-
 export type Mutation = {
-   __typename?: 'Mutation';
-  _empty?: Maybe<Scalars['String']>;
+  __typename?: "Mutation";
+  _empty?: Maybe<Scalars["String"]>;
   signedUser?: Maybe<User>;
   loggedUser?: Maybe<User>;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
-  toggleFavourite?: Maybe<Scalars['Boolean']>;
-  moveArticle?: Maybe<Scalars['Boolean']>;
+  toggleFavourite?: Maybe<Scalars["Boolean"]>;
+  moveArticle?: Maybe<Scalars["Boolean"]>;
 };
-
 
 export type MutationSignedUserArgs = {
   input: UserCreateInput;
 };
 
-
 export type MutationLoggedUserArgs = {
   input: UserLoginInput;
 };
-
 
 export type MutationCreateArticleArgs = {
   input: CreateInput;
 };
 
-
 export type MutationUpdateArticleArgs = {
   input?: Maybe<UpdateInput>;
 };
 
-
 export type MutationToggleFavouriteArgs = {
-  articleId: Scalars['ID'];
+  articleId: Scalars["ID"];
 };
 
-
 export type MutationMoveArticleArgs = {
-  id: Scalars['ID'];
-  parentId?: Maybe<Scalars['ID']>;
+  id: Scalars["ID"];
+  parentId?: Maybe<Scalars["ID"]>;
 };
 
 export type Query = {
-   __typename?: 'Query';
-  _empty?: Maybe<Scalars['String']>;
+  __typename?: "Query";
+  _empty?: Maybe<Scalars["String"]>;
   me?: Maybe<User>;
   article?: Maybe<Article>;
   articles?: Maybe<Array<Maybe<Article>>>;
   articleModifications?: Maybe<Array<Maybe<ArticleModification>>>;
 };
 
-
 export type QueryArticleArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
-
 export type QueryArticleModificationsArgs = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
 export enum Role {
-  User = 'USER',
-  Admin = 'ADMIN'
+  User = "USER",
+  Admin = "ADMIN",
 }
 
 export type UpdateInput = {
-  id?: Maybe<Scalars['ID']>;
-  title?: Maybe<Scalars['String']>;
-  body?: Maybe<Scalars['String']>;
-  children?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  id?: Maybe<Scalars["ID"]>;
+  title?: Maybe<Scalars["String"]>;
+  body?: Maybe<Scalars["String"]>;
+  children?: Maybe<Array<Maybe<Scalars["ID"]>>>;
 };
 
-
 export type User = {
-   __typename?: 'User';
-  id: Scalars['ID'];
-  username?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
+  __typename?: "User";
+  id: Scalars["ID"];
+  username?: Maybe<Scalars["String"]>;
+  email: Scalars["String"];
   role: Role;
   articles?: Maybe<Array<Maybe<Article>>>;
   favourites?: Maybe<Array<Maybe<Article>>>;
-  createdAt?: Maybe<Scalars['Date']>;
-  updatedAt?: Maybe<Scalars['Date']>;
+  createdAt?: Maybe<Scalars["Date"]>;
+  updatedAt?: Maybe<Scalars["Date"]>;
 };
 
 export type UserCreateInput = {
-  email: Scalars['String'];
-  username?: Maybe<Scalars['String']>;
-  password: Scalars['String'];
+  email: Scalars["String"];
+  username?: Maybe<Scalars["String"]>;
+  password: Scalars["String"];
 };
 
 export type UserLoginInput = {
-  identifier: Scalars['String'];
-  password: Scalars['String'];
+  identifier: Scalars["String"];
+  password: Scalars["String"];
 };
 
 export type CreateArticleMutationVariables = {
-  title?: Scalars['String'];
-  parentId?: Maybe<Scalars['ID']>;
+  title?: Scalars["String"];
+  parentId?: Maybe<Scalars["ID"]>;
 };
 
-
-export type CreateArticleMutation = (
-  { __typename?: 'Mutation' }
-  & { createArticle: (
-    { __typename?: 'Article' }
-    & Pick<Article, 'id' | 'title'>
-    & { parent?: Maybe<(
-      { __typename?: 'Article' }
-      & Pick<Article, 'id'>
-    )> }
-  ) }
-);
+export type CreateArticleMutation = { __typename?: "Mutation" } & {
+  createArticle: { __typename?: "Article" } & Pick<Article, "id" | "title"> & {
+      parent?: Maybe<{ __typename?: "Article" } & Pick<Article, "id">>;
+    };
+};
 
 export type SignupMutationVariables = {
-  username?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-  password: Scalars['String'];
+  username?: Maybe<Scalars["String"]>;
+  email: Scalars["String"];
+  password: Scalars["String"];
 };
 
-
-export type SignupMutation = (
-  { __typename?: 'Mutation' }
-  & { signedUser?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id'>
-  )> }
-);
+export type SignupMutation = { __typename?: "Mutation" } & {
+  signedUser?: Maybe<{ __typename?: "User" } & Pick<User, "id">>;
+};
 
 export type LoginMutationVariables = {
-  identifier: Scalars['String'];
-  password: Scalars['String'];
+  identifier: Scalars["String"];
+  password: Scalars["String"];
 };
 
-
-export type LoginMutation = (
-  { __typename?: 'Mutation' }
-  & { loggedUser?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id'>
-  )> }
-);
+export type LoginMutation = { __typename?: "Mutation" } & {
+  loggedUser?: Maybe<{ __typename?: "User" } & Pick<User, "id">>;
+};
 
 export type MoveArticleMutationVariables = {
-  id: Scalars['ID'];
-  parentId: Scalars['ID'];
+  id: Scalars["ID"];
+  parentId: Scalars["ID"];
 };
 
-
-export type MoveArticleMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'moveArticle'>
-);
+export type MoveArticleMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "moveArticle"
+>;
 
 export type ToggleFavouriteMutationVariables = {
-  articleId: Scalars['ID'];
+  articleId: Scalars["ID"];
 };
 
-
-export type ToggleFavouriteMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'toggleFavourite'>
-);
+export type ToggleFavouriteMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "toggleFavourite"
+>;
 
 export type UpdateArticleMutationVariables = {
-  id?: Maybe<Scalars['ID']>;
-  title?: Maybe<Scalars['String']>;
-  body?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars["ID"]>;
+  title?: Maybe<Scalars["String"]>;
+  body?: Maybe<Scalars["String"]>;
 };
 
-
-export type UpdateArticleMutation = (
-  { __typename?: 'Mutation' }
-  & { updateArticle?: Maybe<(
-    { __typename?: 'Article' }
-    & Pick<Article, 'updatedAt'>
-  )> }
-);
+export type UpdateArticleMutation = { __typename?: "Mutation" } & {
+  updateArticle?: Maybe<
+    { __typename?: "Article" } & Pick<Article, "updatedAt">
+  >;
+};
 
 export type ArticlesQueryVariables = {};
 
-
-export type ArticlesQuery = (
-  { __typename?: 'Query' }
-  & { articles?: Maybe<Array<Maybe<(
-    { __typename?: 'Article' }
-    & Pick<Article, 'id' | 'title'>
-    & { parent?: Maybe<(
-      { __typename?: 'Article' }
-      & Pick<Article, 'id'>
-    )> }
-  )>>> }
-);
+export type ArticlesQuery = { __typename?: "Query" } & {
+  articles?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: "Article" } & Pick<Article, "id" | "title"> & {
+            parent?: Maybe<{ __typename?: "Article" } & Pick<Article, "id">>;
+          }
+      >
+    >
+  >;
+};
 
 export type ArticleModificationsQueryVariables = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
-
-export type ArticleModificationsQuery = (
-  { __typename?: 'Query' }
-  & { articleModifications?: Maybe<Array<Maybe<(
-    { __typename?: 'ArticleModification' }
-    & Pick<ArticleModification, 'id' | 'title' | 'body' | 'updatedAt'>
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
-    ), author: (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
-    ) }
-  )>>> }
-);
+export type ArticleModificationsQuery = { __typename?: "Query" } & {
+  articleModifications?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: "ArticleModification" } & Pick<
+          ArticleModification,
+          "id" | "title" | "body" | "updatedAt"
+        > & {
+            user: { __typename?: "User" } & Pick<User, "id" | "username">;
+            author: { __typename?: "User" } & Pick<User, "id" | "username">;
+          }
+      >
+    >
+  >;
+};
 
 export type ArticleQueryVariables = {
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
-
-export type ArticleQuery = (
-  { __typename?: 'Query' }
-  & { article?: Maybe<(
-    { __typename?: 'Article' }
-    & Pick<Article, 'id' | 'title' | 'body' | 'favourited' | 'rootPath' | 'updatedAt' | 'createdAt'>
-    & { author?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
-    )>, children?: Maybe<Array<Maybe<(
-      { __typename?: 'Article' }
-      & Pick<Article, 'id' | 'title'>
-    )>>>, parent?: Maybe<(
-      { __typename?: 'Article' }
-      & Pick<Article, 'id' | 'title'>
-    )> }
-  )> }
-);
+export type ArticleQuery = { __typename?: "Query" } & {
+  article?: Maybe<
+    { __typename?: "Article" } & Pick<
+      Article,
+      | "id"
+      | "title"
+      | "body"
+      | "favourited"
+      | "rootPath"
+      | "updatedAt"
+      | "createdAt"
+    > & {
+        author?: Maybe<{ __typename?: "User" } & Pick<User, "id" | "username">>;
+        children?: Maybe<
+          Array<
+            Maybe<{ __typename?: "Article" } & Pick<Article, "id" | "title">>
+          >
+        >;
+        parent?: Maybe<
+          { __typename?: "Article" } & Pick<Article, "id" | "title">
+        >;
+      }
+  >;
+};
 
 export type FavouriteArticlesQueryVariables = {};
 
-
-export type FavouriteArticlesQuery = (
-  { __typename?: 'Query' }
-  & { me?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id'>
-    & { favourites?: Maybe<Array<Maybe<(
-      { __typename?: 'Article' }
-      & Pick<Article, 'id' | 'title'>
-      & { parent?: Maybe<(
-        { __typename?: 'Article' }
-        & Pick<Article, 'id'>
-      )> }
-    )>>> }
-  )> }
-);
-
+export type FavouriteArticlesQuery = { __typename?: "Query" } & {
+  me?: Maybe<
+    { __typename?: "User" } & Pick<User, "id"> & {
+        favourites?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: "Article" } & Pick<Article, "id" | "title"> & {
+                  parent?: Maybe<
+                    { __typename?: "Article" } & Pick<Article, "id">
+                  >;
+                }
+            >
+          >
+        >;
+      }
+  >;
+};
 
 export const CreateArticleDocument = gql`
-    mutation CreateArticle($title: String! = "Undefined", $parentId: ID) {
-  createArticle(input: {title: $title, parentId: $parentId}) {
-    id
-    title
-    parent {
+  mutation CreateArticle($title: String! = "Untitled", $parentId: ID) {
+    createArticle(input: { title: $title, parentId: $parentId }) {
       id
+      title
+      parent {
+        id
+      }
     }
   }
-}
-    `;
-export type CreateArticleMutationFn = ApolloReactCommon.MutationFunction<CreateArticleMutation, CreateArticleMutationVariables>;
+`;
+export type CreateArticleMutationFn = ApolloReactCommon.MutationFunction<
+  CreateArticleMutation,
+  CreateArticleMutationVariables
+>;
 
 /**
  * __useCreateArticleMutation__
@@ -343,20 +319,40 @@ export type CreateArticleMutationFn = ApolloReactCommon.MutationFunction<CreateA
  *   },
  * });
  */
-export function useCreateArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateArticleMutation, CreateArticleMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, baseOptions);
-      }
-export type CreateArticleMutationHookResult = ReturnType<typeof useCreateArticleMutation>;
-export type CreateArticleMutationResult = ApolloReactCommon.MutationResult<CreateArticleMutation>;
-export type CreateArticleMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateArticleMutation, CreateArticleMutationVariables>;
-export const SignupDocument = gql`
-    mutation Signup($username: String, $email: String!, $password: String!) {
-  signedUser(input: {username: $username, email: $email, password: $password}) {
-    id
-  }
+export function useCreateArticleMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateArticleMutation,
+    CreateArticleMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    CreateArticleMutation,
+    CreateArticleMutationVariables
+  >(CreateArticleDocument, baseOptions);
 }
-    `;
-export type SignupMutationFn = ApolloReactCommon.MutationFunction<SignupMutation, SignupMutationVariables>;
+export type CreateArticleMutationHookResult = ReturnType<
+  typeof useCreateArticleMutation
+>;
+export type CreateArticleMutationResult = ApolloReactCommon.MutationResult<
+  CreateArticleMutation
+>;
+export type CreateArticleMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateArticleMutation,
+  CreateArticleMutationVariables
+>;
+export const SignupDocument = gql`
+  mutation Signup($username: String, $email: String!, $password: String!) {
+    signedUser(
+      input: { username: $username, email: $email, password: $password }
+    ) {
+      id
+    }
+  }
+`;
+export type SignupMutationFn = ApolloReactCommon.MutationFunction<
+  SignupMutation,
+  SignupMutationVariables
+>;
 
 /**
  * __useSignupMutation__
@@ -377,20 +373,36 @@ export type SignupMutationFn = ApolloReactCommon.MutationFunction<SignupMutation
  *   },
  * });
  */
-export function useSignupMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignupMutation, SignupMutationVariables>) {
-        return ApolloReactHooks.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, baseOptions);
-      }
-export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
-export type SignupMutationResult = ApolloReactCommon.MutationResult<SignupMutation>;
-export type SignupMutationOptions = ApolloReactCommon.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
-export const LoginDocument = gql`
-    mutation Login($identifier: String!, $password: String!) {
-  loggedUser(input: {identifier: $identifier, password: $password}) {
-    id
-  }
+export function useSignupMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SignupMutation,
+    SignupMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<SignupMutation, SignupMutationVariables>(
+    SignupDocument,
+    baseOptions
+  );
 }
-    `;
-export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, LoginMutationVariables>;
+export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
+export type SignupMutationResult = ApolloReactCommon.MutationResult<
+  SignupMutation
+>;
+export type SignupMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SignupMutation,
+  SignupMutationVariables
+>;
+export const LoginDocument = gql`
+  mutation Login($identifier: String!, $password: String!) {
+    loggedUser(input: { identifier: $identifier, password: $password }) {
+      id
+    }
+  }
+`;
+export type LoginMutationFn = ApolloReactCommon.MutationFunction<
+  LoginMutation,
+  LoginMutationVariables
+>;
 
 /**
  * __useLoginMutation__
@@ -410,18 +422,34 @@ export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, 
  *   },
  * });
  */
-export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
-      }
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
-export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
-export const MoveArticleDocument = gql`
-    mutation MoveArticle($id: ID!, $parentId: ID!) {
-  moveArticle(id: $id, parentId: $parentId)
+export function useLoginMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    LoginMutation,
+    LoginMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(
+    LoginDocument,
+    baseOptions
+  );
 }
-    `;
-export type MoveArticleMutationFn = ApolloReactCommon.MutationFunction<MoveArticleMutation, MoveArticleMutationVariables>;
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = ApolloReactCommon.MutationResult<
+  LoginMutation
+>;
+export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
+>;
+export const MoveArticleDocument = gql`
+  mutation MoveArticle($id: ID!, $parentId: ID!) {
+    moveArticle(id: $id, parentId: $parentId)
+  }
+`;
+export type MoveArticleMutationFn = ApolloReactCommon.MutationFunction<
+  MoveArticleMutation,
+  MoveArticleMutationVariables
+>;
 
 /**
  * __useMoveArticleMutation__
@@ -441,18 +469,36 @@ export type MoveArticleMutationFn = ApolloReactCommon.MutationFunction<MoveArtic
  *   },
  * });
  */
-export function useMoveArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<MoveArticleMutation, MoveArticleMutationVariables>) {
-        return ApolloReactHooks.useMutation<MoveArticleMutation, MoveArticleMutationVariables>(MoveArticleDocument, baseOptions);
-      }
-export type MoveArticleMutationHookResult = ReturnType<typeof useMoveArticleMutation>;
-export type MoveArticleMutationResult = ApolloReactCommon.MutationResult<MoveArticleMutation>;
-export type MoveArticleMutationOptions = ApolloReactCommon.BaseMutationOptions<MoveArticleMutation, MoveArticleMutationVariables>;
-export const ToggleFavouriteDocument = gql`
-    mutation ToggleFavourite($articleId: ID!) {
-  toggleFavourite(articleId: $articleId)
+export function useMoveArticleMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    MoveArticleMutation,
+    MoveArticleMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    MoveArticleMutation,
+    MoveArticleMutationVariables
+  >(MoveArticleDocument, baseOptions);
 }
-    `;
-export type ToggleFavouriteMutationFn = ApolloReactCommon.MutationFunction<ToggleFavouriteMutation, ToggleFavouriteMutationVariables>;
+export type MoveArticleMutationHookResult = ReturnType<
+  typeof useMoveArticleMutation
+>;
+export type MoveArticleMutationResult = ApolloReactCommon.MutationResult<
+  MoveArticleMutation
+>;
+export type MoveArticleMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  MoveArticleMutation,
+  MoveArticleMutationVariables
+>;
+export const ToggleFavouriteDocument = gql`
+  mutation ToggleFavourite($articleId: ID!) {
+    toggleFavourite(articleId: $articleId)
+  }
+`;
+export type ToggleFavouriteMutationFn = ApolloReactCommon.MutationFunction<
+  ToggleFavouriteMutation,
+  ToggleFavouriteMutationVariables
+>;
 
 /**
  * __useToggleFavouriteMutation__
@@ -471,20 +517,38 @@ export type ToggleFavouriteMutationFn = ApolloReactCommon.MutationFunction<Toggl
  *   },
  * });
  */
-export function useToggleFavouriteMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ToggleFavouriteMutation, ToggleFavouriteMutationVariables>) {
-        return ApolloReactHooks.useMutation<ToggleFavouriteMutation, ToggleFavouriteMutationVariables>(ToggleFavouriteDocument, baseOptions);
-      }
-export type ToggleFavouriteMutationHookResult = ReturnType<typeof useToggleFavouriteMutation>;
-export type ToggleFavouriteMutationResult = ApolloReactCommon.MutationResult<ToggleFavouriteMutation>;
-export type ToggleFavouriteMutationOptions = ApolloReactCommon.BaseMutationOptions<ToggleFavouriteMutation, ToggleFavouriteMutationVariables>;
-export const UpdateArticleDocument = gql`
-    mutation UpdateArticle($id: ID, $title: String, $body: String) {
-  updateArticle(input: {id: $id, title: $title, body: $body}) {
-    updatedAt
-  }
+export function useToggleFavouriteMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ToggleFavouriteMutation,
+    ToggleFavouriteMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    ToggleFavouriteMutation,
+    ToggleFavouriteMutationVariables
+  >(ToggleFavouriteDocument, baseOptions);
 }
-    `;
-export type UpdateArticleMutationFn = ApolloReactCommon.MutationFunction<UpdateArticleMutation, UpdateArticleMutationVariables>;
+export type ToggleFavouriteMutationHookResult = ReturnType<
+  typeof useToggleFavouriteMutation
+>;
+export type ToggleFavouriteMutationResult = ApolloReactCommon.MutationResult<
+  ToggleFavouriteMutation
+>;
+export type ToggleFavouriteMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ToggleFavouriteMutation,
+  ToggleFavouriteMutationVariables
+>;
+export const UpdateArticleDocument = gql`
+  mutation UpdateArticle($id: ID, $title: String, $body: String) {
+    updateArticle(input: { id: $id, title: $title, body: $body }) {
+      updatedAt
+    }
+  }
+`;
+export type UpdateArticleMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateArticleMutation,
+  UpdateArticleMutationVariables
+>;
 
 /**
  * __useUpdateArticleMutation__
@@ -505,23 +569,38 @@ export type UpdateArticleMutationFn = ApolloReactCommon.MutationFunction<UpdateA
  *   },
  * });
  */
-export function useUpdateArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateArticleMutation, UpdateArticleMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, baseOptions);
-      }
-export type UpdateArticleMutationHookResult = ReturnType<typeof useUpdateArticleMutation>;
-export type UpdateArticleMutationResult = ApolloReactCommon.MutationResult<UpdateArticleMutation>;
-export type UpdateArticleMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>;
+export function useUpdateArticleMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateArticleMutation,
+    UpdateArticleMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateArticleMutation,
+    UpdateArticleMutationVariables
+  >(UpdateArticleDocument, baseOptions);
+}
+export type UpdateArticleMutationHookResult = ReturnType<
+  typeof useUpdateArticleMutation
+>;
+export type UpdateArticleMutationResult = ApolloReactCommon.MutationResult<
+  UpdateArticleMutation
+>;
+export type UpdateArticleMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateArticleMutation,
+  UpdateArticleMutationVariables
+>;
 export const ArticlesDocument = gql`
-    query Articles {
-  articles {
-    id
-    title
-    parent {
+  query Articles {
+    articles {
       id
+      title
+      parent {
+        id
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useArticlesQuery__
@@ -538,33 +617,54 @@ export const ArticlesDocument = gql`
  *   },
  * });
  */
-export function useArticlesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ArticlesQuery, ArticlesQueryVariables>) {
-        return ApolloReactHooks.useQuery<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, baseOptions);
-      }
-export function useArticlesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticlesQuery, ArticlesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, baseOptions);
-        }
-export type ArticlesQueryHookResult = ReturnType<typeof useArticlesQuery>;
-export type ArticlesLazyQueryHookResult = ReturnType<typeof useArticlesLazyQuery>;
-export type ArticlesQueryResult = ApolloReactCommon.QueryResult<ArticlesQuery, ArticlesQueryVariables>;
-export const ArticleModificationsDocument = gql`
-    query ArticleModifications($id: ID!) {
-  articleModifications(id: $id) {
-    id
-    user {
-      id
-      username
-    }
-    title
-    body
-    author {
-      id
-      username
-    }
-    updatedAt
-  }
+export function useArticlesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ArticlesQuery,
+    ArticlesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<ArticlesQuery, ArticlesQueryVariables>(
+    ArticlesDocument,
+    baseOptions
+  );
 }
-    `;
+export function useArticlesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ArticlesQuery,
+    ArticlesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<ArticlesQuery, ArticlesQueryVariables>(
+    ArticlesDocument,
+    baseOptions
+  );
+}
+export type ArticlesQueryHookResult = ReturnType<typeof useArticlesQuery>;
+export type ArticlesLazyQueryHookResult = ReturnType<
+  typeof useArticlesLazyQuery
+>;
+export type ArticlesQueryResult = ApolloReactCommon.QueryResult<
+  ArticlesQuery,
+  ArticlesQueryVariables
+>;
+export const ArticleModificationsDocument = gql`
+  query ArticleModifications($id: ID!) {
+    articleModifications(id: $id) {
+      id
+      user {
+        id
+        username
+      }
+      title
+      body
+      author {
+        id
+        username
+      }
+      updatedAt
+    }
+  }
+`;
 
 /**
  * __useArticleModificationsQuery__
@@ -582,40 +682,63 @@ export const ArticleModificationsDocument = gql`
  *   },
  * });
  */
-export function useArticleModificationsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ArticleModificationsQuery, ArticleModificationsQueryVariables>) {
-        return ApolloReactHooks.useQuery<ArticleModificationsQuery, ArticleModificationsQueryVariables>(ArticleModificationsDocument, baseOptions);
-      }
-export function useArticleModificationsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticleModificationsQuery, ArticleModificationsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ArticleModificationsQuery, ArticleModificationsQueryVariables>(ArticleModificationsDocument, baseOptions);
-        }
-export type ArticleModificationsQueryHookResult = ReturnType<typeof useArticleModificationsQuery>;
-export type ArticleModificationsLazyQueryHookResult = ReturnType<typeof useArticleModificationsLazyQuery>;
-export type ArticleModificationsQueryResult = ApolloReactCommon.QueryResult<ArticleModificationsQuery, ArticleModificationsQueryVariables>;
-export const ArticleDocument = gql`
-    query Article($id: ID!) {
-  article(id: $id) {
-    id
-    title
-    body
-    favourited
-    rootPath
-    author {
-      id
-      username
-    }
-    children {
-      id
-      title
-    }
-    parent {
-      id
-      title
-    }
-    updatedAt
-    createdAt
-  }
+export function useArticleModificationsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ArticleModificationsQuery,
+    ArticleModificationsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    ArticleModificationsQuery,
+    ArticleModificationsQueryVariables
+  >(ArticleModificationsDocument, baseOptions);
 }
-    `;
+export function useArticleModificationsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ArticleModificationsQuery,
+    ArticleModificationsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    ArticleModificationsQuery,
+    ArticleModificationsQueryVariables
+  >(ArticleModificationsDocument, baseOptions);
+}
+export type ArticleModificationsQueryHookResult = ReturnType<
+  typeof useArticleModificationsQuery
+>;
+export type ArticleModificationsLazyQueryHookResult = ReturnType<
+  typeof useArticleModificationsLazyQuery
+>;
+export type ArticleModificationsQueryResult = ApolloReactCommon.QueryResult<
+  ArticleModificationsQuery,
+  ArticleModificationsQueryVariables
+>;
+export const ArticleDocument = gql`
+  query Article($id: ID!) {
+    article(id: $id) {
+      id
+      title
+      body
+      favourited
+      rootPath
+      author {
+        id
+        username
+      }
+      children {
+        id
+        title
+      }
+      parent {
+        id
+        title
+      }
+      updatedAt
+      createdAt
+    }
+  }
+`;
 
 /**
  * __useArticleQuery__
@@ -633,29 +756,48 @@ export const ArticleDocument = gql`
  *   },
  * });
  */
-export function useArticleQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
-        return ApolloReactHooks.useQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, baseOptions);
-      }
-export function useArticleLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, baseOptions);
-        }
+export function useArticleQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ArticleQuery,
+    ArticleQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<ArticleQuery, ArticleQueryVariables>(
+    ArticleDocument,
+    baseOptions
+  );
+}
+export function useArticleLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ArticleQuery,
+    ArticleQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<ArticleQuery, ArticleQueryVariables>(
+    ArticleDocument,
+    baseOptions
+  );
+}
 export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>;
 export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>;
-export type ArticleQueryResult = ApolloReactCommon.QueryResult<ArticleQuery, ArticleQueryVariables>;
+export type ArticleQueryResult = ApolloReactCommon.QueryResult<
+  ArticleQuery,
+  ArticleQueryVariables
+>;
 export const FavouriteArticlesDocument = gql`
-    query FavouriteArticles {
-  me {
-    id
-    favourites {
+  query FavouriteArticles {
+    me {
       id
-      title
-      parent {
+      favourites {
         id
+        title
+        parent {
+          id
+        }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useFavouriteArticlesQuery__
@@ -672,12 +814,35 @@ export const FavouriteArticlesDocument = gql`
  *   },
  * });
  */
-export function useFavouriteArticlesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FavouriteArticlesQuery, FavouriteArticlesQueryVariables>) {
-        return ApolloReactHooks.useQuery<FavouriteArticlesQuery, FavouriteArticlesQueryVariables>(FavouriteArticlesDocument, baseOptions);
-      }
-export function useFavouriteArticlesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FavouriteArticlesQuery, FavouriteArticlesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FavouriteArticlesQuery, FavouriteArticlesQueryVariables>(FavouriteArticlesDocument, baseOptions);
-        }
-export type FavouriteArticlesQueryHookResult = ReturnType<typeof useFavouriteArticlesQuery>;
-export type FavouriteArticlesLazyQueryHookResult = ReturnType<typeof useFavouriteArticlesLazyQuery>;
-export type FavouriteArticlesQueryResult = ApolloReactCommon.QueryResult<FavouriteArticlesQuery, FavouriteArticlesQueryVariables>;
+export function useFavouriteArticlesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    FavouriteArticlesQuery,
+    FavouriteArticlesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    FavouriteArticlesQuery,
+    FavouriteArticlesQueryVariables
+  >(FavouriteArticlesDocument, baseOptions);
+}
+export function useFavouriteArticlesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    FavouriteArticlesQuery,
+    FavouriteArticlesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    FavouriteArticlesQuery,
+    FavouriteArticlesQueryVariables
+  >(FavouriteArticlesDocument, baseOptions);
+}
+export type FavouriteArticlesQueryHookResult = ReturnType<
+  typeof useFavouriteArticlesQuery
+>;
+export type FavouriteArticlesLazyQueryHookResult = ReturnType<
+  typeof useFavouriteArticlesLazyQuery
+>;
+export type FavouriteArticlesQueryResult = ApolloReactCommon.QueryResult<
+  FavouriteArticlesQuery,
+  FavouriteArticlesQueryVariables
+>;

@@ -36,7 +36,7 @@ const SidebarFooter = ({ navigation }: FooterProps) => {
             createArticle: { id },
           },
         }) => {
-          navigation.navigate("Article", { articleId: id });
+          navigation.navigate("Article", { articleId: id, isEditing: true });
         }
       )
       .catch((err) => {
