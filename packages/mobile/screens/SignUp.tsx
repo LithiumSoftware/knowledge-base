@@ -98,8 +98,7 @@ const SignUp = ({
         paddingLeft: 30,
       }}
     >
-      <Header />
-      <Title>Sign up</Title>
+      <Title style={{ paddingTop: 10, paddingBottom: 36 }}>Sign up</Title>
       <View>
         <Formik
           initialValues={{
@@ -122,7 +121,7 @@ const SignUp = ({
             <>
               <View
                 style={{
-                  height: Dimensions.get("window").height * 0.52,
+                  height: Dimensions.get("window").height - 268,
                 }}
               >
                 <InputContainer>

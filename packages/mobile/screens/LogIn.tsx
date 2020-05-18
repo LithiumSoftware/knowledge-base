@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  ScrollView,
+  Text as ReactText,
 } from "react-native";
 import { TextInput, IconButton, HelperText } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -68,7 +68,6 @@ const LogIn = ({
   return (
     <Container
       contentContainerStyle={{
-        justifyContent: "center",
         backgroundColor: "#ffffff",
         paddingTop: 50,
         paddingRight: 30,
@@ -95,7 +94,7 @@ const LogIn = ({
             <>
               <View
                 style={{
-                  height: Dimensions.get("window").height * 0.52,
+                  height: Dimensions.get("window").height - 350,
                 }}
               >
                 <InputContainer>
@@ -132,7 +131,6 @@ const LogIn = ({
                     onPress={() => setHidePw(!hidePw)}
                   />
                 </InputContainer>
-                <ForgotText>Forgot password?</ForgotText>
               </View>
               <FormButton onPress={handleSubmit}>
                 <ButtonText>LOGIN</ButtonText>
@@ -156,10 +154,6 @@ const LogIn = ({
 };
 
 export const Header = () => {
-  const StyledImage = styled(Image)`
-    margin-bottom: 3%;
-  `;
-
   const WelcomeText = styled.Text`
     color: #ffb900;
     font-size: 17px;
@@ -168,8 +162,8 @@ export const Header = () => {
 
   return (
     <View>
-      <StyledImage
-        resizeMode={"contain"}
+      <Image
+        style={{ marginBottom: "5%", width: 115, height: 38 }}
         source={require("../assets/logo-lithium.png")}
       />
       <WelcomeText>{"Welcome to Lithium KB."}</WelcomeText>
@@ -201,10 +195,10 @@ export const Container = styled.ScrollView`
 `;
 
 export const Title = styled.Text`
-  padding-top: 15px;
+  padding-top: 30px;
   padding-bottom: 25px;
   font-weight: bold;
-  font-size: 50px;
+  font-size: 46px;
   color: #000;
   align-items: flex-start;
 `;
@@ -241,15 +235,8 @@ export const ButtonText = styled.Text`
   font-weight: 700;
 `;
 
-export const Text = styled.Text`
+export const Text = styled(ReactText)`
   color: black;
-`;
-
-const ForgotText = styled.Text`
-  color: rgba(0, 0, 0, 0.6);
-  padding-top: 10px;
-  padding-left: 15px;
-  padding-bottom: 20px;
 `;
 
 export const PrimaryText = styled.Text`
