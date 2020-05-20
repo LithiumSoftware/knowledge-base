@@ -4,7 +4,6 @@ import styled from "styled-components";
 import HTML from "react-native-render-html";
 
 export default ArtileViewer = ({ content }: Props) => {
-  console.log("BP: " + content);
   return (
     <StyledView>
       <HTML
