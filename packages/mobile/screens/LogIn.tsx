@@ -164,7 +164,7 @@ export const Header = () => {
     <View>
       <Image
         style={{ marginBottom: "5%", width: 115, height: 38 }}
-        source={require("../assets/logo-lithium.png")}
+        source={require("../assets/lithium-logo.png")}
       />
       <WelcomeText>{"Welcome to Lithium KB."}</WelcomeText>
     </View>

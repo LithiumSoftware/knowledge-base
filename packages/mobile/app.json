@@ -26,7 +26,7 @@
       "permissions": [],
       "versionCode": 1
     },
-    "description": "Lithium KB: A knowledgebase inspired on Notion and created to use as a tool that helps teams to documenting projects, processes, and all the things related to the team workflow.",
+    "description": "Lithium KB: A knowledgebase created to be use as a tool that helps teams to documenting projects, processes, and all the things related to the team workflow.",
     "githubUrl": "https://github.com/LithiumSoftware/workspace-library"
   }
 }
