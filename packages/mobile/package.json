@@ -44,7 +44,6 @@
     "react-native-tab-view": "^2.13.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7",
-    "react-native-webview": "8.2.1",
     "react-native-webview-quilljs": "^2.0.0",
     "styled-components": "^5.1.0",
     "yup": "^0.28.3"
