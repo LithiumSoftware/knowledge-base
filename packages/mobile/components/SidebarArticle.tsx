@@ -152,7 +152,7 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
             createArticle: { id },
           },
         }) => {
-          navigation.navigate("Article", { articleId: id });
+          navigation.navigate("Article", { articleId: id, isEditing: true });
         }
       )
       .catch((err: any) => {
@@ -170,7 +170,10 @@ const SidebarArticle = ({ hierarchy, id, rootPath, navigation }: Props) => {
           }}
           title={data?.article?.title}
           onPress={() => {
-            navigation.navigate("Article", { articleId: data?.article?.id });
+            navigation.navigate("Article", {
+              articleId: data?.article?.id,
+              isEditing: false,
+            });
           }}
           left={(props: any) => (
             <NoMarginIcon

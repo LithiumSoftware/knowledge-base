@@ -97,7 +97,7 @@ const Sidebar = (props: any) => {
     <>
       <DrawerContentScrollView {...props}>
         <Header>
-          <StyledImage source={require("../assets/icono-lithium.png")} />
+          <StyledImage source={require("../assets/lithium-icon.png")} />
           <Appbar.Content title="Lithium KB." />
           <StyledIcon icon={() => <Exit />} onPress={() => logOut()} />
         </Header>

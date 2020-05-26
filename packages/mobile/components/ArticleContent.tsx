@@ -56,6 +56,9 @@ const ArticleContent = ({ route, navigation }: Props) => {
     setContent(data?.article?.body);
     setFavourited(data?.article?.favourited);
     setLastEditedBody(data?.article?.body);
+    if (route.params.isEditing) {
+      setIsEditing(true);
+    }
   }, [data?.article?.id]);
 
   useEffect(() => {
