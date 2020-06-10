@@ -12,9 +12,10 @@ A project created with React Native and Apollo GraphQL
 4. [Tech Stack](#tech-stack)
 5. [Desing](#design)
 6. [Get Ready?](#get-ready)
-7. [How to customize this with your brand](#How-to-customize-this-with-your-brand)
-8. [Credits](#credits)
-9. [License](#license)
+7. [How to use it](#How-to-use-it)
+8. [How to customize this with your brand](#How-to-customize-this-with-your-brand)
+9. [Credits](#credits)
+10. [License](#license)
 
 
 ## What is this?
@@ -55,6 +56,8 @@ Another good reason to use that is there are a lot of projects using Material De
 Check our high-fidelity prototype worked on figma [here](https://www.figma.com/proto/y1YazGt8sO6bSd8GUCAJw8/Lithium-KB-final?node-id=19763%3A214&viewport=-5094%2C2163%2C1.3529388904571533&scaling=scale-down).
 
 ## Get ready?
+
+## How to use it
 
 ## How to customize this with your brand
 If you want to customize the app with your brand to use in your company, follow the [customize document](docs/customize.md) to know how to do it.
