@@ -6,15 +6,15 @@ A project created with React Native and Apollo GraphQL
 ![Screenshot](knowledge-base-app-yellow.jpg)
 
 ## Table of contents
-1. [What is this?](##whatisthis?)
-2. [Why should you check this project?](##Whyshouldyoucheckthisproject?)
-3. [Features](##Features)
-4. [Tech Stack](##TechStack)
-5. [Desing](#Design)
-6. [Get Ready?](#GetReady?)
-7. [How to customize this with your brand](#Howtocustomizethiswithyourbrand)
-8. [Credits](#Credits)
-9. [License](#License)
+1. [What is this?](#what-is-this)
+2. [Why should you check this project?](#Why-should-you-check-this-project)
+3. [Features](#features)
+4. [Tech Stack](#tech-stack)
+5. [Desing](#design)
+6. [Get Ready?](#get-ready)
+7. [How to customize this with your brand](#How-to-customize-this-with-your-brand)
+8. [Credits](#credits)
+9. [License](#license)
 
 
 ## What is this?
