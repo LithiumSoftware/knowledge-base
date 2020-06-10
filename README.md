@@ -5,6 +5,18 @@ A project created with React Native and Apollo GraphQL
 
 ![Screenshot](knowledge-base-app-yellow.jpg)
 
+## Table of contents
+1. [What is this?](##whatisthis?)
+2. [Why should you check this project?](##Whyshouldyoucheckthisproject?)
+3. [Features](##Features)
+4. [Tech Stack](##TechStack)
+5. [Desing](#Design)
+6. [Get Ready?](#GetReady?)
+7. [How to customize this with your brand](#Howtocustomizethiswithyourbrand)
+8. [Credits](#Credits)
+9. [License](#License)
+
+
 ## What is this?
 Lithium KB is our in-house knowledge base application. This project was born as a part of our new developers' training process, a way to learn the Javascript stack and our working team culture. Moreover, the project has another goal, it was to get a useful product for our company at the final of the training process.
 
@@ -49,6 +61,6 @@ If you want to customize the app with your brand to use in your company, follow 
 
 ## Credits
 We'd like to thank these awesome people who made this project happen:
-@DogChef, @brunopintos, @mventurotti and @maxtechera.
+[Gerónimo Garcia](https://github.com/DogChef), [Bruno Pintos](https://github.com/brunopintos), [Max Techera](https://github.com/maxtechera) and [Marcelo Venturotti](https://github.com/mventurotti).
 
 ## License
