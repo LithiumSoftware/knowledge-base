@@ -55,7 +55,95 @@ Another good reason to use that is there are a lot of projects using Material De
 
 Check our high-fidelity prototype worked on figma [here](https://www.figma.com/proto/y1YazGt8sO6bSd8GUCAJw8/Lithium-KB-final?node-id=19763%3A214&viewport=-5094%2C2163%2C1.3529388904571533&scaling=scale-down).
 
-## Get ready?
+## Get ready
+
+### Initial Settings
+
+1. [Install Yarn](https://classic.yarnpkg.com/en/docs/install/#debian-stable)
+1. [Clone the project](https://github.com/Lithium-Software/workspace-library.git)
+1. Install yarn in `packages/web`:
+
+   ```
+   $ cd packages/web
+   ```
+   ```
+   $packages/web yarn
+   ```
+1. In the root folder of the project, generate the graphql schema in the back-end:
+
+   ```
+   $packages/web cd ../..
+   ```
+   ```
+   $ sudo docker-compose up
+   ```
+   * If this throws the following error: “cannot find next dev”, we have to run yarn in packages/web
+   * If this throws an error similar to: “BCRYPT 64 … BCRYPT 72” we have to enter the docker web container, delete node_modules and reinstall them:
+      1. `$packages docker exec -ti nombre_contenedor_web bash`
+      1. `rm -r node_modules`
+      1. `yarn`
+1. In `packages/mobile/local_core` we are going to generate the Graphql code for the front-end:
+   ```
+   $ cd packages/mobile
+   ```
+   ```
+   $packages/mobile yarn
+   ```
+   ```
+   $packages/mobile yarn run codegen
+   ```
+1. In `packages/mobile/App.tsx` file we have to configure the Apollo Client to use our IP.  This IP may change during development, the error thrown when this happens is similar to: “Error: Network error: Network request failed”
+
+### Useful commands
+
+* Run the mobile app:
+
+   ```
+   $packages/mobile yarn run start
+   ```
+### Flow of a new feature
+
+* Run the following commands:
+
+   ```
+   $ git checkout develop
+   ```
+   ```
+   $ git checkout feature/${package}_{functionality}
+   ```
+example: `feature/mobile_layout`
+
+### Recommendations
+
+Don’t use `sudo` to use yarn
+
+### Query example from a file in folder “screens”
+
+```javascript
+import { useArticlesQuery } from "../local_core/generated/graphql";
+
+const { data, loading, error } = useArticlesQuery({
+    variables: {},
+  });
+```
+
+### Mutation example from a file in folder “screens”
+
+```javascript
+import { useSignupMutation } from "../local_core/generated/graphql";
+
+const [signupMutation] = useSignupMutation();
+
+signupMutation({
+    variables: {
+      username: "test",
+      email: "test@test.com",
+      password: "123456",
+    },
+  })
+    .then(({ data: { signedUser } }) => console.log(signedUser))
+    .catch((error) => console.log(error));
+```
 
 ## How to use it
 We will talk about the architecture of the project and the folders that compose it.
