@@ -19,12 +19,14 @@ A project created with React Native and Apollo GraphQL
 
 
 ## What is this?
-Lithium KB is our in-house knowledge base application. This project was born as a part of our new developers' training process, a way to learn the Javascript stack and our working team culture. Moreover, the project has another goal, it was to get a useful product for our company at the final of the training process.
+
+Lithium KB is our in-house knowledge base application. It was born to explore about some Javascript platforms and frameworks like Apollo GraphQL, Expo and how it works combined with React Native. Moreover, to get a useful product to work with, in our company.
+
 
 ## Why should you check this project?
 Because:
 * You are looking for developers to work on a project that requires experience working on React, Graphql, etc…
-* You are a developer or a team of developers that want to learn more about how to work with (list of technologies).
+* You are a developer or a team of developers that want to learn more about the tech stack used.
 * You need a tool like this to use on your side
 * You want to learn how to implement some of the **features that we have implemented**
 
