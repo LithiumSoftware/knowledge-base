@@ -223,4 +223,4 @@ If you want to customize the app with your brand to use in your company, follow 
 We'd like to thank these awesome people who made this project happen:
 [Gerónimo Garcia](https://github.com/DogChef), [Bruno Pintos](https://github.com/brunopintos), [Max Techera](https://github.com/maxtechera) and [Marcelo Venturotti](https://github.com/mventurotti).
 
-## License
+## [License](docs/LICENSE)
