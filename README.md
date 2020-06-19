@@ -153,18 +153,12 @@ We will talk about the architecture of the project and the folders that compose 
 > :warning: **If you haven't cloned the project already**: Please take a look at the [Get Ready guide](#get-ready) first.
 
 After cloning, you can realize that at the root of the project we have two folders (docs and packages), and several files of configurations. For this guide, we will focus on the packages folder.  
-Inside the packages folder, you can find core, mobile, and web folders.
-
-### Core folder
-Codegen. This folder has the responsibility of having inside of it the Graphql generated code.  
-To fulfill this goal, it needs two folders called mutations and queries, and some configuration files.  
-Inside of these two folders is where you will add Graph Query Language (GQL) code to define mutations and queries, that will be used by Codegen to do the generation.  
-After adding a new GQL code for a mutation or query, you simply have to run the Codegen command and the code will be generated instantly, updating "generated/graphql.tsx" automatically.
+Inside the packages folder, you can find core, mobile, and web folders but for this tutorial we will focus on mobile and web only.
 
 ### Mobile folder
 What you see. This is the folder where React Native magic happens.  
 This folder is an Expo React Native project with some important libraries: React Navigation, React Native Paper, and Styled Components. It has the responsibility of containing the front-end of the app.  
-Like any project with these characteristics, it has some files, of which we will focus on App.tsx, and has some folders, of which we will describe: assets, components, navigation, and screens.
+Like any project with these characteristics, it has some files, of which we will focus on App.tsx, and has some folders, of which we will describe: assets, local_core, components, navigation, and screens.
 
 #### App.tsx
 This is where all starts, this is the file that runs first.  
@@ -180,6 +174,12 @@ This folder contains the assets of the application, here we can customize, e.g.:
   - The app icon
   - The splash of the app
   - Fonts
+
+#### Local_core folder
+Codegen. This folder has the responsibility of having inside of it the Graphql generated code.  
+To fulfill this goal, it needs two folders called mutations and queries, and some configuration files.  
+Inside of these two folders is where you will add Graph Query Language (GQL) code to define mutations and queries, that will be used by Codegen to do the generation.  
+After adding a new GQL code for a mutation or query, you simply have to run the Codegen command and the code will be generated instantly, updating "generated/graphql.tsx" automatically.
 
 #### Navigation folder
 This folder only contains the AppNavigator.tsx which is a file that has the screens and navigators of React Navigation.  
